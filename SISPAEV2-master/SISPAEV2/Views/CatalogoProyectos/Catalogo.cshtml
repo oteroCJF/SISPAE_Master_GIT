@@ -1,0 +1,303 @@
+﻿@model Sispae.Entities.MProyectos.Models;
+@{
+    string title = "Catálogo de Proyectos";
+    if (Model.Catalogo != null && Model.Catalogo.Equals("Ahorros"))
+    {
+        title = "Catálogo de Proyectos de " + Model.Catalogo;
+    }
+    else if (Model.Catalogo != null && Model.Catalogo.Equals("PAE"))
+    {
+        title = "Catálogo de Proyectos de " + Model.Catalogo;
+    }
+    ViewData["Title"] = title;
+}
+
+<div class="container-fluid">    
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="col-lg-12">
+                <a href="#" type='button' class="btn btn-sm btn-primary float-right btnAdd" data-toggle="tooltip" title="Nuevo Proyecto" data-placement="top">
+                    <i class="fal fa-plus"></i>
+                </a>
+            </div>
+            @*Mostramos los estatus de los proyectos de acuerdo a la UEG*@
+            <div class="row col-lg-12">
+                <div class="row col-lg-12">
+                    <div class="row col-lg-12">
+                        <p class="h6 ml-2">1) Seleccione una <strong>"Unidad Ejecutora del Gasto"</strong> para ver los diferentes catálogos de proyectos.
+                    </div>
+                    @if (Model.proyectoSUEG != null && Model.proyectoSUEG.Count > 0)
+                    {
+                        <a class="btn btn-app-ueg bg-black text-white font-weight-bold btnUeg" data-ueg="">
+                            <i class="fas fa-list mr-2"></i> Proyectos sin UEG
+                        </a>
+                    }
+                    @foreach (var md in Model.uegsAsignadas)
+                    {
+                        <a class="btn btn-app-ueg @md.Fondo text-white font-weight-bold btnUeg" data-ueg="@md.NumeroUEG">
+                            @Html.Raw(@md.Icono)
+                            @md.NumeroUEG - @md.Nombre
+                        </a>
+                    }
+                </div>
+            </div>
+            @*Mostramos los estatus de los proyectos de acuerdo a la UEG*@
+            @if (Model.ueg != 0 && (Model.Catalogo == null || !Model.Catalogo.Equals("")))
+            {
+                <div class="row col-lg-12">
+                    <div class="row col-lg-12">
+                        <p class="h6 ml-2">1) Seleccione una <strong>"Unidad Ejecutora del Gasto"</strong> para ver los diferentes catálogos de proyectos.
+                    </div>
+                    <a class="btn btn-app-ueg bg-primary text-white font-weight-bold btnCatalogo" data-tipo="PAE">
+                        <i class="fa-light fa-folder-bookmark mr-1"></i> PO y CP
+                    </a>
+                    <a class="btn btn-app-ueg bg-success text-white font-weight-bold btnCatalogo" data-tipo="Ahorros">
+                        <i class="fa-light fa-folder-bookmark mr-1"></i> Ahorros y Economías
+                    </a>
+                </div>
+            }
+            else if (Model.ueg == 0 && (Model.Catalogo == null || Model.Catalogo.Equals("")))
+            {
+                <div class="col-lg-12">
+                    <table class="table" id="table_profiles">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in @Model.proyectoSUEG)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(model => item.Id)</td>
+                                    <td>@Html.DisplayFor(model => item.Nombre)</td>
+                                    <td>
+                                        <a href="/proyectos/catalogo/detalle/@item.Id" class="text-center update_ueg">
+                                            <i class="fad fa-pencil text-primary mr-2"></i>
+                                        </a>
+                                        <a href="#" class="text-center delete_ueg" data-id="@item.Id">
+                                            <i class="fad fa-times text-danger"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            @if (Model.ueg != 0 && (Model.Catalogo != null && !Model.Catalogo.Equals("")))
+            {
+                <div class="col-lg-12">
+                    <table class="table" id="table_profiles">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in @Model.proyectos)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(model => item.Id)</td>
+                                    <td>@Html.DisplayFor(model => item.Nombre)</td>
+                                    <td>
+                                        <a href="/proyectos/catalogo/detalle/@item.Id" class="text-center update_ueg">
+                                            <i class="fad fa-pencil text-primary mr-2"></i>
+                                        </a>
+                                        <a href="#" class="text-center delete_ueg" data-id="@item.Id">
+                                            <i class="fad fa-times text-danger"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+@*Modal para buscar cédulas*@
+<div class="modal fade" id="modal-proyectos">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-joke">
+                <h4 class="modal-title text-white">Nuevo Proyecto</h4>
+                <button type="button" class="close close-incidencias text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="row col-lg-12">
+                        <div class="form-group col-lg-4">
+                            <label for="name">Catálogo: *</label>
+                            <select class="form-control" name="nombre" id="tipoProyecto">
+                                <option value="">Seleccione el Catálogo</option>
+                                <option value="PAE">Programa Anual de Ejecución</option>
+                                <option value="Ahorros">Ahorros y Economías</option>
+                            </select>
+                            <div class="col-sm-12" id="error_tipoProyecto">
+                                <small id="dateHelp" class="text-danger">
+                                    Seleccione el catálogo del proyecto
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row col-lg-12">
+                        <div class="form-group col-lg-12">
+                            <label for="name">Nombre del Proyecto: *</label>
+                            <textarea class="form-control" name="nombre" id="nombreProyecto" style="height:100px"></textarea>
+                        </div>
+                        <div class="col-sm-12" id="error_nombreProyecto">
+                            <small id="dateHelp" class="text-danger">
+                                Capture el nombre del proyecto.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button class="btn btn-primary btn_guardar" type="button">Guardar Proyecto</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@*Fin del Modal para Capturar Oficios*@
+
+@section Scripts{
+    <script>
+        $(function () {
+            var model = @Html.Raw(Json.Serialize(@Model));
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $(".delete_ueg").click(function () {
+                Swal.fire({
+                    'icon': 'warning',
+                    'title': 'Catálogo de Proyectos',
+                    'html': '¿Esta seguro de que desea eliminar la <b>Unidad Ejecutora del Gasto</b>?',
+                    'confirmButtonColor': '#3085d6',
+                    'cancelButtonColor': '#d33',
+                    'confirmButtonText': 'Si, eliminar',
+                    'cancelButtonText': 'Cancelar',
+                    'showCancelButton': true
+                }).then(del => {
+                    if (del.isConfirmed) {
+                        axios.get('/ueg/delete/' + $(this).data('id')).then(response => {
+                            if (response.data == 1) {
+                                Swal.fire({
+                                    'icon': 'success',
+                                    'title': 'Unidad Ejecutora del Gasto',
+                                    'html': 'La <strong>Unidad Ejecutora del Gasto </strong> se eliminó correctamente.',
+                                }).then(function () {
+                                    $("#modal-show").modal('hide');
+                                    window.location.reload();
+                                });
+                            }
+                        }).catch(err => {
+                            Swal.fire({
+                                'icon': 'error',
+                                'title': 'Unidad Ejecutora del Gasto',
+                                'html': 'Se presentó un error al intentar eliminar la <strong>Unidad Ejecutora</strong>. Favor de contactar al administrador a la ext. #318 2574',
+                            }).then(function () {
+                                $("#modal-show").modal('hide');
+                            });
+                        });
+                    }
+                });
+            });
+
+            $("#table_profiles").DataTable({
+                paging: true,
+                bLengthChange: false,
+                pageLength: 10,
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+            });
+
+            $(".btnUeg").click(function () {
+                window.location.href = "/proyectos/catalogo?UEG=" + $(this).data('ueg');
+            });
+
+            $(".btnCatalogo").click(function () {
+                window.location.href = "/proyectos/catalogo?UEG="+model.ueg+"&Tipo=" + $(this).data('tipo');
+            });
+
+            /******************************* Nuevo Proyecto ***************************************/
+                $("#error_tipoProyecto").css("display", "none");
+                $("#error_nombreProyecto").css("display", "none");
+
+                $(".btnAdd").click(function () {
+                    $("#modal-proyectos").modal("show");
+                });
+
+                function validaCampos(){
+                    if ($("#tipoProyecto").val() != "" && $("#nombreProyecto").val() != "") {
+                        return true;
+                    }
+
+                    if ($("#tipoProyecto").val() == "") {
+                        $("#tipoProyecto").addClass("is-invalid");
+                        $("#error_tipoProyecto").css("display", "block");
+                    }
+
+                    if ($("#nombreProyecto").val() == "") {
+                        $("#nombreProyecto").addClass("is-invalid");
+                        $("#error_nombreProyecto").css("display", "block");
+                    }
+
+                    return false;
+                }
+
+                $("#tipoProyecto").change(function(){
+                    if ($("#tipoProyecto").val() == "") {
+                        $("#tipoProyecto").removeClass("is-valid");
+                        $("#tipoProyecto").addClass("is-invalid");
+                        $("#error_tipoProyecto").css("display", "none");
+                    } else {
+                        $("#tipoProyecto").removeClass("is-invalid");
+                        $("#tipoProyecto").addClass("is-valid");
+                        $("#error_tipoProyecto").css("display", "none");
+                    }
+                });
+
+                $("#nombreProyecto").change(function(){
+                    if ($("#nombreProyecto").val() == "") {
+                        $("#nombreProyecto").removeClass("is-valid");
+                        $("#nombreProyecto").addClass("is-invalid");
+                        $("#error_nombreProyecto").css("display", "none");
+                    } else {
+                        $("#nombreProyecto").removeClass("is-invalid");
+                        $("#nombreProyecto").addClass("is-valid");
+                        $("#error_nombreProyecto").css("display", "none");
+                    }
+                });
+
+                $('.btn_guardar').click(function () {
+                    var tipo = $('#tipoProyecto').val();
+                    var nombre = $('#nombreProyecto').val();
+
+                    axios.post('/proyectos/nuevoProyecto', { Tipo: tipo, Nombre: nombre }).then(response => {
+                        if (response.data != -1) {
+                            Swal.fire({
+                                'icon': 'success',
+                                'title': 'Catálogo de Proyectos',
+                                'html': 'Se guardó el proyecto correctamente.'
+                            }).then(function () {
+                                window.location.href = "/proyectos/catalogo/detalle/" + response.data;
+                            });
+                        }
+                    });
+                });
+            /******************************* Nuevo Proyecto ***************************************/
+        });
+    </script>
+}

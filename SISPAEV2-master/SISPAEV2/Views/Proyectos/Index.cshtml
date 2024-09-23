@@ -1,0 +1,379 @@
+﻿@model Sispae.Entities.MProyectos.Models;
+@{
+    var i = 0;
+    var anio = (DateTime.Now.Year + 3);
+    var user = Convert.ToInt32((@User.Claims.ElementAt(2).Value).Contains("Evaluador"));
+    string title = "Integración y Seguimiento a Proyectos";
+    if (Model.Catalogo != null && Model.Catalogo.Equals("Ahorros"))
+    {
+        title = "Integración y Seguimiento a Proyectos de Ahorros y Economías " + (Model.Anio != 0 ? Model.Anio.ToString() : "");
+    }
+    else if (Model.Catalogo != null && Model.Catalogo.Equals("PAE"))
+    {
+        title = "Integración y Seguimiento a Proyectos del Programa Anual de Ejecución " + (Model.Anio != 0 ? Model.Anio.ToString() : "");
+    }
+    ViewData["Title"] = title;
+}
+
+<div class="container-fluid">
+    <div class="row col-lg-12">
+        <a href="#" type='button' id="search_proyecto" class='btn-sm btn-primary float-left mr-2 mb-3' data-toggle="tooltip" title="Filtrar Proyecto(s)" data-placement="top">
+            <i class="fas fa-filter"></i> Seleccionar Año
+        </a>
+    </div>
+    <div class="row" id="Prrueba">
+        @*Mostramos las unidades ejecutoras del gasto asignadas al usuario*@
+        @if (@Model.Anio != 0)
+        {
+            <div class="row col-lg-12">
+                <div class="row col-lg-12">
+                    <p class="h6 ml-2">1) Seleccione una <strong>"Unidad Ejecutora del Gasto"</strong> para ver los estatus en los que se encuentran las integraciones de los proyectos.
+                </div>
+                @foreach (var md in Model.uegsAsignadas)
+                {
+                    <a class="btn btn-app-ueg @md.Fondo text-white font-weight-bold btnUeg" data-ueg="@md.Id">
+                        @Html.Raw(@md.Icono)
+                        @md.NumeroUEG - @md.Nombre
+                    </a>
+                }
+            </div>
+        }
+        @*Fin de mostrar las unidades ejecutoras del gasto asignadas al usuario*@
+
+        @*Mostramos los estatus de los proyectos de acuerdo a la UEG*@
+        @if (Model.Anio != 0 && Model.ueg != 0)
+        {
+            <div class="row col-lg-12">
+                <div class="row col-lg-12">
+                    <p class="h6 ml-2">2) Para dar seguimiento a los proyectos de la <strong>UEG @Model.uegSeleccionada.NumeroUEG: @Model.uegSeleccionada.Descripcion </strong> de clic en los estatus marcados con el recuadro "<button class='btn btn-xs btn-danger text-danger'><span class='bg-danger text-danger'></span>0</button>" mismos que indican la cantidad de proyectos pendientes por estatus y que tienen prioridad urgente.</p>
+                </div>
+                <div class="row col-lg-12">
+                    <div class="col-lg-1 mr-5">
+                        <a class="btn btn-app-ueg bg-black text-white font-weight-bold btnEstatus" data-estatus="Todos">
+                            <i class="fas fa-list mr-2"></i>
+                            Ver todos los Proyectos
+                        </a>
+                    </div>
+                </div>
+                <div class="row col-lg-12">
+                    <div class="col-lg-10">
+                        @foreach (var md in Model.proyectosEstatus)
+                        {
+                            <a class="btn btn-app @md.Fondo text-white font-weight-bold btnEstatus" data-estatus="@md.Estatus">
+                                <span class="badge @(md.Estatus.Equals("Autorizada") ? "":"bg-danger")">
+                                    @if (!@md.Estatus.Equals("Autorizada"))
+                                    {
+                                        @md.TotalEstatus
+                                    }
+                                </span>
+                                @Html.Raw(md.Icono)
+                                Proyecto(s) en estatus @md.Estatus
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        @*Mostramos los estatus de los proyectos de acuerdo a la UEG*@
+
+        @*Mostramos los unidades ejecutoras del gasto asignadas al usuario*@
+        @if (Model.Estatus != null && Model.Anio != 0 && Model.ueg != 0 && !Model.Ordenar)
+        {
+            <div class="row col-lg-12 mb-3">
+                <div class="col-lg-12">
+                    <p class="h6 mt-2 mb-4">3) En la sección de <strong>"Acciones"</strong> de clic en el ícono de seguimiento <i class="fas fa-file-import text-primary"></i> :</p>
+                    <table class="table table-responsive-xl" id="dt_proyectos">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Unidad Ejecutora</th>
+                                <th>Proyecto</th>
+                                <th class="text-center">Mes Estimado</th>
+                                <th class="text-center">Año Estimado</th>
+                                <th class="text-center">Monto Estimado</th>
+                                <th class="text-center">Estatus</th>
+                                <th class="text-center">Última Actualización</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.lProyectos)
+                            {
+                                i++;
+                                <tr>
+
+                                    <td>@i</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.NumeroUEG)</td>
+                                    <td>
+                                        @if (item.Proyecto.Length >= 150)
+                                        {
+                                            <div class="divIncomplete text-justify">
+                                                @Html.Raw(@String.Concat(item.Proyecto.Substring(0, 150) + " <span class='mostrar_text text-primary' style='cursor: pointer'> Mostrar todo</span>"))
+                                            </div>
+                                            <div class="divComplete text-justify">
+                                                @Html.Raw(@String.Concat(item.Proyecto + "<span class='mostrar_text text-danger' style='cursor: pointer'> Ocultar todo</span>"))
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(modelItem => item.Proyecto)
+                                        }
+                                    </td>
+                                    <td class="text-center">@(item.Mes.Equals("") && Model.Catalogo.Equals("PAE") ? "-" : item.Mes.Equals("") && Model.Catalogo.Equals("Ahorros") ? "N/A" : item.Mes)</td>
+                                    <td class="text-center">
+                                        @if (item.Anio == 0 && Model.Catalogo.Equals("PAE"))
+                                        {
+                                            @Html.Encode("-")
+                                        }
+                                        else if (item.Anio == 0 && Model.Catalogo.Equals("Ahorros"))
+                                        {
+                                            @Html.Encode("N/A")
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(modelItem => item.Anio)
+                                        }
+                                    </td>
+                                    <td>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", item.Importe)</td>
+                                    <td class="text-center @(item.Fondo.Replace("bg", "text")) font-weight-bold">@Html.DisplayFor(modelItem => item.Estatus)</td>
+                                    <td class="text-center">@(item.FechaActualizacion.ToString("dd/MM/yyyy").Equals("01/01/2001") ? "-" : item.FechaActualizacion.ToString("dd/MM/yyyy hh:mm tt"))</td>
+                                    <td>
+                                        @if ((!item.Estatus.Equals("En Proceso") && !item.Estatus.Equals("")) && 
+                                            (
+                                                (@User.Claims.ElementAt(2).Value).Contains("Administrador") || 
+                                                (@User.Claims.ElementAt(2).Value).Contains("CAE")) || 
+                                                (@User.Claims.ElementAt(2).Value).Contains("Autorizador")
+                                            )
+                                        {
+                                            <a href="#" data-id="@item.Id" class="text-center btnRevision" data-toggle="tooltip" title="Revisar Proyecto" data-placement="top">
+                                                <i class="fad fa-eye text-success"></i>
+                                            </a>
+                                        }
+
+                                        @if ((item.Estatus.Equals("Rechazada") || item.Estatus.Equals("En Proceso") || item.Estatus.Equals("Asignado")) || 
+                                        ((@User.Claims.ElementAt(2).Value).Contains("Administrador")))
+                                        {
+                                            <a href="#" data-id="@item.Id" data-tipo="@item.Tipo" class="text-center ml-2 btnIntegracion" data-toggle="tooltip" title="Integrar Proyecto" data-placement="top">
+                                                <i class="fad fa-pencil text-primary"></i>
+                                            </a>
+                                        }
+
+                                        @if ((item.Estatus.Equals("Autorizada") || item.Estatus.Equals("Seguimiento Enviado") || item.Estatus.Equals("Seguimiento Autorizado")) || item.Evento)
+                                        {
+                                            <a href="#" data-id="@item.Id" data-tipo="@item.Tipo" class="text-center ml-2 btnAdjudicacion" data-toggle="tooltip" title="Nueva Adjudicación" data-placement="top">
+                                                <i class="fa-regular fa-file-signature text-orange"></i>
+                                            </a>
+                                        }
+
+                                        @if (!item.Estatus.Equals("En Proceso"))
+                                        {
+                                            <a href="#" data-id="@item.Id" class="text-center ml-2 btnSeguimiento" data-toggle="tooltip" title="Seguimiento al Proyecto" data-placement="top">
+                                                <i class="fas fa-file-import text-primary"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        }
+        @*Mostramos las unidades ejecutoras del gasto asignadas al usuario*@
+    </div>
+</div>
+
+@*Modal para buscar cédulas*@
+<div class="modal fade" id="modal-proyectos">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-joke">
+                <h4 class="modal-title text-white">Filtrado de Proyecto(s)</h4>
+                <button type="button" class="close close-incidencias text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-row col-md-3" id="divBusquedaMes">
+                        <label for="Anio">Mes: </label>
+                        <select class="form-control" id="anioActual">
+                            <option value="">Seleccione el Año</option>
+                            @for (var j = 2022; j < (DateTime.Now.Year + 3); j++)
+                            {
+                                <option value="@j">@j</option>
+                            }
+                        </select>
+                        <div class="col-sm-12" id="error_anioActual">
+                            <small id="dateHelp" class="text-danger">
+                                Por favor seleccione un año a consultar.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-row col-md-3" id="divBusquedaTipo">
+                        <label for="name">Catálogo: *</label>
+                        <select class="form-control" name="nombre" id="tipoCatalogo">
+                            <option value="">Seleccione el Catálogo</option>
+                            <option value="PAE">Programa Anual de Ejecución</option>
+                            <option value="Ahorros">Ahorros y Economías</option>
+                        </select>
+                        <div class="col-sm-12" id="error_tipoCatalogo">
+                            <small id="dateHelp" class="text-danger">
+                                Por favor seleccione el catálogo a consultar.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button class="btn btn-primary" type="button" id="filtrar">Filtrar Proyectos(s)</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@*Fin del Modal para Capturar Oficios*@
+
+@section Scripts{
+    <script>
+        $(function () {
+            var model = @Html.Raw(Json.Serialize(@Model));
+            var title = @Html.Raw(Json.Serialize(@title));
+
+            $("#divOrder").css("display", "none");
+
+            localStorage.clear();
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $('#error_anioActual').css('display', 'none');
+            $('#error_tipoCatalogo').css('display', 'none');
+
+            $('.divComplete').css('display', 'none');
+
+            $("#dt_proyectos").DataTable({
+                autoWidth: false,
+                responsive: true,
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                columnDefs: [
+                    { width: 100, targets: 7 }
+                ],
+            });
+
+            $("#search_proyecto").click(function () {
+                $("#modal-proyectos").modal('show');
+            });
+
+            $(".mostrar_text").click(function () {
+                $(this).parent().parent().find(".divComplete").show();
+                $(this).parent().hide();
+            });
+
+            $('.mostrar_text').on('click', function (e) {
+                $(this).parent().parent().find('.divIncomplete').show();
+                $(this).parent().hide();
+            });
+
+            /*********************Validaciones de Filtros*************************/
+            function validaFiltros() {
+                if ($("#anioActual").val() != "" && $("#tipoCatalogo").val() != "") {
+                    return true;
+                }
+
+                if ($("#anioActual").val() == "") {
+                    $('#anioActual').addClass('is-invalid');
+                    $('#anioActual').removeClass('is-valid');
+                    $('#error_anioActual').css('display', 'block');
+                }
+
+                if ($("#tipoCatalogo").val() == "") {
+                    $('#tipoCatalogo').addClass('is-invalid');
+                    $('#tipoCatalogo').removeClass('is-valid');
+                    $('#error_tipoCatalogo').css('display', 'block');
+                }
+                return false;
+            }
+
+            $("#anioActual").change(function () {
+                if ($("#anioActual").val() != "") {
+                    $('#anioActual').removeClass('is-invalid');
+                    $('#anioActual').addClass('is-valid');
+                    $('#error_anioActual').css('display', 'none');
+                } else {
+                    $('#anioActual').addClass('is-invalid');
+                    $('#anioActual').removeClass('is-valid');
+                    $('#error_anioActual').css('display', 'block');
+                }
+            });
+
+            $("#tipoCatalogo").change(function () {
+                if ($("#tipoCatalogo").val() != "") {
+                    $('#tipoCatalogo').removeClass('is-invalid');
+                    $('#tipoCatalogo').addClass('is-valid');
+                    $('#error_tipoCatalogo').css('display', 'none');
+                } else {
+                    $('#tipoCatalogo').addClass('is-invalid');
+                    $('#tipoCatalogo').removeClass('is-valid');
+                    $('#error_tipoCatalogo').css('display', 'block');
+                }
+            });
+            /******************Fin a las Validaciones de Filtros******************/
+
+            $("#filtrar").click(function () {
+                if (validaFiltros()) {
+                    window.location.href = "/proyectos/index?anio=" + $("#anioActual").val() + "&catalogo=" + $("#tipoCatalogo").val();
+                } else {
+                    Swal.fire({
+                        'icon': 'error',
+                        'title': 'Integración y Seguimiento a Proyectos',
+                        'html': 'No ha seleccionado el año o el catálogo para consultar información.'
+                    });
+                }
+            });
+
+            $(".btnUeg").click(function () {
+                window.location.href = "/proyectos/index?anio=" + model.anio + "&catalogo=" +model.catalogo+"&UEG=" +$(this).data('ueg');
+            });
+
+            $(".btnEstatus").click(function () {
+                window.location.href = "/proyectos/index?anio=" + model.anio + "&catalogo=" + model.catalogo + "&UEG=" + model.ueg + "&Estatus=" + $(this).data('estatus');
+            });
+
+            $(".btnIntegracion").click(function () {
+                if ($(this).data('tipo') == "Ahorros")
+                {
+                    window.location.href = "/ahorros/integracion/" + $(this).data('id') + window.location.search;
+                }
+                else
+                {
+                    window.location.href = "/proyectos/integracion/" + $(this).data('id') + window.location.search;
+                }
+            });
+
+            $(".btnRevision").click(function () {
+                window.location.href = "/proyectos/revisar/" + $(this).data('id') + window.location.search;
+            });
+
+            $(".btnAdjudicacion").click(function () {
+                if ($(this).data('tipo') == "Ahorros")
+                {
+                    window.location.href = "/ahorros/adjudicacion/" + $(this).data('id') + window.location.search;
+                }
+                else {
+                    window.location.href = "/proyectos/adjudicacion/" + $(this).data('id') + window.location.search;
+                }
+            });
+
+            $(".btnSeguimiento").click(function () {
+                window.location.href = "/proyectos/seguimiento/" + $(this).data('id') + window.location.search;
+            });
+
+            
+        });
+    </script>
+}

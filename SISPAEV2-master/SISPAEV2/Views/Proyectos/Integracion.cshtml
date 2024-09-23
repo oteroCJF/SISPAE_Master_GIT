@@ -1,0 +1,956 @@
+﻿@model Sispae.Entities.Vistas.VProyectos;
+@{
+    var user = Convert.ToInt32((@User.Claims.ElementAt(2).Value).Contains("Evaluador"));
+    ViewData["Title"] = "Integración del Proyecto";
+    var anio = 2024;
+    var c = 0;
+    decimal totalPP = 0;
+    decimal totalC = 0;
+}
+<div class="container-fluid" id="limpieza">
+    <a href="#" type='button' class='btn-sm btn-warning float-right mr-2 mb-3 btn-regresar' data-toggle="tooltip" title="Regresar al Listado de Proyectos" data-placement="top"><i class="fal fa-arrow-left"></i></a>
+    <div class="row col-lg-12 mt-2 mb-3">
+        <table class="table">
+            <tr>
+                <td data-toggle="tooltip" title="Nombre del proyecto" data-placement="top" style="font-family: Tahoma; font-size: 13.5px; letter-spacing: 0.8px;">
+                    <strong>Proyecto: </strong> @Model.Proyecto
+                </td>
+                <td data-toggle="tooltip" title="Unidad encargada de la integración del proyecto" data-placement="top" style="font-family: Tahoma; font-size: 13.5px; letter-spacing: 0.8px;">
+                    <strong>Unidad Ejecutora del Gasto: </strong> @Model.ueg.NumeroUEG - @Model.ueg.Descripcion
+                </td>
+                <td data-toggle="tooltip" title="Estatus actual de la integración del proyecto" data-placement="top">
+                    <strong>Estatus: </strong>@(Model.Estatus.Equals("") ? "Sin Integrar":Model.Estatus)
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card">
+        <div class="card-header bg-joke text-white">
+            <h5 class="mt-2">Integración del Proyecto</h5>
+        </div>
+        <div class="card-body">
+            <div class="row ">
+                <div class="col-lg-12">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#integracion" role="tab" aria-controls="home" aria-selected="true">Detalle del Proyecto</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#partidas" role="tab" aria-controls="profile" aria-selected="false">Partidas Presupuestales</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#calendarizacion" role="tab" aria-controls="profile" aria-selected="false">Calendarización</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#entregables" role="tab" aria-controls="contact" aria-selected="false">Entregables</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        @* Pregunta 1 *@
+                        <div class="tab-pane fade mt-2 ml-3 show active" id="integracion" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="form-row">
+                                <input type="hidden" value="@Model.Id" />
+                                <div class="form-group col-lg-2">
+                                    <label for="UEG">Ejercicio:</label>
+                                    <select class="form-control" id="selectEjercicio" disabled>
+                                        <option value='@Model.Ejercicio'>@Model.Ejercicio</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-4">
+                                    <label for="UEG">Clasificación:</label>
+                                    <select class="form-control" id="selectTipoId">
+                                        <option value="0">Seleccione la clasificación</option>
+                                        @foreach (var m in Model.CTTipo)
+                                        {
+                                            <option value='@m.Id'>@m.Nombre</option>
+                                        }
+                                    </select>
+                                    <div class="col-sm-12" id="error_clasificacion">
+                                        <small id="dateHelp" class="text-danger">
+                                            Capture la clasificación del proyecto
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-2">
+                                    <label for="UEG">Tipo de Adjudicación: *</label>
+                                    <select class="form-control" id="selectTipoProyecto">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="Anticipadas">Anticipadas</option>
+                                        <option value="Ejercicio">Ejercicio</option>
+                                    </select>
+                                    <div class="col-sm-12" id="error_tipoProyecto">
+                                        <small id="dateHelp" class="text-danger">
+                                            Seleccione el tipo de proyecto.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-2">
+                                    <label for="UEG">Capítulo: *</label>
+                                    <select class="form-control" id="selectCapitulo">
+                                        <option value=''>Seleccione un capítulo</option>
+                                        <option value='2000'>2000</option>
+                                        <option value='3000'>3000</option>
+                                        <option value='5000'>5000</option>
+                                    </select>
+                                    <div class="col-sm-12" id="error_capitulo">
+                                        <small id="dateHelp" class="text-danger">
+                                            Seleccione el capítulo del proyecto.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-2">
+                                    <label for="UEG">Tipo de Presupuesto: *</label>
+                                    <select class="form-control" id="selectPresupuesto">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="PO">Presupuesto de Operación</option>
+                                        <option value="CP">Contratos Plurianuales</option>
+                                        <option value="Ahorros">Ahorros y Economías</option>
+                                    </select>
+                                    <div class="col-sm-12" id="error_presupuesto">
+                                        <small id="dateHelp" class="text-danger">
+                                            Seleccione el presupuesto del proyecto.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="anioAdj">Año estimado de adjudicación:* </label>
+                                    <select class="form-control" id="anioEstimado">
+                                        <option value=''>Seleccione el año</option>
+                                        @for (var i = 2020;i<=anio;i++)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                    <div class="col-sm-12" id="error_anio">
+                                        <small id="dateHelp" class="text-danger">
+                                            Seleccione el año estimado.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label for="mesAdj">Mes estimado de adjudicación:* </label>
+                                    <select class="form-control" id="mesEstimado">
+                                        <option value=''>Seleccione un mes</option>
+                                    </select>
+                                    <div class="col-sm-12" id="error_mes">
+                                        <small id="dateHelp" class="text-danger">
+                                            Seleccione el mes estimado.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-2 ml-3">
+                                    <label for="montoEstimado">Importe Estimado: *</label>
+                                    <div class="fields">
+                                        <input class="form-control" type="text" pattern="[0-9.,]+" name="importeEstimado" id="importeEstimado" required data-type="number" />
+                                        <div class="col-sm-12" id="error_importe">
+                                            <small id="dateHelp" class="text-danger">
+                                                Capture el importe estimado.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @* Fin de la Pregunta 1 *@
+                        @* Pregunta 2 *@
+                        <div class="tab-pane fade mt-2 ml-3" id="partidas" role="tabpanel" aria-labelledby="profile-tab">
+                            <p class="text-black h6 mb-3">Captura de Partida (s) para el Proyecto:</p>
+                            <div class="row">
+                                <div class="form-row col-lg-12">
+                                    <div class="form-group col-lg-4">
+                                        <label for="partida">Partida: *</label>
+                                        <select class="form-control select2bs4" id="sPartida">
+                                            <option value=''>Seleccione una Partida</option>
+                                            @foreach (var pp in Model.CTPartidas)
+                                            {
+                                                <option value=@pp.Id>@pp.Nombre</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-lg-4">
+                                        <label for="partida">Monto: *</label>
+                                        <input class="form-control" id="montoPartida"/>
+                                    </div>
+                                    <div class="form-group col-lg-2 mt-4">
+                                        <button type="button" class="btn btn-primary mt-2 h6" id="btnPartidas">Agregar Partida</button>
+                                    </div>
+                                    <div class="form-group col-lg-5 mt-4 float-left">
+                                        <table class="table" id="t_partidas">
+                                            <thead>
+                                                <tr>
+                                                    <th class='text-center'>N°</th>
+                                                    <th class='text-right'>Partida</th>
+                                                    <th class='text-right'>Monto</th>
+                                                    <th class='text-center'>Eliminar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tb_partidas">
+                                                @foreach (var rp in Model.partidas)
+                                                {
+                                                    c++;
+                                                    totalPP += rp.Monto;
+                                                    <tr>
+                                                        <td class='text-right'>@c</td>
+                                                        <td class='text-right'>@rp.Nombre</td>
+                                                        <td class='text-right'>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rp.Monto)</td>
+                                                        <td class='text-center'>
+                                                            <a href="javascript:" class="delete_partida" data-monto="@rp.Monto" data-partida="@rp.Id" data-nombre="@rp.Nombre">
+                                                                <i class="fas fa-times text-danger"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th class='text-right'>Total:</th>
+                                                    <th class='text-right'>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", totalPP)</th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @* Fin de la Pregunta 2 *@
+                        @* Pregunta 3 *@
+                        <div class="tab-pane fade mt-2 ml-3" id="calendarizacion" role="tabpanel" aria-labelledby="profile-tab">
+                            <p class="text-black h6 mb-3 mt-2">Calendarización del gasto estimado por mes:</p>
+                            <div class="row">
+                                <div class="form-row col-lg-12">
+                                    <div class="form-group col-lg-3">
+                                        <label for="mesAdj">Mes:* </label>
+                                        <select class="form-control" id="mesEstimado2">
+                                            <option value=''>Seleccione un mes</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-lg-3">
+                                        <label for="mesAdj">Partida:* </label>
+                                        <select class="form-control" id="partidaMes">
+                                            <option value=''>Seleccione una partida</option>
+                                            @foreach (var pt in Model.partidas)
+                                            {
+                                                <option value=@pt.Id>@pt.Nombre</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-lg-2">
+                                        <label for="partida">Monto: *</label>
+                                        <input class="form-control" id="montoCalendar" />
+                                    </div>
+                                    <div class="form-group col-lg-2 mt-4">
+                                        <button type="button" class="btn btn-primary mt-2 h6" id="btnCalendarizacion">Agregar</button>
+                                    </div>
+                                    <div class="form-group col-lg-7 mt-4 float-left">
+                                        <table class="table tblCalendarizacion" width="50%">
+                                            <thead>
+                                                <tr>
+                                                    <th class='text-center'>N°</th>
+                                                    <th class='text-center'>Mes</th>
+                                                    <th class='text-center'>Partida</th>
+                                                    <th class='text-center'>Monto</th>
+                                                    <th class='text-center'>Eliminar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tb_calendar">
+                                                @{
+                                                    c = 0;
+                                                } 
+                                                @foreach(var rp in Model.RecursosProyecto)
+                                                {
+                                                    c++;
+                                                    totalC += rp.Monto; 
+                                                    <tr>
+                                                        <td class='text-center'>@c</td>
+                                                        <td class='text-center'>@rp.Mes</td>
+                                                        <td class='text-center'>@(rp.Partida.Equals("") ? "Sin Partida":rp.Partida)</td>
+                                                        <td class='text-center'>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rp.Monto)</td>
+                                                        <td class='text-center'>
+                                                            <a href="javascript:" class="eliminaCalendar" data-monto="@rp.Monto" data-integracion="@rp.IntegracionId" 
+                                                            data-mes="@rp.MesId">
+                                                                <i class="fas fa-times text-danger"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th class='text-right'>Total:</th>
+                                                    <th class='text-right'>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", totalC)</th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @* Fin de la Pregunta 2 *@
+                        @* Entregables *@
+                        <div class="tab-pane fade mt-2 ml-3" id="entregables" role="tabpanel" aria-labelledby="contact-tab">
+                            <div class="col-lg-12 mt-3">
+                                <h3>Adjuntar Entregables</h3>
+                                <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right btn_addFile'><i class="fas fa-plus"></i></a>
+                            </div>
+                            <div class="row col-lg-12 mt-3">
+                                <table class="table" id="tblEntregables">
+                                    <thead>
+                                        <tr>
+                                            <th>Entregable</th>
+                                            <th>Archivo</th>
+                                            <th>Fecha de Carga</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tEntregables"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @* Fin de Entregables *@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class=" col-lg-12">
+                <button type="button" class="btn btn-success float-right ml-3 btn_enviar mr-3" data-toggle="tooltip" title='Enviar la integración del proyecto para su revisión' data-placement="top">Enviar</button>
+                <button type="button" class="btn btn-primary float-right btn_guardar" data-toggle="tooltip" title='Guardar la información capturada' data-placement="top">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fields {
+        margin: 0 10px 0 0;
+    }
+
+        .fields:before {
+            content: "$";
+            text-align: center;
+            position: absolute;
+            margin-top: 7px;
+            left: -5px;
+        }
+
+    </style>
+
+@section Scripts{
+    <script>
+        $(function () {
+            var model = @Html.Raw(Json.Serialize(@Model));
+            var calendar = @Html.Raw(Json.Serialize(@Model.RecursosProyecto));
+            var totalC = @Html.Raw(Json.Serialize(totalC));
+            var totalPP = @Html.Raw(Json.Serialize(totalPP));
+            var totalPartidas = 0;
+            var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            var meses2 = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            var partidas = new Array();
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $(".btn-regresar").click(function () {
+                window.location.href = "/proyectos/index" + window.location.search;
+            });
+
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            });
+
+            $('#error_ejercicio').css('display', 'none');
+            $('#error_capitulo').css('display', 'none');
+            $('#error_presupuesto').css('display', 'none');
+            $('#error_anio').css('display', 'none');
+            $('#error_mes').css('display', 'none');
+            $('#error_importe').css('display', 'none');
+            $('#error_tipoProyecto').css('display', 'none');
+            $("#error_clasificacion").css("display", "none");
+
+            /*Formato de Miles*/
+            $(".tblCalendarizacion").DataTable({
+                autoWidth: false,
+                responsive: true,
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+            });
+
+            let myNumericInput = new AutoNumeric('#importeEstimado', model.importe, { decimalPlaces: 2 });
+
+            document.querySelector('#importeEstimado').addEventListener('keyup', () => { });
+
+            $('#montoPartida').keydown(function (e) {
+                setTimeout(() => {
+                    let montoMin = $('#montoPartida').val().split(".");
+                    let valorMn = montoMin[0].replace(/\D/g, ""), decimalMn = montoMin[1];
+                    let valorMin = 99999999999999;
+
+                    let gNumeroMn = Number((decimalMn !== undefined ? valorMn + "." + decimalMn : valorMn));
+                    let numeroFmn = new Intl.NumberFormat('en-EN').format(valorMn);
+                    numeroFmn = decimalMn !== undefined ? numeroFmn + "." + decimalMn : numeroFmn;
+                    $('#montoPartida').val(numeroFmn);
+                })
+            });
+
+            $("#montoPartida").on("input", function () {
+                var limite = 14;
+                $("#montoPartida").attr('maxlength', limite);
+            });
+            
+            $('#montoCalendar').keydown(function (e) {
+                setTimeout(() => {
+                    let montoMin = $('#montoCalendar').val().split(".");
+                    let valorMn = montoMin[0].replace(/\D/g, ""), decimalMn = montoMin[1];
+                    let valorMin = 99999999999999;
+
+                    let gNumeroMn = Number((decimalMn !== undefined ? valorMn + "." + decimalMn : valorMn));
+                    let numeroFmn = new Intl.NumberFormat('en-EN').format(valorMn);
+                    numeroFmn = decimalMn !== undefined ? numeroFmn + "." + decimalMn : numeroFmn;
+                    $('#montoCalendar').val(numeroFmn);
+                })
+            });
+
+            $("#montoCalendar").on("input", function () {
+                var limite = 14;
+                $("#montoCalendar").attr('maxlength', limite);
+            });
+
+            /*FIN de Formato de Miles*/
+
+            /*Llena la Lista de Meses*/
+                let optionsMes = "<option value=''>Seleccione el mes</option>";
+                let optionsMes2 = "<option value=''>Seleccione el mes</option>";
+                let i = 0;
+                meses.forEach(function (mes) {
+                    i++;
+                    optionsMes += "<option value=" + mes + ">" + mes + "</option>"
+                });
+                $("#mesEstimado").html(optionsMes);
+                i = 0;
+                meses2.forEach(function (mes) {
+                    i++;
+                    optionsMes2 += "<option value=" + i + ">" + mes + "</option>"
+                });
+                $("#mesEstimado2").html(optionsMes2);
+            /*Fin de Llena la Lista de Meses*/
+
+            /*********************** Procesos para Partridas Presupuestales *************************************/
+
+            /*Agregar Partidas*/
+                $('#btnPartidas').click(function () {
+                    axios.post('/partidas/insertaPartidaProyecto', {
+                        PartidaId: parseInt($("#sPartida").val()), IntegracionId: model.id,
+                        Monto: $("#montoPartida").val()
+                    }).then(response => {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                'icon': "success",
+                                'title': "Integración del Proyecto",
+                                'html': "Se asignó la partida al proyecto correctamente."
+                            }).then(function () {
+                                window.location.reload();
+                            });
+                        }
+                    });
+                });
+            /*Fin de Agregar Partidas*/
+
+            /*Eliminacion de Partidas*/
+                $(document).on('click', '.delete_partida', function () {
+                    Swal.fire({
+                        'icon': 'warning',
+                        'title': 'Integración del Proyecto',
+                        'html': '¿Desea eliminar la partida presupuestal <strong>'+$(this).data('nombre')+'</strong> asignada a este proyecto?',
+                        'confirmButtonColor': '#3085d6',
+                        'cancelButtonColor': '#d33',
+                        'confirmButtonText': 'Si, eliminar',
+                        'cancelButtonText': 'Cancelar',
+                        'showCancelButton': true
+                    }).then(response => {
+                        if (response.isConfirmed) {
+                            axios.get('/partidas/eliminaPartidasProyecto/' + model.id+'/'+$(this).data('partida')).then(response => {
+                                Swal.fire({
+                                    'icon': "success",
+                                    'title': 'Integración del Proyecto',
+                                    'html': "La partida presupuestal se eliminó correctamente."
+                                }).then(function () {
+                                    window.location.reload();
+                                });
+                            });
+                        }
+                    });
+                });
+            /*Fin de la Eliminacion de Partidas*/
+
+            /*********************** FIN Procesos para Partridas Presupuestales *************************************/
+            
+            /*********************** Procesos para Calendarizacion *************************************/
+            $('#btnCalendarizacion').click(function () {
+                var existsMes = false;
+
+                if ($("#mesEstimado2").val() == "") {
+                    Swal.fire({
+                        'icon': 'error',
+                        'title': 'Integración del Proyecto',
+                        'html': 'Aún no selecciona el <b>Mes</b>.'
+                    });
+
+                    return false;
+                }
+
+                if ($("#montoCalendar").val() == "" || $("#montoCalendar").val() == 0) {
+                    Swal.fire({
+                        'icon': 'error',
+                        'title': 'Integración del Proyecto',
+                        'html': 'Aún no captura el monto estimado para el mes del proyecto.'
+                    });
+
+                    return false;
+                }
+
+                if ($("#partidaMes").val() == "" || $("#partidaMes").val() == 0) {
+                    Swal.fire({
+                        'icon': 'error',
+                        'title': 'Integración del Proyecto',
+                        'html': 'Aún no selecciona la partida para el mes del proyecto.'
+                    });
+
+                    return false;
+                }
+
+                for (var i = 0; i < calendar.length;i++)
+                {
+                    if (calendar[i].mesId == $("#mesEstimado2").val() && calendar[i].partidaId == $("#partidaMes").val()) {
+                        console.log($("#mesEstimado2").val());
+                        console.log($("#partidaMes").val());
+
+                        console.log(calendar[i].mesId);
+                        console.log(calendar[i].partidaId);
+
+                        console.log(calendar[i].mesId == $("#mesEstimado2").val());
+                        console.log(calendar[i].partidaId == $("#partidaMes").val());
+                        existsMes = true;
+                        break;
+                    }
+                }
+
+                if (existsMes) {
+                    Swal.fire({
+                        'icon': 'error',
+                        'title': 'Integración del Proyecto',
+                        'html': 'El mes de estimación para la partida seleccionada ya fue capturado.'
+                    });
+
+                    return false;
+                }
+
+
+                axios.post('/recursosP/insertaRP', {
+                    MesId: parseInt($("#mesEstimado2").val()), IntegracionId: parseInt(model.id),
+                    Monto: $("#montoCalendar").val(), PartidaId: parseInt($("#partidaMes").val())
+                }).then(response => {
+                    if (response.data == 1) {
+                        Swal.fire({
+                            'icon': "success",
+                            'title': "Integración del Proyecto",
+                            'html': "Se asignó el gasto estimado al proyecto correctamente."
+                        }).then(function (){ 
+                            window.location.reload();
+                        });
+                    }
+                });
+            });
+
+             /*Eliminacion de Partidas*/
+                $(document).on('click', '.eliminaCalendar', function () {
+                    Swal.fire({
+                        'icon': 'warning',
+                        'title': 'Integración del Proyecto',
+                        'html': '¿Desea eliminar el <strong>Monto estimado</strong> asignado a este proyecto?',
+                        'confirmButtonColor': '#3085d6',
+                        'cancelButtonColor': '#d33',
+                        'confirmButtonText': 'Si, eliminar',
+                        'cancelButtonText': 'Cancelar',
+                        'showCancelButton': true
+                    }).then(response => {
+                        if (response.isConfirmed) {
+                        axios.get('/recursosP/eliminaRP/' + model.id + '/' + $(this).data('mes')+'/'+$(this).data('monto')).then(response => {
+                                Swal.fire({
+                                    'icon': "success",
+                                    'title': 'Integración del Proyecto',
+                                    'html': "El monto estimado se eliminó correctamente."
+                                }).then(function () {
+                                    window.location.reload();
+                                });
+                            });
+                        }
+                    });
+                });
+            /*Fin de la Eliminacion de Partidas*/
+            /*********************** Procesos para Calendarizacion *************************************/
+
+            /*********************** Procesos para Insertar/Actualizar la Integracion del Proyecto *************************************/
+                function validacionCampos() {
+                    if ($("#selectEjercicio").val() != "" && $("#selectCapitulo").val() != "" && $("#selectTipoProyecto").val() != "" &&
+                        $("#selectPresupuesto").val() != "" && $("#anioEstimado").val() != "" &&
+                        $("#mesEstimado").val() != "" && $("#importeEstimado").val() != "") {
+                        return true;
+                    }
+
+                    if ($("#selectTipoProyecto").val() == "") {
+                        $('#selectTipoProyecto').addClass('is-invalid');
+                        $('#selectTipoProyecto').removeClass('is-valid');
+                        $('#error_tipoProyecto').css('display', 'block');
+                    }
+
+                    if ($("#selectEjercicio").val() == "") {
+                        $('#selectEjercicio').addClass('is-invalid');
+                        $('#selectEjercicio').removeClass('is-valid');
+                        $('#error_ejercicio').css('display', 'block');
+                    }
+
+                    if ($("#selectCapitulo").val() == "") {
+                        $('#selectCapitulo').addClass('is-invalid');
+                        $('#selectCapitulo').removeClass('is-valid');
+                        $('#error_capitulo').css('display', 'block');
+                    }
+
+                    if ($("#selectPresupuesto").val() == "") {
+                        $('#selectPresupuesto').addClass('is-invalid');
+                        $('#selectPresupuesto').removeClass('is-valid');
+                        $('#error_presupuesto').css('display', 'block');
+                    }
+
+                    if ($("#anioEstimado").val() == "") {
+                        $('#anioEstimado').addClass('is-invalid');
+                        $('#anioEstimado').removeClass('is-valid');
+                        $('#error_anio').css('display', 'block');
+                    }
+
+                    if ($("#mesEstimado").val() == "") {
+                        $('#mesEstimado').addClass('is-invalid');
+                        $('#mesEstimado').removeClass('is-valid');
+                        $('#error_mes').css('display', 'block');
+                    }
+
+                    if ($("#importeEstimado").val() == "" || $("#importeEstimado").val() == 0) {
+                        $('#importeEstimado').addClass('is-invalid');
+                        $('#importeEstimado').removeClass('is-valid');
+                        $('#error_importe').css('display', 'block');
+                    }
+
+                    return false;
+                }
+
+                $("#selectEjercicio").change(function () {
+                    if ($("#selectEjercicio").val() != "") {
+                        $('#selectEjercicio').removeClass('is-invalid');
+                        $('#selectEjercicio').addClass('is-valid');
+                        $('#error_ejercicio').css('display', 'none');
+                    }
+                });
+
+                $("#selectTipoProyecto").change(function () {
+                    if ($("#selectTipoProyecto").val() != "") {
+                        $('#selectTipoProyecto').removeClass('is-invalid');
+                        $('#selectTipoProyecto').addClass('is-valid');
+                        $('#error_tipoProyecto').css('display', 'none');
+                    }
+                });
+
+                $("#selectTipoId").change(function () {
+                    if ($("#selectTipoId").val() != 0) {
+                        $('#selectTipoId').removeClass('is-invalid');
+                        $('#selectTipoId').addClass('is-valid');
+                        $("#error_clasificacion").css("display", "none");
+                    }
+                });
+
+                $("#selectCapitulo").change(function () {
+                    if ($("#selectCapitulo").val() != "") {
+                        $('#selectCapitulo').removeClass('is-invalid');
+                        $('#selectCapitulo').addClass('is-valid');
+                        $('#error_capitulo').css('display', 'none');
+                    }
+                });
+
+                $("#selectPresupuesto").change(function () {
+                    if ($("#selectPresupuesto").val() != "") {
+                        $('#selectPresupuesto').removeClass('is-invalid');
+                        $('#selectPresupuesto').addClass('is-valid');
+                        $('#error_presupuesto').css('display', 'none');
+                    }
+                });
+
+                $("#partidaMes").change(function () {
+                    if ($("#partidaMes").val() != "") {
+                        $('#partidaMes').removeClass('is-invalid');
+                        $('#partidaMes').addClass('is-valid');
+                    }
+                });
+
+                $("#anioEstimado").change(function () {
+                    if ($("#anioEstimado").val() != "") {
+                        $('#anioEstimado').removeClass('is-invalid');
+                        $('#anioEstimado').addClass('is-valid');
+                        $('#error_anio').css('display', 'none');
+                    }
+                });
+
+                $("#mesEstimado").change(function () {
+                    if ($("#mesEstimado").val() != "") {
+                        $('#mesEstimado').removeClass('is-invalid');
+                        $('#mesEstimado').addClass('is-valid');
+                        $('#error_mes').css('display', 'none');
+                    }
+                });
+
+                $("#importeEstimado").change(function () {
+                    if ($("#importeEstimado").val() != "" && $("#importeEstimado").val() != 0) {
+                        $('#importeEstimado').removeClass('is-invalid');
+                        $('#importeEstimado').addClass('is-valid');
+                        $('#error_importe').css('display', 'none');
+                    }
+                });
+
+                $(".btn_guardar").click(function () {
+                    var ejercicio = $("#selectEjercicio").val();
+                    var capitulo = $("#selectCapitulo").val();
+                    var presupuesto = $("#selectPresupuesto").val();
+                    var anio = $("#anioEstimado").val();
+                    var mes = $("#mesEstimado").val();
+                    var importe = $("#importeEstimado").val();
+                    var tipoProyecto = $("#selectTipoProyecto").val();
+                    var tipoId = $("#selectTipoId").val();
+
+                    if (ejercicio != "")
+                        ejercicio = parseInt(ejercicio);
+                    else
+                        ejercicio = 0;
+
+                    if (capitulo != "")
+                        capitulo = parseInt(capitulo);
+                    else
+                        capitulo = 0;
+
+                    if (anio != "")
+                        anio = parseInt(anio);
+                    else
+                        anio = 0;
+
+                    if (mes != "")
+                        mes = mes;
+                    else
+                        mes = "";
+
+                    if (presupuesto != "")
+                        presupuesto = presupuesto;
+                    else
+                        presupuesto = "";
+                        
+                    if (tipoId != "")
+                        tipoId = tipoId;
+                    else
+                        tipoId = "";
+
+                    if (importe != "" && importe != 0) {
+                        importe = importe;
+                    }else {
+                        importe = 0;
+                    }
+
+                    axios.post('/historial/nuevoHistorialProyecto', { IntegracionId: model.id, UsuarioId: parseInt(@User.Claims.ElementAt(0).Value),
+                                                                    Tipo: "Integración", Estatus: "En Proceso", Comentarios: "Se relizó captura de datos del proyecto."
+                    }).then(historial => {
+                        if (historial.data != -1) {
+                            axios.post('/integracion/actualizarIntegracion', {
+                                Id: model.id, UsuarioId: parseInt(@User.Claims.ElementAt(0).Value), Capitulo: capitulo,Tipo: presupuesto, Anio: anio, Mes: mes,
+                            Importe: importe, Estatus: "En Proceso", TipoProyecto: tipoProyecto, TipoId: parseInt(tipoId)
+                            }).then(response => {
+                                if (response.data != -1)
+                                {
+                                    Swal.fire({
+                                        'icon': "success",
+                                        'title': "Integración del Proyecto",
+                                        'html': "Se guardó el proyecto correctamente."
+                                    }).then(function () {
+                                        window.location.reload();
+                                    });
+                                }
+                            }).catch(error => {
+                                Swal.fire({
+                                    'icon': 'error',
+                                    'title': 'Integración del Proyecto',
+                                    'html': 'Hubo un error al guardar el proyecto. Favor de contactar al administrador'
+                                });
+                            });
+                        }
+                    }).catch(errh => {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Integración del Proyecto',
+                            'html': 'Hubo un error al guardar el proyecto. Favor de contactar al administrador'
+                        });
+                    });
+                });
+
+            /********************************** Funciones Adicionales *********************************/
+                function cuentaPartidasProyecto() {
+                    var isContinue = true;
+                    $.ajax({
+                        url: '/partidas/getPartidasProyecto/' + model.id,
+                        type: 'GET',
+                        async: false,
+                        success: function (json) {
+                            json == 0 ? isContinue = false : true;
+                        },
+                    });
+                    return isContinue;
+                }
+
+                function TotalPartidasProyecto() {
+                    var total = 0;
+                    $.ajax({
+                        url: '/partidas/getPartidasIntegracion/' + model.id,
+                        type: 'GET',
+                        async: false,
+                        success: function (json) {
+                            total = json;
+                        },
+                    });
+                    return total;
+                }
+            /********************************** FIN Funciones Asincronas*********************************/
+
+                $(".btn_enviar").click(function () {
+                    var ejercicio = $("#selectEjercicio").val();
+                    var capitulo = $("#selectCapitulo").val();
+                    var presupuesto = $("#selectPresupuesto").val();
+                    var anio = $("#anioEstimado").val();
+                    var mes = $("#mesEstimado").val();
+                    var importe = $("#importeEstimado").val();
+                    var tipoProyecto = $("#selectTipoProyecto").val();
+                    var estatus = "Enviada";
+                    var tipoId = $("#selectTipoId").val();
+
+                    if (!cuentaPartidasProyecto()) {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Integración del Proyecto',
+                            'html': 'Aún no asigna la(s) <b>Partidas Presupuestales</b> al proyecto.'
+                        });
+
+                        return false;
+                    }
+
+                    if (tipoId == 0 || tipoId == "" ) {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Integración del Proyecto',
+                            'html': 'Aún no captura la <b>Clasificación</b> del proyecto.'
+                        });
+                        $("#error_clasificacion").css("display","block");
+                        return false;
+                    }
+
+                    if (calendar.length == 0) {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Integración del Proyecto',
+                            'html': 'Aún no captura los montos de estimación mensual.'
+                        });
+
+                        return false;
+                    }
+
+                    if (model.importe != totalPP) {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Integración del Proyecto',
+                            'html': '<p style="text-align:justify">El monto estimado no coincide con el monto total de las partidas capturadas.<br/><br/>'+
+                                     '<b>- Monto estimado: </b>'+model.importe.toLocaleString("en-US", {style:"currency", currency:"USD"})+'.<br/><br/>'+
+                                     '<b>- Monto partidas presupuestales: </b>'+totalPP.toLocaleString("en-US", {style:"currency", currency:"USD"})+'.</p>'
+                        });
+
+                        return false;
+                    }
+
+                    if (model.importe != totalC ) {
+                         Swal.fire({
+                            'icon': 'error',
+                            'title': 'Integración del Proyecto',
+                            'html': '<p style="text-align:justify">El monto estimado no coincide con el monto total de la calendarización.<br/><br/>'+
+                                     '<b>- Monto estimado: </b>'+model.importe.toLocaleString("en-US", {style:"currency", currency:"USD"})+'.<br/><br/>'+
+                                     '<b>- Monto calendarización: </b>'+totalC.toLocaleString("en-US", {style:"currency", currency:"USD"})+'.</p>'
+                        });
+
+                        return false;
+                    }
+
+                    if (validacionCampos()) {
+                        axios.post('/historial/nuevoHistorialProyecto', { IntegracionId: model.id, UsuarioId: parseInt(@User.Claims.ElementAt(0).Value),
+                            Tipo: "Integración", Estatus: estatus,
+                            Comentarios: "Se envía la integración del proyecto para su revisión."
+                        }).then(historial => {
+                            if (historial.data != -1) {
+                                axios.post('/integracion/actualizarIntegracion', {
+                                    Id: model.id, UsuarioId: parseInt(@User.Claims.ElementAt(0).Value), Capitulo: capitulo, Tipo: presupuesto, Anio: anio, Mes: mes,
+                                    Importe: importe, Estatus: estatus, TipoProyecto: tipoProyecto, TipoId: parseInt(tipoId)
+                                }).then(response => {
+                                    if (response.data != -1) {
+                                        Swal.fire({
+                                            'icon': "success",
+                                            'title': "Integración del Proyecto",
+                                            'html': "Se envió el proyecto correctamente."
+                                        }).then(function () {
+                                            window.location.href = "/proyectos/index?anio=" + model.ejercicio + "&catalogo=PAE&UEG=" + model.ueg.id;
+                                        });
+                                    }
+                                }).catch(error => {
+                                     Swal.fire({
+                                         'icon': 'error',
+                                         'title': 'Integración del Proyecto',
+                                         'html': 'Hubo un error al envíar el proyecto. Favor de contactar al administrador'
+                                     });
+                                });
+                            }
+                        }).catch(errh => {
+                            Swal.fire({
+                                'icon': 'error',
+                                'title': 'Integración del Proyecto',
+                                'html': 'Hubo un error al envíar el proyecto. Favor de contactar al administrador'
+                            });
+                        });
+                    } else {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Integración del Proyecto',
+                            'html': 'Antes de enviar el proyecto capture todos los datos marcados en rojo.'
+                        });
+                    }
+                });
+            /*********************** FIN Procesos para Insertar/Actualizar la Integracion del Proyecto *************************************/
+
+            /****************** Procesos para mostrar los resultados capturados en la Integracion del Proyecto *****************************/
+                //console.log(model);
+                $("#selectCapitulo").val(model.capitulo == 0 ? "" : model.capitulo);
+                $("#selectPresupuesto").val(model.tipo);
+                $("#anioEstimado").val(model.anio == 0 ? "":model.anio);
+                $("#mesEstimado").val(model.mes).change();
+                $("#selectTipoProyecto").val(model.tipoProyecto);
+                $("#selectTipoId").val(model.tipoId);
+            /***************** FIN Procesos para mostrar los resultados capturados en la Integracion del Proyecto **************************/
+
+        });
+    </script>
+}

@@ -1,0 +1,594 @@
+﻿@model Sispae.Entities.MProyectos.Models;
+@inject Sispae.Services.PermisosService  sPermisos;
+@{
+    var i = 0;
+    var user = Convert.ToInt32(@User.Claims.ElementAt(0).Value);
+    var anio = (DateTime.Now.Year + 3);
+    string title = "Generación de Reportes";
+    if (Model.Catalogo != null && Model.Catalogo.Equals("Ahorros"))
+    {
+        title = "Integración y Seguimiento a Proyectos de Ahorros y Economías " + (Model.Anio != 0 ? Model.Anio.ToString() : "");
+    }
+    else if (Model.Catalogo != null && Model.Catalogo.Equals("PAE"))
+    {
+        title = "Generación de Reportes de Proyectos del Programa Anual de Ejecución " + (Model.Anio != 0 ? Model.Anio.ToString() : "");
+    }
+    ViewData["Title"] = title;
+}
+
+<div class="container-fluid">
+    <div class="row col-lg-12">
+        <a href="#" type='button' id="search_proyecto" class='btn-sm btn-primary float-left mr-2 mb-3' data-toggle="tooltip" title="Filtrar Proyecto(s)" data-placement="top">
+            <i class="fas fa-filter"></i> Seleccionar Año
+        </a>
+    </div>
+    <div class="row" id="Prrueba">
+        @*Mostramos las unidades ejecutoras del gasto asignadas al usuario*@
+        @if (@Model.Anio != 0)
+        {
+            <div class="row col-lg-12">
+                <div class="row col-lg-12">
+                    <p class="h6 ml-2">1) Seleccione el tipo de reporte que desea generar.
+                </div>
+                <div class="row col-lg-12 mt-2">
+                    @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("reporte general", @user) != 0)
+                    {
+                        <a href="#" type='button' id="search_proyecto" class='btn-sm bg-cjf text-white float-left ml-2 mb-3 btnGeneral' data-toggle="tooltip" title="Genera el reporte general por Unidad Ejecutora" data-placement="top">
+                            <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte General
+                        </a>
+                    }
+                    
+                    @if (Model.Catalogo.Equals("Ahorros") && await sPermisos.GetPermisosByModulo("reporte general ahorros", @user) != 0)
+                    {
+                        <a href="#" type='button' id="search_proyecto" class='btn-sm bg-cjf text-white float-left ml-2 mb-3 btnGeneralA' data-toggle="tooltip" title="Genera el reporte general por Unidad Ejecutora" data-placement="top">
+                            <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte General Ahorros
+                        </a>
+                    }
+
+                    @if (await sPermisos.GetPermisosByModulo("reporte punto ueg", @user) != 0)
+                    {
+                        <a href="#" type='button' data-reporte="PAE" class='btn-sm bg-primary text-white float-left ml-2 mb-3 btnPunto' data-toggle="tooltip" title="Genera el reporte general por Unidad Ejecutora" data-placement="top">
+                            <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte Punto por Unidad Ejecutora
+                        </a>
+
+                    }
+
+                    @if (await sPermisos.GetPermisosByModulo("reporte punto", @user) != 0)
+                    {
+                        @if (Model.Catalogo.Equals("PAE"))
+                         {
+                            <a href="/reportes/reportePunto/@Model.Anio" type='button' id="search_proyecto" class='btn-sm bg-success text-white float-left ml-2 mb-3 btnPuntoGral' data-toggle="tooltip" title="Genera el reporte general del Punto" data-placement="top">
+                                <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte Punto General
+                            </a>
+                         }
+                        @if (Model.Catalogo.Equals("Ahorros"))
+                        {
+                            <a href="/reportes/reportePuntoAhorros/@Model.Anio" data-reporte="Ahorros" type='button' id="search_proyecto" class='btn-sm bg-success text-white float-left ml-2 mb-3 btnPuntoGral' data-toggle="tooltip" title="Genera el reporte general del Punto" data-placement="top">
+                                <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte Punto General
+                            </a>
+                        }
+                    }
+
+                    @if (await sPermisos.GetPermisosByModulo("reporte ueg", @user) != 0)
+                    {
+                        <a href="#" type='button' id="search_proyecto" class='btn-sm bg-ordenar float-left ml-2 mb-3 btnRUEG' data-toggle="tooltip" title="Genera el reporte general de proyectos" data-placement="top">
+                            <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte por unidad ejecutora (UEG)
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.Reporte != null && (Model.Reporte.Equals("UEG") || Model.Reporte.Equals("Punto")))
+        {
+            <div class="row col-lg-12" id="listadoUEGS">
+                <div class="row col-lg-12">
+                    <p class="h6 ml-2">2) Seleccione la unidad ejecutora del gasto para continuar.
+                </div>
+                @foreach (var md in Model.uegsAsignadas)
+                {
+                    <a class="btn btn-app-ueg @md.Fondo font-weight-bold btnUeg" data-ueg="@md.Id">
+                        @Html.Raw(@md.Icono)
+                        @md.NumeroUEG - @md.Nombre
+                    </a>
+                }
+            </div>
+        }
+        else if (Model.Reporte != null && Model.Reporte.Equals("General"))
+        {
+            <div class="row col-lg-12">
+                <div class="row col-lg-12">
+                    <p class="h6 ml-2">2) Seleccione el formato para descargar el reporte:
+                </div>
+                 @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("pdf", @user) != 0)
+                 {
+                    <a href="#" type='button' id="generaReporteGeneralPDF" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3" data-toggle="tooltip"
+                       title='Generar reporte de la "Unidad Ejecutora del Gasto"' data-placement="top">
+                        <i class="fas fa-file-pdf"></i> Genera Reporte General PDF
+                    </a>
+                 }
+                 @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("word", @user) != 0)
+                 {
+                    <a href="#" type='button' id="generaReporteGeneralWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3" data-toggle="tooltip"
+                       title='Descarga el reporte de la "Unidad Ejecutora del Gasto" en formato "Word"' data-placement="top">
+                        <i class="fas fa-file-word"></i> Genera Reporte GeneralWord
+                    </a>
+                }
+                 @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("pdf", @user) != 0)
+                 {
+                    <a href="#" type='button' id="generaRPTPDF" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3" data-toggle="tooltip"
+                       title='Generar reporte de la "Unidad Ejecutora del Gasto"' data-placement="top">
+                        <i class="fas fa-file-pdf"></i> Genera Reporte General Proyecto PDF
+                    </a>
+                 }
+                 @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("word", @user) != 0)
+                 {
+                    <a href="#" type='button' id="generaRPTWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3" data-toggle="tooltip"
+                       title='Descarga el reporte de la "Unidad Ejecutora del Gasto" en formato "Word"' data-placement="top">
+                        <i class="fas fa-file-word"></i> Genera Reporte General Proyecto Word
+                    </a>
+                }
+                 
+                @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("pdf", @user) != 0)
+                 {
+                    <a href="#" type='button' id="generaCalendario" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3" data-toggle="tooltip"
+                       title='Generar reporte de la "Calendarización"' data-placement="top">
+                        <i class="fas fa-file-pdf"></i> Genera Calendarización PDF
+                    </a>
+                 }
+                 @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("word", @user) != 0)
+                 {
+                    <a href="#" type='button' id="generaCalendarioWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3" data-toggle="tooltip"
+                       title='Descarga el reporte de la "Calendarizacion" en formato "Word"' data-placement="top">
+                        <i class="fas fa-file-word"></i> Genera Calendarización Word
+                    </a>
+                }
+
+                @if (Model.Catalogo.Equals("Ahorros") && await sPermisos.GetPermisosByModulo("pdf", @user) != 0)
+                 {
+                    <a href="#" type='button' id="generaReporteGeneralAPDF" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3" data-toggle="tooltip"
+                       title='Generar reporte de la "Unidad Ejecutora del Gasto"' data-placement="top">
+                        <i class="fas fa-file-pdf"></i> Genera Reporte General PDF
+                    </a>
+                 }
+                 @if (Model.Catalogo.Equals("Ahorros") && await sPermisos.GetPermisosByModulo("word", @user) != 0)
+                 {
+                    <a href="#" type='button' id="generaReporteGeneralAWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3" data-toggle="tooltip"
+                       title='Descarga el reporte de la "Unidad Ejecutora del Gasto" en formato "Word"' data-placement="top">
+                        <i class="fas fa-file-word"></i> Genera Reporte General Word
+                    </a>
+                }
+            </div>
+        }
+
+        @if (Model.ueg != 0)
+        {
+            <div class="row col-lg-12" id="formatosReporte">
+                <div class="row col-lg-12">
+                    <p class="h6 ml-2">3) Haga clic en el boton <strong>"Descargar Reporte"</strong> para obtener el reporte del Punto:
+                </div>
+                @if (Model.Reporte.Equals("Punto"))
+                {
+                    <div class="row col-lg-12">
+                        @if (Model.Catalogo.Equals("PAE"))
+                         {
+                            <a href="/reportes/reportePunto/@Model.Anio/@Model.ueg" type='button' id="search_proyecto" class='btn-sm bg-success text-white float-left ml-2 mb-3 btnPunto' data-toggle="tooltip" title="Genera el reporte general del Punto" data-placement="top">
+                                <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte Punto
+                            </a>
+                         }
+                        @if (Model.Catalogo.Equals("Ahorros"))
+                        {
+                            <a href="/reportes/reportePuntoAhorros/@Model.Anio/@Model.ueg" data-reporte="Ahorros" type='button' id="search_proyecto" class='btn-sm bg-success text-white float-left ml-2 mb-3 btnPunto' data-toggle="tooltip" title="Genera el reporte general del Punto" data-placement="top">
+                                <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte Punto
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                     @if (Model.Catalogo.Equals("PAE"))
+                     {
+                         <a href="#" class="btn btn-app-ueg bg-primary text-white font-weight-bold btnPresupuesto" data-tipo="CP">
+                            <i class="fa-solid fa-chart-pie-simple mr-2"></i> Contratos Plurianuales
+                         </a>
+                         <a href="#" class='btn-sm btn-app-ueg bg-primary float-left ml-2 mb-3 font-weight-bold btnPresupuesto' style="padding-top: 5px" data-tipo="PO">
+                            <i class="fa-sharp fa-solid fa-chart-mixed mr-1"></i> Presupuesto de Operación
+                         </a>
+                        <a href="#" class='btn-sm btn-app-ueg bg-primary float-left ml-2 mb-3 font-weight-bold btnAnticipadas' style="padding-top: 5px">
+                            <i class="fa-solid fa-chart-bar mr-1"></i> Reporte Anticipadas
+                        </a>
+                        <a href="#" class='btn-sm btn-app-ueg bg-primary float-left ml-2 mb-3 font-weight-bold btnAnticipadasE' style="padding-top: 5px">
+                            <i class="fa-solid fa-file-excel mr-1"></i> Reporte Anticipadas
+                        </a>
+                        <a href="#" class='btn-sm btn-app-ueg bg-primary float-left ml-2 mb-3 font-weight-bold btnCalendario' style="padding-top: 5px">
+                            <i class="fa-solid fa-calendar mr-1"></i> Reporte Calendario
+                        </a>
+                        <a href="#" class='btn-sm btn-app-ueg bg-primary float-left ml-2 mb-3 font-weight-bold btnCalendarioXLS' style="padding-top: 5px">
+                            <i class="fa-solid fa-file-excel mr-1"></i> Reporte Calendario Excel
+                        </a>
+                      }
+                      else
+                      {
+                         <a href="#" class='btn-sm btn-app-ueg bg-primary float-left ml-2 mb-3 font-weight-bold btnPresupuesto' style="padding-top: 5px" data-tipo="Ahorros">
+                            <i class="fa-sharp fa-solid fa-chart-mixed mr-1"></i> Ahorros y Economías
+                         </a>
+                      }
+                     @if (await sPermisos.GetPermisosByModulo("ordenar proyectos", @user) != 0)
+                      {
+                         <a class="btn btn-app-ueg bg-ordenar text-white font-weight-bold btnOrdenar text-justify" data-estatus="Todos">
+                            <i class="fa-regular fa-arrow-down-arrow-up mr-1 ml-1"></i>
+                            Ordenar Proyectos
+                          </a>
+                      }
+                }
+            </div>
+        }
+
+        @if (Model.Anio != 0 && Model.ueg != 0 && Model.Ordenar)
+        {
+            <div class="row col-lg-12 mb-3">
+                <div class="col-lg-12">
+                    <p class="h6 mt-2 mb-4">3) Para cambiar el orden de los proyectos cambie el numero haciendo click en la caja que se encuentra en la columna <strong>"Número de Proyecto"</strong> y seleccione el número que va a asignar:</p>
+                    <div class="d-flex justify-content-end mb-3">
+                        <a class="btn bg-primary guardaOrdenamiento">Guardar Ordenamiento</a>
+                    </div>
+                    <table class="table table-responsive-xl">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Unidad Ejecutora</th>
+                                <th>Proyecto</th>
+                                <th class="text-center">Número de Proyecto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ i = 0; }
+                            @foreach (var item in Model.lProyectos)
+                            {
+                                i++;
+                                <tr>
+
+                                    <td>@i</td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.NumeroUEG)</td>
+                                    <td>
+                                        @if (item.Proyecto.Length >= 150)
+                                        {
+                                            <div class="divIncomplete text-justify">
+                                                @Html.Raw(@String.Concat(item.Proyecto.Substring(0, 150) + " <span class='mostrar_text text-primary' style='cursor: pointer'> Mostrar todo</span>"))
+                                            </div>
+                                            <div class="divComplete text-justify">
+                                                @Html.Raw(@String.Concat(item.Proyecto + "<span class='mostrar_text text-danger' style='cursor: pointer'> Ocultar todo</span>"))
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(modelItem => item.Proyecto)
+                                        }
+                                    </td>
+                                    <td class="d-flex justify-content-center">
+                                        <select class="form-control col-lg-6 listOrder_@item.ClaveProyecto" name="ordenar[]" data-id="@item.Id">
+                                            <option value="0">N°</option>
+                                            @for (var j = 0; j < Model.lProyectos.Count; j++)
+                                            {
+                                                <option value="@(j+1)">@(j+1)</option>
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else if (Model.Presupuesto != null && !Model.Presupuesto.Equals(""))
+        {
+            <div class="row col-lg-12">
+                <div class="row col-lg-12">
+                    <p class="h6 ml-2">4) Seleccione el formato para descargar el reporte:
+                </div>
+                @if (await sPermisos.GetPermisosByModulo("pdf", @user) != 0)
+                {
+                    <a href="#" type='button' id="generaReportePDF" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3" data-toggle="tooltip"
+                       title='Generar reporte de la "Unidad Ejecutora del Gasto"' data-placement="top">
+                        <i class="fas fa-file-pdf"></i> Genera Reporte PDF
+                    </a>
+                }
+                @if (await sPermisos.GetPermisosByModulo("word", @user) != 0)
+                {
+                    <a href="#" type='button' id="generaReporteWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3" data-toggle="tooltip"
+                       title='Descarga el reporte de la "Unidad Ejecutora del Gasto" en formato "Word"' data-placement="top">
+                        <i class="fas fa-file-word"></i> Genera Reporte Word
+                    </a>
+                }
+            </div>
+        }
+
+    </div>
+</div>
+
+@*Modal para buscar cédulas*@
+<div class="modal fade" id="modal-proyectos">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-joke">
+                <h4 class="modal-title text-white">Filtrado de Proyecto(s)</h4>
+                <button type="button" class="close close-incidencias text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-row col-md-3" id="divBusquedaMes">
+                        <label for="Anio">Mes: </label>
+                        <select class="form-control" id="anioActual">
+                            <option value="">Seleccione el Año</option>
+                            @for (var j = 2022; j < (DateTime.Now.Year + 3); j++)
+                            {
+                                <option value="@j">@j</option>
+                            }
+                        </select>
+                        <div class="col-sm-12" id="error_anioActual">
+                            <small id="dateHelp" class="text-danger">
+                                Por favor seleccione un año a consultar.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-row col-md-3" id="divBusquedaTipo">
+                        <label for="name">Catálogo: *</label>
+                        <select class="form-control" name="nombre" id="tipoCatalogo">
+                            <option value="">Seleccione el Catálogo</option>
+                            <option value="PAE">Programa Anual de Ejecución</option>
+                            <option value="Ahorros">Ahorros y Economías</option>
+                        </select>
+                        <div class="col-sm-12" id="error_tipoCatalogo">
+                            <small id="dateHelp" class="text-danger">
+                                Por favor seleccione un año a consultar.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button class="btn btn-primary" type="button" id="filtrar">Filtrar Proyectos(s)</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@*Fin del Modal para Capturar Oficios*@
+
+
+@section Scripts{
+    <script>
+        $(function () {
+            var model = @Html.Raw(Json.Serialize(@Model));
+            var title = @Html.Raw(Json.Serialize(@title));
+            var anio = @Html.Raw(Json.Serialize(Model.Anio));
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $('#error_anioActual').css('display', 'none');
+            $('#error_tipoCatalogo').css('display', 'none');
+
+            $("#search_proyecto").click(function () {
+                $("#modal-proyectos").modal('show');
+            });
+
+            /*********************Validaciones de Filtros*************************/
+            function validaFiltros() {
+                if ($("#anioActual").val() != "" && $("#tipoCatalogo").val() != "") {
+                    return true;
+                }
+
+                if ($("#anioActual").val() == "") {
+                    $('#anioActual').addClass('is-invalid');
+                    $('#anioActual').removeClass('is-valid');
+                    $('#error_anioActual').css('display', 'block');
+                }
+
+                if ($("#tipoCatalogo").val() == "") {
+                    $('#tipoCatalogo').addClass('is-invalid');
+                    $('#tipoCatalogo').removeClass('is-valid');
+                    $('#error_tipoCatalogo').css('display', 'block');
+                }
+                return false;
+            }
+
+            $("#anioActual").change(function () {
+                if ($("#anioActual").val() != "") {
+                    $('#anioActual').removeClass('is-invalid');
+                    $('#anioActual').addClass('is-valid');
+                    $('#error_anioActual').css('display', 'none');
+                } else {
+                    $('#anioActual').addClass('is-invalid');
+                    $('#anioActual').removeClass('is-valid');
+                    $('#error_anioActual').css('display', 'block');
+                }
+            });
+
+            $("#tipoCatalogo").change(function () {
+                if ($("#tipoCatalogo").val() != "") {
+                    $('#tipoCatalogo').removeClass('is-invalid');
+                    $('#tipoCatalogo').addClass('is-valid');
+                    $('#error_tipoCatalogo').css('display', 'none');
+                } else {
+                    $('#tipoCatalogo').addClass('is-invalid');
+                    $('#tipoCatalogo').removeClass('is-valid');
+                    $('#error_tipoCatalogo').css('display', 'block');
+                }
+            });
+
+            $("#filtrar").click(function () {
+                if (validaFiltros()) {
+                    window.location.href = "/reportes/index?anio=" + $("#anioActual").val() + "&catalogo=" + $("#tipoCatalogo").val();
+                } else {
+                    Swal.fire({
+                        'icon': 'error',
+                        'title': 'Generación de Reportes',
+                        'html': 'No ha seleccionado el año o el catálogo para consultar información.'
+                    });
+                }
+            });
+            /******************Fin a las Validaciones de Filtros******************/
+
+            /********************** Reportes por Unidad Ejecutora del Gasto ************************/
+                $(".btnRUEG").click(function(){
+                    window.location.href = "/reportes/index?anio=" + model.anio + "&catalogo=" + model.catalogo + "&Reporte=UEG";
+                });
+
+                $(".btnUeg").click(function(){
+                    if (model.reporte == "Punto") {
+                        window.location.href = "/reportes/index?anio=" + model.anio + "&catalogo=" + model.catalogo + "&Reporte=Punto&UEG=" + $(this).data('ueg');
+                    }
+                    else
+                    {
+                        window.location.href = "/reportes/index?anio=" + model.anio + "&catalogo=" + model.catalogo + "&Reporte=UEG&UEG=" + $(this).data('ueg');
+                    }
+                });
+
+                $(".btnPresupuesto").click(function(){
+                    window.location.href = "/reportes/index?anio=" + model.anio + "&catalogo=" + model.catalogo + "&Reporte=UEG&UEG="+model.ueg+"&presupuesto="+$(this).data('tipo');
+                });
+
+                $("#generaReportePDF").click(function () {
+                    window.open("/reporte/general/ueg/" + model.ueg + "/" + model.anio + "/" + model.presupuesto, "_blank");
+                });
+
+                $("#generaRPTPDF").click(function () {
+                    window.open("/reportes/reporteGeneralTP/"+ model.anio, "_blank");
+                });
+
+                $("#generaRPTWord").click(function () {
+                    window.open("/reportes/reporteGeneralTP/word/"+ model.anio, "_blank");
+                });
+
+                $("#generaCalendario").click(function () {
+                    window.open("/reportes/calendarizacion", "_blank");
+                });
+
+                $("#generaCalendarioWord").click(function () {
+                    window.open("/reportes/calendarizacion/word", "_blank");
+                });
+
+                $("#generaReporteWord").click(function () {
+                    window.open("/reporte/general/ueg/word/" + model.ueg + "/" + model.anio + "/" + model.presupuesto, "_blank");
+                    /*if (anio < 2024) {
+                        window.open("/reportes/ueg/word/" + model.ueg + "/" + model.anio + "/" + model.presupuesto, "_blank");
+                    }
+                    else {
+                        window.open("/reporte/general/ueg/word/" + model.ueg + "/" + model.anio + "/" + model.presupuesto, "_blank");
+                    }*/
+                });
+            /******************* Fin Reportes por Unidad Ejecutora del Gasto **********************/
+            /******************* Reporte General SISPAE **********************/
+                $(".btnGeneral").click(function () {
+                    window.location.href = "/reportes/index?anio=" + model.anio + "&catalogo=" + model.catalogo + "&Reporte=General";
+                });
+
+                $(".btnGeneralA").click(function () {
+                    window.location.href = "/reportes/index?anio=" + model.anio + "&catalogo=" + model.catalogo + "&Reporte=General";
+                });
+
+                $(".btnPunto").click(function () {
+                    window.location.href = "/reportes/index?anio=" + model.anio + "&catalogo=" + model.catalogo + "&Reporte=Punto";
+                });
+
+                $(".btnPuntoGral").click(function () {
+                    $("#listadoUEGS").css("display","none");
+                    $("#formatosReporte").css("display","none");
+                });
+
+                $(".btnAnticipadas").click(function(){
+                    window.open("/reportes/reporteAnticipadas/" + model.anio +"/" + model.ueg,"_blank");
+                });
+
+                $(".btnAnticipadasE").click(function () {
+                    window.open("/reportes/excel/reporteAnticipadas/" + model.anio +"/" + model.ueg,"_blank");
+                });
+
+                $(".btnCalendario").click(function () {
+                    window.open("/reportes/calendario/" + model.anio +"/" + model.ueg,"_blank");
+                });
+
+                $(".btnCalendarioXLS").click(function () {
+                    window.open("/reportes/calendario/excel/" + model.anio +"/" + model.ueg,"_blank");
+                });
+
+                $("#generaReporteGeneralPDF").click(function () {
+                    window.open("/reportes/reporteGeneral/" + model.anio + "/" + model.catalogo, "_blank");
+                });
+
+                $("#generaReporteGeneralWord").click(function () {
+                    window.open("/reportes/reporteGeneral/word/" + model.anio + "/" + model.catalogo, "_blank");
+                });
+
+                $("#generaReporteGeneralAPDF").click(function () {
+                    window.open("/reportes/reporteGeneralAhorros/" + model.anio + "/" + model.catalogo, "_blank");
+                });
+
+                $("#generaReporteGeneralAWord").click(function () {
+                    window.open("/reportes/reporteGeneralAhorros/word/" + model.anio + "/" + model.catalogo, "_blank");
+                });
+            /******************* Fin Reporte General SISPAE **********************/
+
+            /******************************* Ordenamiento de Proyectos ***********************************/
+                $('.divComplete').css('display', 'none');
+
+                $(".btnOrdenar").click(function(){
+                    window.location.href = "/reportes/index?anio=" + model.anio + "&catalogo=" + model.catalogo + "&Reporte="+model.reporte+"&UEG=" + model.ueg + "&Ordenar="+true;
+                });
+
+                if (model.ordenar) {
+                    for (var i = 0; i < model.lProyectos.length; i++) {
+                        $(".listOrder_" + model.lProyectos[i].claveProyecto).val(model.lProyectos[i].claveProyecto);
+                    }
+                }
+
+                $(".guardaOrdenamiento").click(function(){
+                    var proyectos = new Array();
+                    var isCero = false;
+                    $("[name='ordenar[]']").each(function () {
+                        if ($(this).val() != 0) {
+                            proyectos.push({ Id: $(this).data('id'), ClaveProyecto: $(this).val() });
+                        } else {
+                            isCero = true;
+                            return;
+                        }
+                    });
+
+                    if (isCero == true) {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': title,
+                            'html': 'No puedes dejar un valor de orden en 0 favor de revisar y asignar un valor.'
+                        });
+
+                        return false;
+                    }
+
+                    axios.post("/integracion/ordenaProyectos", proyectos).then(res => {
+                        if (res.status == 200) {
+                            Swal.fire({
+                                'icon': 'success',
+                                'title': title,
+                                'html': 'El orden de los proyectos fue guardado correctamente.'
+                            });
+                        }
+                    });
+                });
+
+                $(".mostrar_text").click(function () {
+                    $(this).parent().parent().find(".divComplete").show();
+                    $(this).parent().hide();
+                });
+
+                $('.mostrar_text').on('click', function (e) {
+                    $(this).parent().parent().find('.divIncomplete').show();
+                    $(this).parent().hide();
+                });
+            /*************************** Fin de Ordenamiento de Proyectos ********************************/
+        });
+    </script>
+}

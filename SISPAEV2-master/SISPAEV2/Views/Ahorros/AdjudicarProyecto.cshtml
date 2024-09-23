@@ -1,0 +1,1647 @@
+﻿@model Sispae.Entities.Vistas.VProyectos;
+@{
+    var i = 0;
+    ViewData["Title"] = "Ahorros y Economías - Adjudicación del Proyecto ";
+}
+
+<div class="container-fluid" id="limpieza">
+    <a href="#" type='button' class='btn-sm btn-warning float-right mr-2 mb-3 btn-regresar' data-toggle="tooltip" title="Regresar al Listado de Proyectos" data-placement="top"><i class="fal fa-arrow-left"></i></a>
+    <div class="row col-lg-12 mt-2 mb-3">
+        <table class="table">
+            <tr>
+                <td colspan="4" data-toggle="tooltip" title="Nombre del proyecto" data-placement="top" style="font-family: Tahoma; font-size: 13.5px; letter-spacing: 0.8px;">
+                    <strong>Proyecto: </strong> @Model.Proyecto
+                </td>
+            </tr>
+            <tr>
+                <td data-toggle="tooltip" title="Unidad encargada de la integración del proyecto" data-placement="top" style="font-family: Tahoma; font-size: 13.5px; letter-spacing: 0.8px;">
+                    <strong>Unidad Ejecutora del Gasto: </strong> @Model.ueg.NumeroUEG - @Model.ueg.Descripcion
+                </td>
+                <td data-toggle="tooltip" title="Capítulo del proyecto" data-placement="top">
+                    <strong>Capítulo: </strong>@Model.Capitulo
+                </td>
+                <td data-toggle="tooltip" title="Estatus actual de la integración del proyecto" data-placement="top">
+                    <strong>Estatus: </strong>@(Model.Estatus.Equals("") ? "Sin Integrar":Model.Estatus)
+                </td>
+                <td data-toggle="tooltip" title="Presupuesto del proyecto" data-placement="top">
+                    <strong>Presupuesto: </strong> @(Model.Tipo.Equals("CP") ? "Contratos Plurianuales" : Model.Tipo.Equals("PO") ? "Presupuesto de Operación":"Ahorros y Economías")
+                </td>
+            </tr>
+            <tr>
+                <td data-toggle="tooltip" title="Importe estimado para la adjudicación" data-placement="top" style="font-family: Tahoma; font-size: 13.5px; letter-spacing: 0.8px;">
+                    <strong>Monto estimado de adjudicación: </strong>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", Model.Importe)
+                </td>
+                <td data-toggle="tooltip" title="Monto total de adjudicación del proyecto" data-placement="top">
+                    @if (Model.seguimiento != null && Model.seguimiento.Tipo.Equals("Tramite"))
+                    {
+                        <strong>Proyecto en Trámite: </strong>
+                    }
+                    else if (Model.seguimiento != null && Model.seguimiento.Tipo.Equals("Covid"))
+                    {
+                        <strong>Proyecto en Trámite COVID: </strong>
+                    }
+                    else
+                    {
+                        <strong>Adjudicado por: </strong>
+                    }
+                    @if (Model.seguimiento != null && Model.seguimiento.Monto != 0)
+                        @String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", Model.seguimiento.Monto)
+                        else
+                            @String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", 0)
+                </td>
+                <td colspan="2" data-toggle="tooltip" title="Recursos Disponibles" data-placement="top">
+                    <strong>Recursos Disponibles: </strong>
+                        @String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", Model.RecursosDisponibles)
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card">
+        <div class="card-header bg-joke text-white">
+            <h5 class="mt-2">Adjudicación del Proyecto</h5>
+        </div>
+        <div class="card-body">
+            <div class="row ">
+                <div class="col-lg-12">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#recursos" role="tab" aria-controls="home" aria-selected="true">Adjudicación del Proyecto</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#prestador" role="tab" aria-controls="profile" aria-selected="false">Prestador del Servicio</a>
+                        </li>
+                        @if (Model.seguimiento != null)
+                        {
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#oficios" role="tab" aria-controls="contact" aria-selected="false">Oficios</a>
+                            </li>
+                        }
+                        @if (Model.entregables != null)
+                        {
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#entregables" role="tab" aria-controls="contact" aria-selected="false">Documentación del Proyecto</a>
+                            </li>
+                        }
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        @* Recursos 1 *@
+                        <div class="tab-pane fade mt-2 ml-2 show active" id="recursos" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="row col-lg-12 mt-4">
+                                <div class="col-lg-7">
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-4 mr-3">
+                                            <label for="anioAdj">Proyecto:* </label>
+                                            <select class="form-control" id="slProyecto">
+                                                <option value=''>Seleccione el seguimiento</option>
+                                                <option value="Adjudicado">Adjudicado</option>
+                                                <option value="Solicitado">Recursos Solicitados a DGPPT</option>
+                                            </select>
+                                            <div class="col-sm-12" id="error_seguimiento">
+                                                <small id="dateHelp" class="text-danger">
+                                                    Seleccione el año de adjudicación.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-3 mr-3" id="divAnioAdj">
+                                            <label for="anioAdj">Año de adjudicación:* </label>
+                                            <select class="form-control" id="anioAdj">
+                                                <option value=''>Seleccione el año</option>
+                                                <option value="2021">2021</option>
+                                                <option value="2022">2022</option>
+                                                <option value="@(DateTime.Now.Year)">@(DateTime.Now.Year)</option>
+                                                <option value="@(DateTime.Now.Year+1)">@(DateTime.Now.Year+1)</option>
+                                            </select>
+                                            <div class="col-sm-12" id="error_anioAdj">
+                                                <small id="dateHelp" class="text-danger">
+                                                    Seleccione el año de adjudicación.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-3 mr-3" id="divMesAdj">
+                                            <label for="mesAdj">Mes de adjudicación:* </label>
+                                            <select class="form-control" id="mesAdj">
+                                                <option value=''>Seleccione un mes</option>
+                                            </select>
+                                            <div class="col-sm-12" id="error_mesAdj">
+                                                <small id="dateHelp" class="text-danger">
+                                                    Seleccione el mes de adjudicación.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-3 ml-2" id="divMontoAdj">
+                                            <label for="UEG">Monto Adjudicado:</label>
+                                            <div class="fields">
+                                                <input class="form-control" type="text" pattern="[0-9.,]+" name="montoAdj" id="montoAdj" required data-type="number" />
+                                                <div class="col-sm-12" id="error_montoAdj">
+                                                    <small id="dateHelp" class="text-danger">
+                                                        Capture el monto de adjudicación.
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row col-lg-12">
+                                        <div class="form-check-inline recursosDGPPT mt-2" style="background: none; color: black;">
+                                            <strong class="text-black mr-3">¿Los recursos sobrantes se devolverán a la DGPPT?</strong>
+                                            @if (Model.seguimiento != null && Model.seguimiento.Devolver)
+                                            {
+                                                <input class="chk_recursosDGPPT" type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>"
+                                                       data-onstyle="success" data-offstyle="danger" data-style="ios" checked>
+                                            }
+                                            else
+                                            {
+                                                <input class="chk_recursosDGPPT" type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>"
+                                                       data-onstyle="success" data-offstyle="danger" data-style="ios">
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="form-row mt-2" id="divMontoP">
+                                        <div class="form-group col-lg-3 ml-2">
+                                            <label for="UEG">Recursos Adicionales:</label>
+                                            <div class="fields">
+                                                <input class="form-control" type="text" pattern="[0-9.,]+" name="montoPropio" id="montoPropio" required data-type="number" />
+                                                <div class="col-sm-12" id="error_montoPropio">
+                                                    <small id="dateHelp" class="text-danger">
+                                                        Capture el monto propio de la administración.
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="col mt-2" id="divMontoEstimado">
+                                        <strong>Monto estimado para la adjudicación: </strong> @String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", Model.Importe)
+                                    </div>
+                                    <div class="col mt-2" id="divMontoPropio"></div>
+                                    <div class="col mt-2" id="divMontoTotal"></div>
+                                    <div class="col mt-2" id="divMontoAdjudicado"></div>
+                                    <div class="col mt-2" id="divMontoDGPPT"></div>
+                                </div>
+                            </div>
+                        </div>
+                        @* Fin de la Recursos 1 *@
+                        @* Prestador 2 *@
+                        <div class="tab-pane fade mt-2 ml-3" id="prestador" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="row mt-3">
+                                <div class="col-lg-12">
+                                    <div class="form-row">
+                                        <div class="select2-purple col-lg-4">
+                                            <label for="Anio">Prestador de Servicios: </label>
+                                            <select class="form-control select2bs4" data-dropdown-css-class="select2-purple" id="prestadorAdj">
+                                            </select>
+                                            <div class="col-sm-12" id="error_prestadorAdj">
+                                                <small id="dateHelp" class="text-danger">
+                                                    Seleccione el prestador de servicio.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-2" id="divTipoAdj">
+                                            <label for="tipoAdjudicación">Tipo de Adjudicación: </label>
+                                            <select class="form-control" id="tipoAdj">
+                                                <option value="">Seleccione una opción</option>
+                                                <option value="Adjudicación Directa">Adjudicación Directa</option>
+                                                <option value="Licitación Pública">Licitación Pública</option>
+                                                <option value="Recontratación">Recontratación</option>
+                                                <option value="AD por Exepción">AD por Exepción</option>
+                                                <option value="Inv cuando menos 3">Inv cuando menos 3</option>
+                                                <option value="Concurso Público Sumario">Concurso Público Sumario</option>
+                                            </select>
+                                            <div class="col-sm-12" id="error_tipoAdj">
+                                                <small id="dateHelp" class="text-danger">
+                                                    Seleccione el tipo de adjudicación.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-2" id="divApartado">
+                                            <label for="Apartado">Apartado: </label>
+                                            <select class="form-control" id="apartadoAdj">
+                                                <option value="">Seleccione una opción</option>
+                                                <option value="DGRM">DGRM</option>
+                                                <option value="DGSG">DGSG</option>
+                                            </select>
+                                            <div class="col-sm-12" id="error_apartadoAdj">
+                                                <small id="dateHelp" class="text-danger">
+                                                    Seleccione el apartado.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label for="psContrato">Número de Contrato: </label>
+                                            <input class="form-control" type="text" id="contratoAdj" />
+                                            <div class="col-sm-12" id="error_contratoAdj">
+                                                <small id="dateHelp" class="text-danger">
+                                                    Capture el número de contrato.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row mt-2">
+                                        <div class="col-lg-6">
+                                            <label for="psObervacionesC">Observaciones: </label>
+                                            <textarea class="form-control" type="text" id="observacionesAdj"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @* Fin de la Prestador *@
+                        @if (Model.seguimiento != null)
+                        {
+                            i = 0;
+                            @* Oficios *@
+                            <div class="tab-pane fade mt-2 ml-3" id="oficios" role="tabpanel" aria-labelledby="contact-tab">
+                                <div class="col-lg-12 mt-3">
+                                    <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right addOficio'><i class="fas fa-plus"></i></a>
+                                </div>
+                                <div class="row col-lg-12">
+                                    <table class="table mt-3" id="tblOficios">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Tipo de Movimiento</th>
+                                                <th>Número de Oficio</th>
+                                                @*<th>Oficio</th>*@
+                                                <th>Archivo</th>
+                                                <th>Monto</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tEntregables">
+                                            @foreach (var rec in Model.seguimiento.recursos)
+                                            {
+                                                i++;
+                                                <tr>
+                                                    <td>@i</td>
+                                                    <td>@rec.TipoRecurso</td>
+                                                    <td>@(rec.NumeroOficio != 0 ? rec.NumeroOficio.ToString(): "Sin capturar")</td>
+                                                    @*<td>@(!rec.Oficio.Equals("") ? rec.Oficio.ToString(): "Sin capturar")</td>*@
+                                                    <td>@(rec.NombreArchivo.Equals("") ? "Pendiente de Adjuntar": rec.NombreArchivo)</td>
+                                                    <td>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rec.Monto)</td>
+                                                    <td>
+                                                        <a href="#" data-id="@rec.Id" class="text-center viewOficio" data-file="@rec.NombreArchivo"
+                                                           data-tipo="@rec.Tipo" data-numo="@rec.NumeroOficio" data-fecha="@rec.FechaOficio.ToString("dd/MM/yyyy")"
+                                                           data-monto="@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rec.Monto)"
+                                                           data-nombreo="@rec.Oficio" data-observaciones="@rec.Observaciones"
+                                                           data-toggle="tooltip" title="Ver Oficio" data-placement="top">
+                                                            <i class="fad fa-eye text-success"></i>
+                                                        </a>
+                                                        <a href="#" class="text-center ml-2 editOficio" data-id="@rec.Id" data-tipo="@rec.Tipo" data-oficio="@rec.NumeroOficio"
+                                                           data-fecha="@rec.FechaOficio.ToString("yyyy-MM-dd")" data-monto="@rec.Monto" data-archivo="@rec.NombreArchivo"
+                                                           data-observaciones="@rec.Observaciones" data-nombreo="@rec.Oficio" data-toggle="tooltip" title="Editar Oficio" data-placement="top">
+                                                            <i class="fad fa-pencil text-primary"></i>
+                                                        </a>
+                                                        <a href="#" data-id="@rec.Id" data-numo="@rec.NumeroOficio" class="text-center ml-2 eliminarRecursos" data-toggle="tooltip" title="Eliminar Oficio" data-placement="top">
+                                                            <i class="fad fa-times text-danger"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            @* Fin de Oficios *@
+                        }
+                        @* Entregables *@
+                        @if (Model.entregables != null)
+                        {
+                            <div class="tab-pane fade mt-2 ml-3" id="entregables" role="tabpanel" aria-labelledby="contact-tab">
+                                <div class="col-lg-12 mt-3">
+                                    <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right addEntregables'><i class="fas fa-plus"></i></a>
+                                </div>
+                                <div class="row col-lg-12 mt-3">
+                                    <table class="table" id="tblEntregables">
+                                        <thead>
+                                            <tr>
+                                                <th>Entregable</th>
+                                                <th>Archivo</th>
+                                                <th>Fecha de Carga</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tEntregables">
+                                            @foreach (var entre in Model.entregables)
+                                            {
+                                                <tr>
+                                                    <td>@entre.Tipo</td>
+                                                    <td>@entre.NombreArchivo</td>
+                                                    <td>@entre.FechaCreacion.ToString("dd/MM/yyyy hh:MM tt")</td>
+                                                    <td>
+                                                        <a href="#" data-id="@entre.Id" class="text-center viewEntregable" data-file="@entre.NombreArchivo"
+                                                           data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-seguimiento="@entre.SeguimientoId">
+                                                            <i class="fad fa-eye text-success mr-2"></i>
+                                                        </a>
+                                                        <a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-file="@entre.NombreArchivo"
+                                                           class="text-center btnEdit">
+                                                            <i class="fa-duotone fa-pencil text-primary mr-2"></i>
+                                                        </a>
+                                                        <a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" class="text-center btnEliminar">
+                                                            <i class="fad fa-times text-danger mr-2"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                        @* Fin de Entregables *@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class=" col-lg-12">
+                @if (Model.seguimiento != null && Model.seguimiento.Id != 0)
+                {
+                    <button type="button" class="btn btn-success float-right ml-3 btn_enviar mr-3" data-toggle="tooltip" title='Enviar la integración del proyecto para su revisión' data-placement="top">Enviar</button>
+                }
+                <button type="button" class="btn btn-primary float-right btn_guardar" data-toggle="tooltip" title='Guardar la información capturada' data-placement="top">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal para la carga de oficios*@
+<div class="modal fade" id="modal_oficios">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-joke">
+                <h4 class="modal-title text-white">Adjuntar/Modificar Oficios</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="recurso_id" />
+                    <div class="form-group col-lg-3">
+                        <label for="tipoIncidencia">Tipo de Movimiento:</label>
+                        <select class="form-control" id="movimientoRec">
+                            <option value="">Seleccione un movimiento</option>
+                            <option value="Tesorería DGPPT">Monto adjudicado menor al estimado</option>
+                            <option value="Solicitud">Solicitud de Recursos a DGPPT</option>
+                            <option value="Otorgado">Recursos Otorgados</option>
+                        </select>
+                        <div class="col-sm-12" id="error_movimientoRec">
+                            <small id="dateHelp" class="text-danger">
+                                Por favor seleccione el tipo de recurso.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <label for="psContrato">Número de Oficio: </label>
+                        <input class="form-control" type="text" id="oficioRec" />
+                        <div class="col-sm-12" id="error_oficioRec">
+                            <small id="dateHelp" class="text-danger">
+                                Capture el número de oficio.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <label for="psContrato">Fecha del Oficio: </label>
+                        <input class="form-control" type="date" id="fechaRec" />
+                        <div class="col-sm-12" id="error_fechaRec">
+                            <small id="dateHelp" class="text-danger">
+                                Capture la fecha del oficio.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 ml-3" id="divMonto">
+                        <label for="psContrato">Monto: </label>
+                        <div class="fields">
+                            <input class="form-control" type="text" pattern="[0-9.,]+" name="montoRec" id="montoRec" required data-type="number" />
+                            <div class="col-sm-12" id="error_montoRec">
+                                <small id="dateHelp" class="text-danger">
+                                    Capture el monto del oficio.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="psContrato">Nombre del Oficio: </label>
+                        <input class="form-control" type="text" id="nombreOficio" />
+                        <div class="col-sm-12" id="error_nombreoficio">
+                            <small id="dateHelp" class="text-danger">
+                                Capture el número de oficio.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="elegirArchivo">Seleccionar Archivo: </label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile" accept=".pdf">
+                            <label class="custom-file-label" for="customFile">Seleccionar Archivo</label>
+                        </div>
+                        <div class="col-sm-12" id="error_customFile">
+                            <small id="dateHelp" class="text-danger">
+                                Por favor seleccione el oficio correspondiente
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-row col-lg-12 mt-2" id="divObservaciones">
+                        <div class="form-group mt-2 col-md-12">
+                            <label for="fechaCierre">Observaciones:</label><br>
+                            <textarea id="observacionesRec" class="form-control float-left"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button type="button" class="btn btn-primary" id="adjuntarOficio">Adjuntar/Modificar</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@*Fin Modal para la carga de oficios*@
+
+@* Modal para la captura de Entregables *@
+<div class="modal fade" id="modal_entregables">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-joke">
+                <h4 class="modal-title text-white">Adjuntar/Modificar Entregables</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="entregableId" />
+                    <div class="form-group col-lg-4">
+                        <label for="tipoIncidencia">Tipo de Entregable:</label>
+                        <select class="form-control" id="tipo_entregable">
+                            <option value="">Seleccione un archivo</option>
+                            <option value="Oficio">Oficio</option>
+                            <option value="Contrato">Contrato</option>
+                            <option value="Nota(s)">Nota(s)</option>
+                        </select>
+                        <div class="col-sm-12" id="error_tipoEntre">
+                            <small id="dateHelp" class="text-danger">
+                                Por favor seleccione el tipo de entregable
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="elegirArchivo">Seleccionar Archivo: </label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFileSoporte" accept=".pdf">
+                            <label class="custom-file-label" id="custom-file-label-soporte" for="customFile">Seleccionar Archivo</label>
+                        </div>
+                        <div class="col-sm-12" id="error_archivoSoporte">
+                            <small id="dateHelp" class="text-danger">
+                                Por favor seleccione el oficio correspondiente
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-row col-lg-12 mt-2" id="divComentariosSoporte">
+                        <div class="form-group mt-2 col-md-12">
+                            <label for="fechaCierre">Comentarios:</label><br>
+                            <textarea id="comentariosSoporte" class="form-control float-left"></textarea>
+                            <div class="col-sm-12" id="error_comentariosSoporte">
+                                <small id="comentariosHelp" class="text-danger">
+                                    Por favor capture los comentarios correspondientes
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button type="button" class="btn btn-primary" id="adjuntarArchivo">Adjuntar Entregable</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@*Fin Modal para la captura de Entregables *@
+
+@*Modal para la visualizar el oficio*@
+<div class="modal fade" id="modal_ViewOficio">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-joke">
+                <h4 class="modal-title text-white" id="vo_title"></h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-5" id="vo_tipo">
+                    </div>
+                    <div class="col-lg-2" id="vo_numOficio">
+                    </div>
+                    <div class="col-lg-5" id="vo_nombreOficio">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-lg-3" id="vo_fechaOficio">
+                    </div>
+                    <div class="col-lg-3" id="vo_montoOficio">
+                    </div>
+                    <div class="col-lg-6" id="vo_observaciones">
+                    </div>
+                </div>
+                <div class="row mt-3" id="vo_oficioPDF">
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@*Fin Modal para la carga de oficios*@
+
+@*Modal para la visualizar entregables *@
+<div class="modal fade" id="modal_ViewEntregables">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-joke">
+                <h4 class="modal-title text-white" id="ve_title"></h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-5" id="ve_tipo">
+                    </div>
+                    <div class="col-lg-6" id="ve_observaciones">
+                    </div>
+                </div>
+                <div class="row mt-3" id="ve_entregablePDF">
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@*Fin Modal para la carga entregables*@
+
+<style>
+    .fields {
+        margin: 0 10px 0 0;
+    }
+
+        .fields:before {
+            content: "$";
+            text-align: center;
+            position: absolute;
+            margin-top: 7px;
+            left: -5px;
+        }
+</style>
+
+@section Scripts{
+    <script>
+        $(function () {
+            var model = @Html.Raw(Json.Serialize(@Model));
+
+            var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            var partidas = new Array();
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $(".btn-regresar").click(function () {
+                if (model.seguimiento != null) {
+                    window.location.href = "/proyectos/seguimiento/"+model.id + window.location.search;
+                } else {
+                    window.location.href = "/proyectos/index" + window.location.search;
+                }
+            });
+
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            });
+
+            /*Ocultamos los divs de captura*/
+                $("#divAnioAdj").css("display","none");
+                $("#divMesAdj").css("display","none");
+                $("#divMontoAdj").css("display","none");
+                $("#divMontoP").css("display","none");
+            /*Fin de la ocultacion los divs de captura*/
+
+            /*Ocultamos los divs de error de captura*/
+                $("#error_anioAdj").css("display","none");
+                $("#error_mesAdj").css("display","none");
+                $("#error_montoAdj").css("display","none");
+                $("#error_montoPropio").css("display", "none");
+                $("#error_seguimiento").css("display", "none");
+                $('#error_prestadorAdj').css('display', 'none');
+                $('#error_tipoAdj').css('display', 'none');
+                $('#error_apartadoAdj').css('display', 'none');
+                $('#error_contratoAdj').css('display', 'none');
+                $('#error_nombreoficio').css('display', 'none');
+            /*Fin de la ocultacion los divs de error de captura*/
+
+            /*Ocultamos los divs de error de captura de oficios*/
+                $("#error_movimientoRec").css("display","none");
+                $("#error_oficioRec").css("display","none");
+                $("#error_fechaRec").css("display","none");
+                $("#error_customFile").css("display","none");
+                $("#error_montoRec").css("display","none");
+            /*Fin de la ocultacion los divs de error de captura de oficios*/
+
+            if (model.seguimiento != null) {
+                let inputMontoAdj = new AutoNumeric('#montoAdj', model.seguimiento.monto, { decimalPlaces: 2 });
+            }
+            else {
+                let inputMontoAdj = new AutoNumeric('#montoAdj', { decimalPlaces: 2 });
+            }
+
+            document.querySelector('#montoAdj').addEventListener('keyup', () => { });
+
+            /*Llena la Lista de Meses*/
+                let optionsMes = "<option value=''>Seleccione el mes</option>";
+                let i = 0;
+                meses.forEach(function (mes) {
+                    i++;
+                    optionsMes += "<option value=" + mes + ">" + mes + "</option>"
+                });
+                $("#mesAdj").html(optionsMes);
+            /*Fin de Llena la Lista de Meses*/
+
+            /*Llena la Lista de Prestadores*/
+                let optionsPrestadores = "<option value=''>Seleccione el prestador</option>";
+                model.prestadores.forEach(function (prestador) {
+                    optionsPrestadores += "<option value=" + prestador.id + ">" + prestador.nombre + "</option>"
+                });
+                $("#prestadorAdj").html(optionsPrestadores);
+            /*Fin Llena la Lista de Prestadores*/
+
+            /***************************************** Acciones del Select "Proyectos" **************************************************/
+                $("#slProyecto").change(function(){
+                    if ($(this).val() == "Adjudicado") {
+                        $("#divAnioAdj").css("display", "block");
+                        $("#divMesAdj").css("display", "block");
+                        $("#divMontoAdj").css("display", "block");
+                        $("#divMontoTotal").html('<strong>Monto total para adjudicar: </strong> $' + model.importe.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+                    }
+                    else if ($(this).val() == "Solicitado")
+                    {
+                        $("#divAnioAdj").css("display", "none");
+                        $("#divMesAdj").css("display", "none");
+                        $("#anioAdj").val("");
+                        $("#mesAdj").val("");
+                        $("#prestadorAdj").val();
+                        $("#tipoAdj").val("");
+                        $("#apartadoAdj").val("");
+                        $("#contratoAdj").val("");
+                        $("#observacionesAdj").val("");
+                        $("#divMontoAdj").css("display", "block");
+                        $("#divMontoTotal").html('<strong>Monto total para adjudicar: </strong> $' + model.importe.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+                    }
+                });
+            /********************************* Fin de las acciones del Select "Proyectos" ***********************************************/
+
+            /********************************* Acciones al cambiar los valores de "Proyectos" ***********************************************/
+                $("#anioAdj").change(function () {
+                    if ($("#anioAdj").val() != "") {
+                        $('#anioAdj').removeClass('is-invalid');
+                        $('#anioAdj').addClass('is-valid');
+                        $('#error_anioAdj').css('display', 'none');
+                    }
+                });
+
+                $("#slProyecto").change(function () {
+                    if ($("#slProyecto").val() != "") {
+                        $('#slProyecto').removeClass('is-invalid');
+                        $('#slProyecto').addClass('is-valid');
+                        $('#error_seguimiento').css('display', 'none');
+                    }
+                });
+
+                $("#mesAdj").change(function () {
+                    if ($("#mesAdj").val() != "") {
+                        $('#mesAdj').removeClass('is-invalid');
+                        $('#mesAdj').addClass('is-valid');
+                        $('#error_mesAdj').css('display', 'none');
+                    }
+                });
+
+                $("#montoAdj").change(function () {
+                    let montoAdj = 0
+                    let montoTotal = 0
+                    let dgppt = 0;
+                    if ($("#montoAdj").val() != "") {
+                        montoAdj = parseFloat($("#montoAdj").val().replace(/,/g, ""));
+                        montoTotal = parseFloat(model.importe);
+                        dgppt = montoTotal - montoAdj;
+                        $('#montoAdj').removeClass('is-invalid');
+                        $('#montoAdj').addClass('is-valid');
+                        $('#error_montoAdj').css('display', 'none');
+                        $("#divMontoAdjudicado").html('<strong>Monto de adjudicación: </strong> $' + montoAdj.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+                        if (dgppt < 0) {
+                            dgppt = 0;
+                        }
+
+                        $("#divMontoDGPPT").html('<strong>Monto devuelto a DGPPT: </strong> $' + (dgppt).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+                    }
+                });
+            /******************************** Fin Acciones al cambiar los valores de "Proyectos" *********************************************/
+
+            /********************************* Acciones al cambiar los valores de "Prestador de Servicios" ***********************************************/
+                $("#prestadorAdj").change(function () {
+                    if ($("#prestadorAdj").val() != "") {
+                        $('#prestadorAdj').removeClass('is-invalid');
+                        $('#prestadorAdj').addClass('is-valid');
+                        $('#error_prestadorAdj').css('display', 'none');
+                    }
+                });
+
+                $("#tipoAdj").change(function () {
+                    if ($("#tipoAdj").val() != "") {
+                        $('#tipoAdj').removeClass('is-invalid');
+                        $('#tipoAdj').addClass('is-valid');
+                        $('#error_tipoAdj').css('display', 'none');
+                    }
+                });
+
+                $("#apartadoAdj").change(function () {
+                    if ($("#apartadoAdj").val() != "") {
+                        $('#apartadoAdj').removeClass('is-invalid');
+                        $('#apartadoAdj').addClass('is-valid');
+                        $('#error_apartadoAdj').css('display', 'none');
+                    }
+                });
+
+                $("#contratoAdj").change(function () {
+                    if ($('#contratoAdj').val() != "") {
+                        $('#contratoAdj').removeClass('is-invalid');
+                        $('#contratoAdj').addClass('is-valid');
+                        $('#error_contratoAdj').css('display', 'none');
+                    }
+                });
+
+            /******************************** Fin Acciones al cambiar los valores de "Prestador de Servicios" *********************************************/
+
+            /********************************* Validaciones de la Adjudicacion ***********************************************/
+                function validaRecursos() {
+                    if ($("#slProyecto").val() == "Adjudicado" && $("#anioAdj").val() != "" && $("#mesAdj").val() != "" && $("#montoAdj").val() != "") {
+                        return true;
+                    }
+
+                    if ($("#slProyecto").val() == "DGPPT" && $("#montoAdj").val() != "") {
+                        return true;
+                    }
+
+                    if ($("#slProyecto").val() == "") {
+                        $('#slProyecto').removeClass('is-valid');
+                        $('#slProyecto').addClass('is-invalid');
+                        $('#error_seguimiento').css('display', 'block');
+                        return false;
+                    }
+
+                    if ($('#anioAdj').val() == "") {
+                        $('#anioAdj').addClass('is-invalid');
+                        $('#anioAdj').removeClass('is-valid');
+                        $('#error_anioAdj').css('display', 'block');
+                    }
+
+                    if ($('#mesAdj').val() == "") {
+                        $('#mesAdj').removeClass('is-valid');
+                        $('#mesAdj').addClass('is-invalid');
+                        $('#error_mesAdj').css('display', 'block');
+                    }
+
+                    if ($('#montoAdj').val() == "") {
+                        $('#montoAdj').removeClass('is-valid');
+                        $('#montoAdj').addClass('is-invalid');
+                        $('#error_montoAdj').css('display', 'block');
+                    }
+
+                    return false;
+                }
+
+                function validaPrestador() {
+                    if ($("#slProyecto").val() == "Adjudicado" && $("#prestadorAdj").val() != "" && $("#contratoAdj").val() != "") {
+                        return true;
+                    }
+
+                    if ($("#prestadorAdj").val() == "") {
+                        $('#prestadorAdj').removeClass('is-valid');
+                        $('#prestadorAdj').addClass('is-invalid');
+                        $('#error_prestadorAdj').css('display', 'block');
+                    }
+
+                    if ($('#tipoAdj').val() == "") {
+                        $('#tipoAdj').addClass('is-invalid');
+                        $('#tipoAdj').removeClass('is-valid');
+                        $('#error_tipoAdj').css('display', 'block');
+                    }
+
+                    if ($('#apartadoAdj').val() == "") {
+                        $('#apartadoAdj').removeClass('is-valid');
+                        $('#apartadoAdj').addClass('is-invalid');
+                        $('#error_apartadoAdj').css('display', 'block');
+                    }
+
+                    if ($('#contratoAdj').val() == "") {
+                        $('#contratoAdj').removeClass('is-valid');
+                        $('#contratoAdj').addClass('is-invalid');
+                        $('#error_contratoAdj').css('display', 'block');
+                    }
+
+                    return false;
+                }
+
+            /****************************** Fin de validaciones de la Adjudicacion *******************************************/
+
+            /********************************** Funciones Adicionales *********************************/
+                function cuentaRecursosSinOficio(seguimiento) {
+                    var isContinue = true;
+                    $.ajax({
+                        url: '/recursos/validaRecursos/' + seguimiento,
+                        type: 'GET',
+                        async: false,
+                        success: function (json) {
+                            json == 0 ? isContinue = false : true;
+                        },
+                    });
+                    return isContinue;
+                }
+
+            /********************************** FIN Funciones Asincronas*********************************/
+
+            /********************************** Enviar/Guardar la Adjudicacion **********************************************/
+                 $(".btn_guardar").click(function(){
+                     var id = 0;
+                     var tipo = $("#slProyecto").val()+"";
+                     var anio = $("#anioAdj").val();
+                     var mes = $("#mesAdj").val()+"";
+                     var montoAdj = $("#montoAdj").val().replace(/,/g, "");
+                     var prestador = $("#prestadorAdj").val();
+                     var tipoAdj = $("#tipoAdj").val()+"";
+                     var apartado = $("#apartadoAdj").val()+"";
+                     var numContrato = $("#contratoAdj").val()+"";
+                     var observaciones = $("#observacionesAdj").val() + "";
+                     var devolver = $(".chk_recursosDGPPT").prop("checked");
+                     var montoTotal = 0;
+
+                     var url = "inserta";
+
+                     if (anio != "") {
+                         anio = parseInt(anio);
+                     } else {
+                         anio = 0;
+                     }
+
+                     if (mes != "") {
+                         mes = mes;
+                     } else {
+                         mes = "";
+                     }
+
+                     if (montoAdj != "") {
+                         montoAdj = parseFloat(montoAdj);
+                     } else {
+                         montoAdj = 0;
+                     }
+
+                     if (prestador != "") {
+                         prestador = parseInt(prestador);
+                     } else {
+                         prestador = 0;
+                     }
+
+                     if (model.seguimiento != null && model.seguimiento.id != 0) {
+                         url = "actualizar";
+                         id = parseInt(model.seguimiento.id);
+                     }
+
+                     if (url == "inserta") {
+                         axios.post('/historial/nuevoHistorialProyecto', {
+                             IntegracionId: parseInt(model.id), UsuarioId: parseInt(@User.Claims.ElementAt(0).Value), Tipo: "Seguimiento", Estatus: "Seguimiento en Proceso",
+                             Comentarios: "Se generó una nueva adjudicación para el proyecto."
+                         });
+                     }
+
+                     axios.post('/seguimiento/'+url+'Seguimiento', { Id: id,
+                         IntegracionId: parseInt(model.id), UsuarioId: parseInt(@User.Claims.ElementAt(0).Value), PrestadorId: prestador,
+                         Tipo: tipo, Anio: anio, Mes: mes, Contrato: numContrato, TipoAdjudicacion: tipoAdj, Apartado: apartado, Estatus: "Seguimiento en Proceso",
+                         Monto: montoAdj, Observaciones: observaciones, Devolver: (devolver == true)
+                     }).then(response => {
+                         if (response.data != -1) {
+                             Swal.fire({
+                                 'icon': 'success',
+                                 'title': 'Adjudicación del Proyecto',
+                                 'html': '<p style="text-align: justify">Se guardó el seguimiento del proyecto correctamente.</p>'
+                             }).then(function () {
+                                 if (url == "actualizar") {
+                                     window.location.reload();
+                                 } else {
+                                     window.location.href = "/ahorros/actualizar/adjudicacion/" + model.id + "/" + response.data+window.location.search;
+                                 }
+                             });
+                         }
+                     });
+                 });
+
+                 $(".btn_enviar").click(function(){
+                     var id = 0;
+                     var oficios = 0;
+                     if (model.seguimiento != null && model.seguimiento.id != 0) {
+                         url = "actualizar";
+                         id = parseInt(model.seguimiento.id);
+                         oficios = cuentaRecursosSinOficio(id);
+                     }
+
+                     if (oficios != 0) {
+                         Swal.fire({
+                             'icon': 'warning',
+                             'title': 'Adjudicación del Proyecto',
+                             'html': 'Aún cuenta con oficios pendientes de soporte documental. Favor de revisar.'
+                         });
+
+                         return false;
+                     }
+
+                     if (validaRecursos()) {
+                        if (validaPrestador()) {
+                            Swal.fire({
+                                'icon': 'warning',
+                                'title': 'Adjudicación del Proyecto',
+                                'html': '¿Está seguro de envíar la adjudicación del proyecto para su revisión?',
+                                'confirmButtonColor': '#3085d6',
+                                'cancelButtonColor': '#d33',
+                                'confirmButtonText': 'Si, enviar',
+                                'cancelButtonText': 'Cancelar',
+                                'showCancelButton': true
+                            }).then(response => {
+                                if (response.isConfirmed) {
+                                     var tipo = $("#slProyecto").val()+"";
+                                     var anio = $("#anioAdj").val();
+                                     var mes = $("#mesAdj").val()+"";
+                                     var montoAdj = $("#montoAdj").val().replace(/,/g, "");
+                                     var prestador = $("#prestadorAdj").val();
+                                     var tipoAdj = $("#tipoAdj").val()+"";
+                                     var apartado = $("#apartadoAdj").val()+"";
+                                     var numContrato = $("#contratoAdj").val()+"";
+                                     var observaciones = $("#observacionesAdj").val() + "";
+                                     var montoTotal = 0;
+
+                                     var url = "inserta";
+
+                                     if (anio != "") {
+                                         anio = parseInt(anio);
+                                     } else {
+                                         anio= 0;
+                                     }
+
+                                     if (montoAdj != "") {
+                                         montoAdj = parseFloat(montoAdj);
+                                     } else {
+                                         montoAdj = 0;
+                                     }
+
+                                     if (prestador != "") {
+                                         prestador = parseInt(prestador);
+                                     } else {
+                                        prestador = 0;
+                                    }
+
+                                    if (model.seguimiento != null && model.seguimiento.id != 0) {
+                                        url = "actualizar";
+                                        id = parseInt(model.seguimiento.id);
+                                    }
+
+                                    axios.post('/seguimiento/' + url + 'Seguimiento', {
+                                        Id: id, IntegracionId: parseInt(model.id), UsuarioId: parseInt(@User.Claims.ElementAt(0).Value), Estatus: "Seguimiento Enviado",
+                                        PrestadorId: prestador, Tipo: tipo, Anio: anio, Mes: mes, Contrato: numContrato, TipoAdjudicacion: tipoAdj, Apartado: apartado,
+                                        Monto: montoAdj, Observaciones: observaciones
+                                    }).then(response => {
+                                        if (response.data != -1) {
+                                            axios.post('/seguimiento/enviaSeguimiento', {
+                                                Id: id, UsuarioId: parseInt(@User.Claims.ElementAt(0).Value), IntegracionId: parseInt(model.id),
+                                                Estatus: "Seguimiento Enviado"
+                                            }).then(send => {
+                                                if (send.data != -1){
+                                                    Swal.fire({
+                                                        'icon': 'success',
+                                                        'title': 'Adjudicación del Proyecto',
+                                                        'html': '<p style="text-align: justify">Se envió el seguimiento del proyecto correctamente.</p>'
+                                                    }).then(function () {
+                                                         axios.post('/historial/nuevoHistorialProyecto', {
+                                                            IntegracionId: parseInt(model.id), UsuarioId: parseInt(@User.Claims.ElementAt(0).Value), Tipo: "Seguimiento",
+                                                            Estatus: "Seguimiento Enviado", Comentarios: "Se envió el seguimiento del proyecto para su revisión."
+                                                        });
+                                                        window.location.href = "/proyectos/index" + window.location.search;
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                'icon': 'error',
+                                'title': 'Adjudicación del Proyecto',
+                                'html': '<p style="text-align: justify">Favor de verificar que haya llenado todos los campos del apartado <b>Prestador del Servicio</b>.</p>'
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Adjudicación del Proyecto',
+                            'html':'<p style="text-align: justify">Favor de verificar que haya llenado todos del apartado <b>Adjudicación del Proyecto</b>.</p>'
+                        });
+                    }
+                 });
+
+                 function guardaSeguimiento() {
+                     var id = 0;
+                     var tipo = $("#slProyecto").val()+"";
+                     var anio = $("#anioAdj").val();
+                     var mes = $("#mesAdj").val()+"";
+                     var montoAdj = $("#montoAdj").val().replace(/,/g, "");
+                     var prestador = $("#prestadorAdj").val();
+                     var tipoAdj = $("#tipoAdj").val()+"";
+                     var apartado = $("#apartadoAdj").val()+"";
+                     var numContrato = $("#contratoAdj").val()+"";
+                     var observaciones = $("#observacionesAdj").val() + "";
+                     var montoTotal = 0;
+
+                     var url = "inserta";
+
+                     if (anio != "") {
+                         anio = parseInt(anio);
+                     } else {
+                         anio= 0;
+                     }
+
+                     if (montoAdj != "") {
+                         montoAdj = parseFloat(montoAdj);
+                     } else {
+                         montoAdj = 0;
+                     }
+
+                     if (prestador != "") {
+                         prestador = parseInt(prestador);
+                     } else {
+                         prestador = 0;
+                     }
+
+                     if (model.seguimiento != null && model.seguimiento.id != 0) {
+                         url = "actualizar";
+                         id = parseInt(model.seguimiento.id);
+                     }
+
+                     axios.post('/proyectos/'+url+'Seguimiento', { Id: id,
+                         IntegracionId: parseInt(model.id), UsuarioId: parseInt(@User.Claims.ElementAt(0).Value), PrestadorId: prestador,
+                         Tipo: tipo, Anio: anio, Mes: mes, Contrato: numContrato, TipoAdjudicacion: tipoAdj, Apartado: apartado, Estatus: "Seguimiento en Proceso",
+                         Monto: montoAdj, Observaciones: observaciones
+                     }).then(response => {
+                         if (response.data != -1) {
+                             Swal.fire({
+                                 'icon': 'success',
+                                 'title': 'Adjudicación del Proyecto',
+                                 'html': '<p style="text-align: justify">Se guardó el seguimiento del proyecto correctamente.</p>'
+                             }).then(function () {
+                                 if (url == "actualizar") {
+                                     window.location.reload();
+                                 } else {
+                                     window.location.href = "/proyectos/actualizar/adjudicacion/" + model.id + "/" + response.data;
+                                 }
+                             });
+                         }
+                     });
+                 }
+            /****************************** Fin de Enviar/Guardar la Adjudicacion *******************************************/
+
+            /****************************** Mostrar información capturada *******************************************/
+                if(model.seguimiento != null && model.seguimiento.id != 0)
+                {
+                    $("#slProyecto").val(model.seguimiento.tipo).change();
+                    $("#anioAdj").val((model.seguimiento.anio != 0 ? model.seguimiento.anio:"")).change();
+                    $("#mesAdj").val((model.seguimiento.mes != "" ? model.seguimiento.mes:"")).change();
+                    if (model.seguimiento.monto != 0)
+                    {
+                        $("#montoAdj").trigger('change');
+                    }
+
+                    $("#prestadorAdj").val((model.seguimiento.prestadorId == 0) ? "" : model.seguimiento.prestadorId).change();
+                    $("#tipoAdj").val(model.seguimiento.tipoAdjudicacion).change();
+                    $("#apartadoAdj").val(model.seguimiento.apartado).change();
+                    $("#contratoAdj").val(model.seguimiento.contrato);
+                    $("#observacionesAdj").val(model.seguimiento.observaciones);
+                }
+            /*************************** Fin de mostrar información capturada ***************************************/
+
+            /******************************************* Captura de Oficios ***************************************/
+
+                $(".addOficio").click(function(){
+                    $("#modal_oficios").modal("show");
+                });
+
+                $(".editOficio").click(function () {
+                    var monto = parseFloat($(this).data('monto')).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                    $("#recurso_id").val($(this).data('id'));
+                    $("#movimientoRec").val($(this).data('tipo'));
+                    $("#oficioRec").val($(this).data('oficio'));
+                    if ($(this).data('monto') == "" || $(this).data('monto') == 0) {
+                        var inputMonto = new AutoNumeric('#montoRec', $(this).data('monto'), { decimalPlaces: 2 });
+                    }
+                    else
+                    {
+                        $("#montoRec").val(monto);
+                    }
+                    $(".custom-file-label").text($(this).data('archivo'));
+                    $("#fechaRec").val($(this).data('fecha'));
+                    $("#nombreOficio").val($(this).data('nombreo'));
+                    $("#observacionesRec").val($(this).data('observaciones'));
+                    $("#modal_oficios").modal("show");
+                });
+
+                $('#customFile').change(function () {
+                    if ($('#customFile').val() == "") {
+                        $('#customFile').addClass('is-invalid');
+                        $('#error_customFile').css('display', 'block');
+                    } else {
+                        var fileName = $("#customFile").val().split("\\").pop();
+                        var ext = fileName.split('.').pop();
+                        if (ext != "pdf") {
+                            $('#customFile').addClass('is-invalid');
+                            $('#error_customFile').css('display', 'block');
+                        } else {
+                            $('#customFile').removeClass('is-invalid');
+                            $('#customFile').addClass('is-valid');
+                            $('#error_customFile').css('display', 'none');
+                        }
+                    }
+                });
+
+                $("#customFile").on("change", function () {
+                    var fileName = $(this).val().split("\\").pop();
+                    var ext = fileName.split('.').pop();
+                    if (ext == "pdf" || ext == "PDF") {
+                        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+                    } else {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Servicio de Transportación de Bienes Muebles',
+                            'text': 'El archivo que intentas adjuntar no es válido. Favor de solo seleccionar archivos "PDF"'
+                        });
+                        $(".custom-file-label").text("Seleccionar Archivo");
+                        document.getElementById('customFile').value = '';
+
+                        if ($('#customFile').hasClass('is-valid')) {
+                            $('#customFile').removeClass('is-valid');
+                        }
+                        $('#customFile').addClass('is-invalid');
+                        $('#error_customFile').css('display', 'block');
+                    }
+                });
+
+                $("#adjuntarOficio").click(function () {
+                    var formData = new FormData();
+                    var id = $('#recurso_id').val();
+                    var tipo = $("#movimientoRec").val();
+                    var numOficio = $("#oficioRec").val();
+                    var nombreoficio = $("#nombreOficio").val();
+                    var fechaOficio = $("#fechaRec").val();
+                    var montoRec = $("#montoRec").val();
+                    var file = document.getElementById('customFile').files[0];
+                    var observaciones = $("#observacionesRec").val();
+                    var url = "inserta";
+
+                    if (parseInt(id) != 0 && id != "") {
+                        id = parseInt(id);
+                        url = "actualiza";
+                    } else {
+                        id = 0;
+                    }
+
+                    formData.append("Id", id);
+                    formData.append("SeguimientoId", model.seguimiento.id);
+                    formData.append("Tipo", tipo);
+                    formData.append("NumeroOficio", numOficio);
+                    formData.append("Oficio", nombreoficio);
+                    formData.append("FechaOficio", fechaOficio);
+                    formData.append("Monto", parseFloat(montoRec.replace(/,/g, "")));
+                    if (file != null)
+                        formData.append("Archivo", file);
+
+                    formData.append("Observaciones", observaciones);
+
+                     axios.post('/recursos/'+url+'Recursos', formData, { headers: { 'Content-Type': 'multipart/form-data' }}).then(response => {
+                                    $('.close').trigger('click');
+                                    /*Validamos la pregunta a la que se realizo el anexo de evidencia*/
+                                    if (response.status == 200) {
+                                        Swal.fire({
+                                            'icon': "success",
+                                            'title': 'Adjudicación del Proyecto',
+                                            'text': 'Se adjuntó el oficio correctamente.'
+                                        }).then(function () {
+                                            window.location.reload();
+                                        });
+                                        $('#customFile').removeClass('is-valid');
+                                        $('#oficioRec').removeClass('is-valid');
+                                        $('#fechaRec').removeClass('is-valid');
+                                        $('#montoRec').removeClass('is-valid');
+                                        $('#obseracionesRec').removeClass('is-valid');
+                                        $('#movimientoRec').removeClass('is-valid');
+                                    }
+                                }).catch(error => {
+                                    Swal.fire({
+                                        'icon': "error",
+                                        'title': 'Adjudicación del Proyecto',
+                                        'text': 'Se presento un error al adjuntar el oficio.'
+                                    });
+                                });
+
+                });
+
+                $(".eliminarRecursos").click(function () {
+                    Swal.fire({
+                        'icon': 'warning',
+                        'title': 'Adjudicación del Proyecto',
+                        'html': '¿Está seguro de eliminar el oficio?',
+                        'confirmButtonColor': '#3085d6',
+                        'cancelButtonColor': '#d33',
+                        'confirmButtonText': 'Si, eliminar',
+                        'cancelButtonText': 'Cancelar',
+                        'showCancelButton': true
+                    }).then(response => {
+                        if (response.isConfirmed) {
+                            axios.post('/recursos/eliminarRecursos', { Id: $(this).data('id'), NumeroOficio: $(this).data('numo') }).then(response => {
+                                if (response.status == 200) {
+                                    Swal.fire({
+                                        'icon': "success",
+                                        'title': 'Adjudicación del Proyecto',
+                                        'text': 'Se eliminó el oficio correctamente.'
+                                    }).then(function () {
+                                        window.location.reload();
+                                    });
+                                }
+                            }).catch(error => {
+                                Swal.fire({
+                                    'icon': "error",
+                                    'title': 'Adjudicación del Proyecto',
+                                    'text': 'Se presentó un error al eliminar el oficio.'
+                                });
+                            });
+                        }
+                    });
+                });
+
+            /************************************** Fin de Captura de Oficios *************************************/
+
+
+            /******************************************* Captura de Oficios ***************************************/
+
+                $('#montoRec').on('blur', function () {
+                    const value = this.value.replace(/,/g, '');
+                    this.value = parseFloat(value).toLocaleString('en-US', {
+                        style: 'decimal',
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2
+                    });
+                });
+
+                $(".addEntregable").click(function(){
+                    $("#modal_oficios").modal("show");
+                });
+
+                $(".editEntregable").click(function () {
+                    $("#recurso_id").val($(this).data('id'));
+                    $("#movimientoRec").val($(this).data('tipo'));
+                    $("#oficioRec").val($(this).data('oficio'));
+                    if ($(this).data('tipo') == "Tesorería DGPPT") {
+                        $("#movimientoRec").prop('disabled', true);
+                        $("#montoRec").prop('disabled', true);
+                    }
+                    if ($(this).data('monto') != "" || $(this).data('monto') != 0) {
+                        let inputMonto = new AutoNumeric('#montoRec', $(this).data('monto'), { decimalPlaces: 2 });
+                    }
+                    $(".custom-file-label").text($(this).data('archivo'));
+                    $("#fechaRec").val($(this).data('fecha'));
+                    $("#observacionesRec").val($(this).data('observaciones'));
+                    $("#modal_oficios").modal("show");
+                });
+
+                $("#adjuntarEntregable").click(function () {
+                    var formData = new FormData();
+                    var id = $('#recurso_id').val();
+                    var tipo = $("#movimientoRec").val();
+                    var numOficio = $("#oficioRec").val();
+                    var fechaOficio = $("#fechaRec").val();
+                    var montoRec = $("#montoRec").val();
+                    var file = document.getElementById('customFile').files[0];
+                    var observaciones = $("#observacionesRec").val();
+                    var url = "inserta";
+
+                    if (parseInt(id) != 0 && id != "") {
+                        id = parseInt(id);
+                        url = "actualiza";
+                    } else {
+                        id = 0;
+                    }
+
+                    formData.append("Id", id);
+                    formData.append("SeguimientoId", model.seguimiento.id);
+                    formData.append("Tipo", tipo);
+                    formData.append("NumeroOficio", numOficio);
+                    formData.append("FechaOficio", fechaOficio);
+                    formData.append("Monto", parseFloat(montoRec.replace(/,/g, "")));
+                    if (file != null)
+                        formData.append("Archivo", file);
+
+                    formData.append("Observaciones", observaciones);
+
+                     axios.post('/proyectos/'+url+'Recursos', formData, { headers: { 'Content-Type': 'multipart/form-data' }}).then(response => {
+                                    $('.close').trigger('click');
+                                    /*Validamos la pregunta a la que se realizo el anexo de evidencia*/
+                                    if (response.status == 200) {
+                                        Swal.fire({
+                                            'icon': "success",
+                                            'title': 'Adjudicación del Proyecto',
+                                            'text': 'Se adjuntó el oficio correctamente.'
+                                        }).then(function () {
+                                            window.location.reload();
+                                        });
+                                        $('#customFile').removeClass('is-valid');
+                                        $('#oficioRec').removeClass('is-valid');
+                                        $('#fechaRec').removeClass('is-valid');
+                                        $('#montoRec').removeClass('is-valid');
+                                        $('#obseracionesRec').removeClass('is-valid');
+                                        $('#movimientoRec').removeClass('is-valid');
+                                    }
+                                }).catch(error => {
+                                    Swal.fire({
+                                        'icon': "error",
+                                        'title': 'Adjudicación del Proyecto',
+                                        'text': 'Se presento un error al adjuntar el oficio.'
+                                    });
+                                });
+
+                });
+
+                $(".eliminarEntregable").click(function () {
+                    Swal.fire({
+                        'icon': 'warning',
+                        'title': 'Adjudicación del Proyecto',
+                        'html': '¿Está seguro de eliminar el oficio?',
+                        'confirmButtonColor': '#3085d6',
+                        'cancelButtonColor': '#d33',
+                        'confirmButtonText': 'Si, eliminar',
+                        'cancelButtonText': 'Cancelar',
+                        'showCancelButton': true
+                    }).then(response => {
+                        if (response.isConfirmed) {
+                            axios.post('/proyectos/eliminarRecursos', { Id: $(this).data('id') }).then(response => {
+                                if (response.status == 200) {
+                                    Swal.fire({
+                                        'icon': "success",
+                                        'title': 'Adjudicación del Proyecto',
+                                        'text': 'Se eliminó el oficio correctamente.'
+                                    }).then(function () {
+                                        window.location.reload();
+                                    });
+                                }
+                            }).catch(error => {
+                                Swal.fire({
+                                    'icon': "error",
+                                    'title': 'Adjudicación del Proyecto',
+                                    'text': 'Se presentó un error al eliminar el oficio.'
+                                });
+                            });
+                        }
+                    });
+                });
+
+
+            /************************************** Fin de Captura de Oficios *************************************/
+
+            /***************************************** Captura de Entregables ****************************************/
+                $('#error_tipoEntre').css('display', 'none');
+                $('#error_archivoSoporte').css('display', 'none');
+                $('#error_comentariosSoporte').css('display', 'none');
+
+                $(".addEntregables").click(function () {
+                    $("#modal_entregables").modal("show");
+                });
+
+                $('#tipo_entregable').change(function () {
+                        if ($('#tipo_entregable').val() == "") {
+                            $('#tipo_entregable').addClass('is-invalid');
+                            $('#error_tipoEntre').css('display', 'block');
+
+                            return false;
+                        } else {
+                            $('#tipo_entregable').removeClass('is-invalid');
+                            $('#tipo_entregable').addClass('is-valid');
+                            $('#error_tipoEntre').css('display', 'none');
+                        }
+                    });
+
+                $('#customFileSoporte').change(function () {
+                    if ($('#customFileSoporte').val() == "") {
+                        $('#customFileSoporte').addClass('is-invalid');
+                        $('#error_customFileSoporte').css('display', 'block');
+                    } else {
+                        var fileName = $("#customFileSoporte").val().split("\\").pop();
+                        var ext = fileName.split('.').pop();
+                        if (ext != "pdf") {
+                            $('#customFileSoporte').addClass('is-invalid');
+                            $('#error_customFileSoporte').css('display', 'block');
+                        } else {
+                            $('#customFileSoporte').removeClass('is-invalid');
+                            $('#customFileSoporte').addClass('is-valid');
+                            $('#error_customFileSoporte').css('display', 'none');
+                        }
+                    }
+                });
+
+                $('#comentarios_entregable').change(function () {
+                        if ($('#comentarios_entregable').val() == "") {
+                            $('#comentarios_entregable').addClass('is-invalid');
+                            $('#error_comentariosEntre').css('display', 'block');
+
+                            return false;
+                        } else {
+                            $('#comentarios_entregable').removeClass('is-invalid');
+                            $('#comentarios_entregable').addClass('is-valid');
+                            $('#error_comentariosEntre').css('display', 'none');
+                        }
+                    });
+
+                $("#adjuntarArchivo").click(function () {
+                    var formData = new FormData();
+                    var id = $('#entregableId').val();
+                    var tipo = $('#tipo_entregable').val();
+                    var file = document.getElementById('customFileSoporte').files[0];
+                    var observaciones = $("#comentariosSoporte").val();
+                    var url = "inserta";
+                    var txt = "insertó";
+
+                    if (parseInt(id) != 0 && id != "") {
+                        id = parseInt(id);
+                        url = "actualiza";
+                        txt = "actualizó";
+                    } else {
+                        id = 0;
+                    }
+
+                    formData.append("Id", id);
+                    formData.append("SeguimientoId", model.seguimiento.id);
+                    formData.append("UsuarioId", parseInt(@User.Claims.ElementAt(0).Value));
+                    formData.append("Tipo", tipo);
+                    if (file != null)
+                        formData.append("Archivo", file);
+
+                    formData.append("Observaciones", observaciones);
+
+                     axios.post('/entregables/'+url+'Entregable', formData, { headers: { 'Content-Type': 'multipart/form-data' }}).then(response => {
+                                    $('.close').trigger('click');
+                                    /*Validamos la pregunta a la que se realizo el anexo de evidencia*/
+                                    if (response.status == 200) {
+                                        Swal.fire({
+                                            'icon': "success",
+                                            'title': 'Adjudicación del Proyecto',
+                                            'text': 'Se '+txt+' el(la) '+tipo+' correctamente.'
+                                        }).then(function () {
+                                            window.location.reload();
+                                        });
+                                        $('#customFile').removeClass('is-valid');
+                                        $('#oficioRec').removeClass('is-valid');
+                                        $('#fechaRec').removeClass('is-valid');
+                                        $('#montoRec').removeClass('is-valid');
+                                        $('#obseracionesRec').removeClass('is-valid');
+                                        $('#movimientoRec').removeClass('is-valid');
+                                    }
+                                }).catch(error => {
+                                    Swal.fire({
+                                        'icon': "error",
+                                        'title': 'Adjudicación del Proyecto',
+                                        'text': 'Se presento un error al adjuntar el oficio.'
+                                    });
+                                });
+
+                });
+
+                $(document).on("click", '.btnEdit', function(){
+                    $("#entregableId").val($(this).data('id'));
+                    $("#tipo_entregable").val($(this).data('tipo'));
+                    $("#custom-file-label-soporte").text($(this).data('file'));
+                    $("#comentariosSoporte").val($(this).data('observaciones'));
+                    $("#modal_entregables").modal("show");
+                });
+
+                $(".btnEliminar").click(function () {
+                    Swal.fire({
+                        'icon': 'warning',
+                        'title': 'Adjudicación del Proyecto',
+                        'html': '¿Está seguro de eliminar el ' + $(this).data('tipo')+'?',
+                        'confirmButtonColor': '#3085d6',
+                        'cancelButtonColor': '#d33',
+                        'confirmButtonText': 'Si, eliminar',
+                        'cancelButtonText': 'Cancelar',
+                        'showCancelButton': true
+                    }).then(response => {
+                        if (response.isConfirmed) {
+                            axios.post('/entregables/eliminaEntregable', { Id: $(this).data('id'), SeguimientoId: parseInt(model.seguimiento.id) }).then(response => {
+                                if (response.status == 200) {
+                                    Swal.fire({
+                                        'icon': "success",
+                                        'title': 'Adjudicación del Proyecto',
+                                        'text': 'Se eliminó el ' + $(this).data('tipo')+' correctamente.'
+                                    }).then(function () {
+                                        window.location.reload();
+                                    });
+                                }
+                            }).catch(error => {
+                                Swal.fire({
+                                    'icon': "error",
+                                    'title': 'Adjudicación del Proyecto',
+                                    'text': 'Se presentó un error al eliminar el oficio.'
+                                });
+                            });
+                        }
+                    });
+                });
+
+                /*Ver archivo en modal*/
+                    $(document).on('click', '.view_file', function () {
+                        let nombre = $(this).data('file');
+                        let oficio = $(this).data('oficio');
+                        let data = "<object width='100%' height='710px' data='/cedLimpieza/verArchivo/" + oficio + "/" + nombre + "'></object>";
+                        $('#titlePDF').text("PDF - \"" + tipo + "\"");
+                        $('#objectPdf').html(data);
+                        $('#show_pdf').modal('show');
+                    });
+                /*FIN de ver archivo en modal*/
+
+                $("#customFileSoporte").on("change", function () {
+                        var fileName = $(this).val().split("\\").pop();
+                        var ext = fileName.split('.').pop();
+                        if (ext == "pdf" || ext == "PDF") {
+                            $(this).siblings("#custom-file-label-soporte").addClass("selected").html(fileName);
+                        } else {
+                            Swal.fire({
+                                'icon': 'error',
+                                'title': 'Adjudicación del Proyecto',
+                                'text': 'El archivo que intentas adjuntar no es válido. Favor de solo seleccionar archivos "PDF"'
+                            });
+                            $("#custom-file-label-soporte").text("Seleccionar Archivo");
+                            document.getElementById('customFileSoporte').value = '';
+                            if ($('#customFileSoporte').hasClass('is-valid')) {
+                                $('#customFileSoporte').removeClass('is-valid');
+                            }
+                            $('#customFileSoporte').addClass('is-invalid');
+                            $('#error_customFileSoporte').css('display', 'block');
+                        }
+
+                    });
+
+            /************************************** Fin de Captura de Entregables*************************************/
+
+            /************************************** Visualización de Oficios *****************************************/
+                $(".viewOficio").click(function(){
+                    var tipo = "";
+                    if ($(this).data('tipo') == "Tesorería DGPPT") {
+                        tipo = "Monto adjudicado menor al estimado";
+                    } else if ($(this).data('tipo') == "Solicitud") {
+                        tipo = "Solicitud de Recursos a DGPPT";
+                    } else {
+                        tipo = "Recursos Otorgados";
+                    }
+                    $('#vo_title').text("Oficio - \"" + $(this).data('nombreo') + "\"");
+
+                    $("#vo_tipo").html('<strong>Tipo de Movimiento: </strong>'+tipo)
+                    $("#vo_numOficio").html('<strong>Número de Oficio: </strong>'+$(this).data('numo'))
+                    $("#vo_fechaOficio").html('<strong for="psContrato">Fecha del Oficio: </strong>'+$(this).data('fecha'))
+                    $("#vo_montoOficio").html('<strong for="psContrato">Monto: </strong>'+$(this).data('monto'))
+                    $("#vo_nombreOficio").html('<strong>Nombre del Oficio: </strong>'+$(this).data('nombreo'))
+                    $("#vo_observaciones").html('<strong>Observaciones: </strong>' + $(this).data('observaciones'))
+                    let data = "<object width='100%' height='410px' data='/view/oficio/" + $(this).data('numo')+"/"+$(this).data('file')+ "'></object>";
+                    $('#vo_oficioPDF').html(data);
+                    $("#modal_ViewOficio").modal('show');
+                });
+            /************************************** Fin Visualización de Oficios *************************************/
+
+            /************************************** Visualización de Entregables *****************************************/
+                $(".viewEntregable").click(function(){
+                    $('#ve_title').text("Visualización de Entregables");
+                    $("#ve_tipo").html('<strong>Tipo de Entregable: </strong>' + $(this).data('tipo'))
+                    $("#ve_observaciones").html('<strong>Observaciones: </strong>' + $(this).data('observaciones'))
+                    let data = "<object width='100%' height='410px' data='/view/entregable/" + $(this).data('seguimiento')+"/"+$(this).data('file')+ "'></object>";
+                    $('#ve_entregablePDF').html(data);
+                    $("#modal_ViewEntregables").modal('show');
+                });
+            /************************************** Fin Visualización de Entregables *************************************/
+
+        });
+    </script>
+}

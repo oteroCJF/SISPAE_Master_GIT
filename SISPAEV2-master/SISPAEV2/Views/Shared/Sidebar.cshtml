@@ -1,0 +1,81 @@
+﻿@inject Sispae.Services.ModuleService sModulo;
+@inject Sispae.Services.PermisosService  sPermisos;
+@{
+    int user = Convert.ToInt32(@User.Claims.ElementAt(0).Value + "");
+    List<Sispae.Entities.Vistas.VModulosUsuario> modulos = await sModulo.GetVModulos(user);
+}
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar elevation-2" style="background-image: #ffffff;">
+    <!-- Brand Logo -->
+    <a href="/home" class="brand-link ml-3">
+        <img src="~/dist/img/logos/logoCJFColor.png" alt="AdminLTE Logo" class="brand-image-xl">
+    </a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="font-size: 15px;">
+                <li class="nav-item has-treeview" id="li_Inicio">
+                    <a href="/" class="nav-link" style="color: #1A1188;">
+                        <i class="fad fa-home mr-2"></i>
+                        <p>
+                            Inicio
+                        </p>
+                    </a>
+                </li>
+                @foreach (var mod in modulos)
+                {
+                    @if (mod.Modulo.Equals("Proyectos"))
+                    {
+                        <li class="nav-item has-treeview" id="li_Limpieza">
+                            <a href="#" class="nav-link" style="color: #1A1188;">
+                                @Html.Raw(@mod.Icono)
+                                <p>
+                                    @mod.Modulo
+                                    <i class="right fas fa-angle-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                @if (await sPermisos.GetPermisosByModulo("catálogo", @user) != 0)
+                                {
+                                    <li class="nav-item">
+                                        <a href="/proyectos/catalogo" class="nav-link ml-2" style="color: #1A1188;">
+                                            <i class="fal fa-list-check nav-icon"></i>
+                                            <p>Catalogo de Proyectos</p>
+                                        </a>
+                                    </li>
+                                }
+                                <li class="nav-item">
+                                    <a href="@mod.URL/index" class="nav-link ml-2" style="color: #1A1188;">
+                                        <i class="fal fa-clipboard-check nav-icon"></i>
+                                        <p>Mis Proyectos</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item has-treeview" id="li_Limpieza">
+                            <a href="@mod.URL/index" class="nav-link" style="color: #1A1188;">
+                                @Html.Raw(@mod.Icono)
+                                <p>
+                                    @if (mod.Modulo.Equals("UEG"))
+                                    {
+                                        @Html.Raw("UEG (s)")
+                                    }
+                                    else
+                                    {
+                                        @mod.Modulo.Replace("_", " ")
+                                    }
+                                </p>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

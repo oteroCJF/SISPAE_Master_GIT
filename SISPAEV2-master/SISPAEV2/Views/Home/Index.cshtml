@@ -1,0 +1,194 @@
+﻿@model Sispae.Entities.MDashboards.DModels;
+@{
+    var anio = 2022;
+    var total = 0;
+    var tProyectos = 0.0;
+    ViewData["Title"] = Model.Anio != 0 ? "Proyectos del Ejercicio - " + Model.Anio : "Dashboard de Proyectos";
+    if (Model.Tipo != null && Model.Tipo.Equals("PAE"))
+    {
+        for ( var i =0;i<Model.dashboardEstatus.Count;i++)
+        {
+            if (Model.dashboardEstatus[i].Estatus.Equals(Model.Estatus)) {
+                total = Model.dashboardEstatus[i].TotalProyectos;
+            }
+        }
+    }
+    else if (Model.Tipo != null && Model.Tipo.Equals("Ahorros"))
+    {
+        for (var i = 0; i < Model.dashboardEstatusA.Count; i++)
+        {
+            if (Model.dashboardEstatusA[i].Estatus.Equals(Model.Estatus))
+            {
+                total = Model.dashboardEstatusA[i].TotalProyectos;
+            }
+        }
+    }
+}
+
+<div class="container-fluid">
+    <form method="get" asp-route="/home/index">
+        <div class="row col-lg-4">
+            <label for="cedulasAnio">Consultar Información del Año: </label>
+            <div class="input-group mb-3">
+                <select class="form-control" asp-for="@Model.Anio" id="anioActual">
+                    <option value="">Seleccione el Año</option>
+                    @for (var i = anio; i < (anio + 3); i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+                <div class="row">
+                    <button class="btn btn-primary ml-3" type="submit" id="consultar">Consultar Información</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    @if (Model.dashboardEstatus != null)
+    {
+        <div class="row" id="Prrueba">
+            <div class="col-lg-12">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Integración y Seguimiento "PAE"</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#ahorros" role="tab" aria-controls="contact" aria-selected="false">Integración y Seguimiento "Ahorros y Economías"</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade mt-2 ml-3 show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <h4 class="mt-4">
+                            @(@Model.Estatus != null ? "Integración y Seguimiento \"PAE\" - Estatus "+ @Model.Estatus: "Integración y Seguimiento \"PAE\"")
+                        </h4>
+                        <div class="row col-lg-12 mt-3">
+                            @foreach (var ds in Model.dashboardEstatus)
+                            {
+                                <div class="col-lg-3 col-6">
+                                    <div class="small-box @ds.Fondo text-white">
+                                        <div class="inner">
+                                            <h3>@ds.TotalProyectos</h3>
+                                            <div class="form-row">
+                                                <strong><p>Proyecto(s) en estatus @ds.Estatus</p></strong>
+                                            </div>
+                                        </div>
+                                        <div class="icon">
+                                            @Html.Raw(@ds.Icono)
+                                        </div>
+                                        <a href="#" class="small-box-footer proyectosUEG" data-estatus="@ds.Estatus" data-tipo="PAE">Mas Información <i class="fas fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        @if (Model.dashboardpueg != null && Model.Tipo.Equals("PAE"))
+                        {
+                            <div class="row col-lg-12">
+                                @foreach (var pu in Model.dashboardpueg)
+                                {
+                                    if (pu.TotalProyectos != 0) {
+                                        tProyectos = (Convert.ToDouble(pu.TotalProyectos) / Convert.ToDouble(pu.TotalProyectosUEG)) * 100.0;
+                                    }
+
+                                    <div class="col-md-4 text-center mt-3">
+                                        <p class="font-weight-bold" style="color: @pu.FondoHexadecimal">@pu.NumeroUEG - @pu.Nombre</p>
+                                        <input type="text" class="desgloceUEG" value="@(tProyectos != 0 ? tProyectos:0)" data-width="100" 
+                                               data-height="100" data-fgColor="@pu.FondoHexadecimal" data-readonly="true" disabled/><br />
+                                        <a href="#" class="font-weight-bold btnDetalle" style="color: @pu.FondoHexadecimal" data-estatus="@pu.NumeroUEG"
+                                           data-servicio="@pu.Id">
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="tab-pane fade mt-2 ml-3" id="ahorros" role="tabpanel" aria-labelledby="contact-tab">
+                        <h4 class="mt-4">
+                            @(@Model.Estatus != null ? "Integración y Seguimiento \"Ahorros y Economías\" - Estatus "+ @Model.Estatus: "Ahorros y Economías\"PAE\"")
+                        </h4>
+                        <div class="row col-lg-12 mt-3">
+                            @foreach (var ds in Model.dashboardEstatusA)
+                            {
+                                <div class="col-lg-3 col-6">
+                                    <div class="small-box @ds.Fondo text-white">
+                                        <div class="inner">
+                                            <h3>@ds.TotalProyectos</h3>
+                                            <div class="form-row">
+                                                <strong><p>Proyecto(s) en estatus @ds.Estatus</p></strong>
+                                            </div>
+                                        </div>
+                                        <div class="icon">
+                                            @Html.Raw(@ds.Icono)
+                                        </div>
+                                        <a href="#" class="small-box-footer proyectosUEG" data-estatus="@ds.Estatus" data-tipo="Ahorros">Mas Información <i class="fas fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        @if (Model.dashboardpueg != null && Model.Tipo.Equals("Ahorros"))
+                        {
+                            <div class="row col-lg-12">
+                                @foreach (var pu in Model.dashboardpueg)
+                                {
+                                    if (pu.TotalProyectos != 0)
+                                    {
+                                        tProyectos = (Convert.ToDouble(pu.TotalProyectos) / Convert.ToDouble(pu.TotalProyectosUEG)) * 100.0;
+                                    }
+
+                                    <div class="col-md-4 text-center mt-3">
+                                        <p class="font-weight-bold" style="color: @pu.FondoHexadecimal">@pu.NumeroUEG - @pu.Nombre</p>
+                                        <input type="text" class="desgloceUEG" value="@(tProyectos != 0 ? tProyectos:0)" data-width="100"
+                                               data-height="100" data-fgColor="@pu.FondoHexadecimal" data-readonly="true" disabled/><br />
+                                        <a href="#" class="font-weight-bold btnDetalle" style="color: @pu.FondoHexadecimal" data-estatus="@pu.NumeroUEG"
+                                           data-servicio="@pu.Id">
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            var model = @Html.Raw(Json.Serialize(@Model));
+            var totalProyectos = @Html.Raw(Json.Serialize(@total));
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var target = $(e.target).attr("href") // activated tab
+                localStorage.setItem('activeTab', target);
+            });
+
+            if (localStorage.getItem('activeTab')) {
+                var idTab = localStorage.getItem('activeTab').replace("#", "");
+                $('a[href="#home"]').removeClass('active');
+                $('a[href="' + localStorage.getItem('activeTab') + '"]').addClass('active');
+                $("#home").removeClass("show active");
+                $("#" + idTab).addClass("show active");
+            } else {
+                $('#myTab li:first').addClass('active');
+            }
+
+            /********************************* Propiedades Graficas *********************************************/
+                $('.desgloceUEG').knob({
+                    max: 100,
+                    format: function (value) {
+                        return (value).toFixed(2) + '%';
+                    },
+                    draw: function () {
+                        $(this.i).css('transform', 'rotate(0deg)').css('font-size', '11pt');
+                    }
+                });
+            /********************************** Fin Propiedades Graficas ****************************************/
+
+            /************************************ Ver Proyectos By UEG ******************************************/
+                $(".proyectosUEG").click(function(){
+                    window.location.href = "/home/index?anio=" + model.anio + "&tipo=" + $(this).data('tipo') + "&estatus=" + $(this).data('estatus');
+                });
+            /******************************** Final Ver Proyectos By UEG ****************************************/
+        });
+    </script>
+}

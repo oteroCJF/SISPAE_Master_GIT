@@ -1,0 +1,499 @@
+﻿@model Sispae.Entities.Vistas.VProyectos;
+@{
+    var user = Convert.ToInt32((@User.Claims.ElementAt(2).Value).Contains("Evaluador"));
+    ViewData["Title"] = "Integración del Proyecto";
+    var anio = 2024;
+    var c = 0;
+}
+<div class="container-fluid" id="limpieza">
+    <a href="#" type='button' class='btn-sm btn-warning float-right mr-2 mb-3 btn-regresar' data-toggle="tooltip" title="Regresar al Listado de Proyectos" data-placement="top"><i class="fal fa-arrow-left"></i></a>
+    <div class="row col-lg-12 mt-2 mb-3">
+        <table class="table">
+            <tr>
+                <td data-toggle="tooltip" title="Nombre del proyecto" data-placement="top" style="font-family: Tahoma; font-size: 13.5px; letter-spacing: 0.8px;">
+                    <strong>Proyecto: </strong> @Model.Proyecto
+                </td>
+                <td data-toggle="tooltip" title="Unidad encargada de la integración del proyecto" data-placement="top" style="font-family: Tahoma; font-size: 13.5px; letter-spacing: 0.8px;">
+                    <strong>Unidad Ejecutora del Gasto: </strong> @Model.ueg.NumeroUEG - @Model.ueg.Descripcion
+                </td>
+                <td data-toggle="tooltip" title="Estatus actual de la integración del proyecto" data-placement="top">
+                    <strong>Estatus: </strong>@(Model.Estatus.Equals("") ? "Sin Integrar":Model.Estatus)
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card">
+        <div class="card-header bg-joke text-white">
+            <h5 class="mt-2">Integración del Proyecto</h5>
+        </div>
+        <div class="card-body">
+            <div class="row ">
+                <div class="col-lg-12">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#integracion" role="tab" aria-controls="home" aria-selected="true">Detalle del Proyecto</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#partidas" role="tab" aria-controls="profile" aria-selected="false">Partidas Presupuestales</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#entregables" role="tab" aria-controls="contact" aria-selected="false">Entregables</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        @* Pregunta 1 *@
+                        <div class="tab-pane fade mt-2 ml-3 show active" id="integracion" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="form-row">
+                                <input type="hidden" value="@Model.Id" />
+                                <div class="form-group col-lg-2">
+                                    <label for="UEG">Ejercicio:</label>
+                                    <select class="form-control" id="selectEjercicio" disabled>
+                                        <option value='@Model.Ejercicio'>@Model.Ejercicio</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-2">
+                                    <label for="UEG">Capítulo: *</label>
+                                    <select class="form-control" id="selectCapitulo">
+                                        <option value=''>Seleccione un capítulo</option>
+                                        <option value='2000'>2000</option>
+                                        <option value='3000'>3000</option>
+                                        <option value='5000'>5000</option>
+                                    </select>
+                                    <div class="col-sm-12" id="error_capitulo">
+                                        <small id="dateHelp" class="text-danger">
+                                            Seleccione el capítulo del proyecto.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-2 mr-3">
+                                    <label for="UEG">Tipo de Presupuesto: *</label>
+                                    <select class="form-control" id="selectPresupuesto">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="PO">Presupuesto de Operación</option>
+                                        <option value="CP">Contratos Plurianuales</option>
+                                        <option value="Ahorros">Ahorros y Economías</option>
+                                    </select>
+                                    <div class="col-sm-12" id="error_presupuesto">
+                                        <small id="dateHelp" class="text-danger">
+                                            Seleccione el presupuesto del proyecto.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-2">
+                                    <label for="montoEstimado">Importe Estimado: *</label>
+                                    <div class="fields">
+                                        <input class="form-control" type="text" pattern="[0-9.,]+" name="importeEstimado" id="importeEstimado" required data-type="number" />
+                                        <div class="col-sm-12" id="error_importe">
+                                            <small id="dateHelp" class="text-danger">
+                                                Capture el importe estimado.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-lg-12">
+                                <div class="form-group col-lg-4">
+                                    <div class="form-check-inline proyectoEvento mt-2" style="background: none; color: black;">
+                                        <strong class="text-black mr-3">¿Proyecto por evento?</strong>
+                                        @if (Model.Evento)
+                                        {
+                                            <input class="chk_evento" type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>"
+                                                   data-onstyle="success" data-offstyle="danger" data-style="ios" checked>
+                                        }
+                                        else
+                                        {
+                                            <input class="chk_evento" type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>"
+                                                   data-onstyle="success" data-offstyle="danger" data-style="ios">
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @* Fin de la Pregunta 1 *@
+                        @* Pregunta 2 *@
+                        <div class="tab-pane fade mt-2 ml-3" id="partidas" role="tabpanel" aria-labelledby="profile-tab">
+                            <p class="text-black h6 mb-3">Captura de Partida (s) para el Proyecto:</p>
+                            <div class="row">
+                                <div class="form-row col-lg-12">
+                                    <div class="form-group col-lg-4">
+                                        <label for="partida">Partida: *</label>
+                                        <select class="form-control select2bs4" id="sPartida">
+                                            <option value=''>Seleccione una Partida</option>
+                                            @foreach (var pp in Model.CTPartidas)
+                                            {
+                                                <option value=@pp.Id>@pp.Nombre</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-lg-2 mt-4">
+                                        <button type="button" class="btn btn-primary mt-2 h6" id="btnPartidas">Agregar Partida</button>
+                                    </div>
+                                    <div class="form-group col-lg-5 mt-4 float-left">
+                                        <table class="table" id="t_partidas">
+                                            <thead>
+                                                <tr>
+                                                    <th class='text-center'>N°</th>
+                                                    <th class='text-center'>Partida</th>
+                                                    <th class='text-center'>Eliminar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tb_partidas">
+                                                @foreach (var rp in Model.partidas)
+                                                {
+                                                    c++;
+                                                    <tr>
+                                                        <td class='text-right'>@c</td>
+                                                        <td class='text-center'>@rp.Nombre</td>
+                                                        <td class='text-center'>
+                                                            <a href="javascript:" class="delete_partida" data-monto="@rp.Monto" data-partida="@rp.Id" data-nombre="@rp.Nombre">
+                                                                <i class="fas fa-times text-danger"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @* Fin de la Pregunta 2 *@
+                        @* Entregables *@
+                        <div class="tab-pane fade mt-2 ml-3" id="entregables" role="tabpanel" aria-labelledby="contact-tab">
+                            <div class="col-lg-12 mt-3">
+                                <h3>Adjuntar Entregables</h3>
+                                <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right btn_addFile'><i class="fas fa-plus"></i></a>
+                            </div>
+                            <div class="row col-lg-12 mt-3">
+                                <table class="table" id="tblEntregables">
+                                    <thead>
+                                        <tr>
+                                            <th>Entregable</th>
+                                            <th>Archivo</th>
+                                            <th>Fecha de Carga</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tEntregables"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @* Fin de Entregables *@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class=" col-lg-12">
+                <button type="button" class="btn btn-success float-right ml-3 btn_enviar mr-3" data-toggle="tooltip" title='Enviar la integración del proyecto para su revisión' data-placement="top">Enviar</button>
+                <button type="button" class="btn btn-primary float-right btn_guardar" data-toggle="tooltip" title='Guardar la información capturada' data-placement="top">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fields {
+        margin: 0 10px 0 0;
+    }
+
+        .fields:before {
+            content: "$";
+            text-align: center;
+            position: absolute;
+            margin-top: 7px;
+            left: -5px;
+        }
+
+    </style>
+
+@section Scripts{
+    <script>
+        $(function () {
+            var model = @Html.Raw(Json.Serialize(@Model));
+            var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            var partidas = new Array();
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $(".btn-regresar").click(function () {
+                window.location.href = "/proyectos/index" + window.location.search;
+            });
+
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            });
+
+            $('#error_ejercicio').css('display', 'none');
+            $('#error_capitulo').css('display', 'none');
+            $('#error_presupuesto').css('display', 'none');
+            $('#error_importe').css('display', 'none');
+
+            /*Formato de Miles*/
+
+
+            let myNumericInput = new AutoNumeric('#importeEstimado', model.importe, { decimalPlaces: 2 });
+
+            document.querySelector('#importeEstimado').addEventListener('keyup', () => { });
+            /*FIN de Formato de Miles*/
+
+            /*********************** Procesos para Partridas Presupuestales *************************************/
+
+            /*Agregar Partidas*/
+                $('#btnPartidas').click(function () {
+                    axios.post('/partidas/insertaPartidaProyecto', { PartidaId: parseInt($("#sPartida").val()), IntegracionId: model.id }).then(response => {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                'icon': "success",
+                                'title': "Integración del Proyecto",
+                                'html': "Se asignó la partida al proyecto correctamente."
+                            }).then(function () {
+                                window.location.reload();
+                            });
+                        }
+                    });
+                });
+            /*Fin de Agregar Partidas*/
+
+            /*Eliminacion de Partidas*/
+                $(document).on('click', '.delete_partida', function () {
+                    Swal.fire({
+                        'icon': 'warning',
+                        'title': 'Integración del Proyecto',
+                        'html': '¿Desea eliminar la partida presupuestal <strong>'+$(this).data('nombre')+'</strong> asignada a este proyecto?',
+                        'confirmButtonColor': '#3085d6',
+                        'cancelButtonColor': '#d33',
+                        'confirmButtonText': 'Si, eliminar',
+                        'cancelButtonText': 'Cancelar',
+                        'showCancelButton': true
+                    }).then(response => {
+                        if (response.isConfirmed) {
+                            axios.get('/partidas/eliminaPartidasProyecto/' + model.id+'/'+$(this).data('partida')).then(response => {
+                                Swal.fire({
+                                    'icon': "success",
+                                    'title': 'Integración del Proyecto',
+                                    'html': "La partida presupuestal se eliminó correctamente."
+                                }).then(function () {
+                                    window.location.reload();
+                                });
+                            });
+                        }
+                    });
+                });
+            /*Fin de la Eliminacion de Partidas*/
+
+            /*********************** FIN Procesos para Partridas Presupuestales *************************************/
+
+            /*********************** Procesos para Insertar/Actualizar la Integracion del Proyecto *************************************/
+                function validacionCampos() {
+                    if ($("#selectEjercicio").val() != "" && $("#selectCapitulo").val() != "" &&
+                        $("#selectPresupuesto").val() != "" && $("#importeEstimado").val() != "") {
+                        return true;
+                    }
+
+                    if ($("#selectEjercicio").val() == "") {
+                        $('#selectEjercicio').addClass('is-invalid');
+                        $('#selectEjercicio').removeClass('is-valid');
+                        $('#error_ejercicio').css('display', 'block');
+                    }
+
+                    if ($("#selectCapitulo").val() == "") {
+                        $('#selectCapitulo').addClass('is-invalid');
+                        $('#selectCapitulo').removeClass('is-valid');
+                        $('#error_capitulo').css('display', 'block');
+                    }
+
+                    if ($("#selectPresupuesto").val() == "") {
+                        $('#selectPresupuesto').addClass('is-invalid');
+                        $('#selectPresupuesto').removeClass('is-valid');
+                        $('#error_presupuesto').css('display', 'block');
+                    }
+
+                    if ($("#importeEstimado").val() == "" || $("#importeEstimado").val() == 0) {
+                        $('#importeEstimado').addClass('is-invalid');
+                        $('#importeEstimado').removeClass('is-valid');
+                        $('#error_importe').css('display', 'block');
+                    }
+
+                    return false;
+                }
+
+                $("#selectEjercicio").change(function () {
+                    if ($("#selectEjercicio").val() != "") {
+                        $('#selectEjercicio').removeClass('is-invalid');
+                        $('#selectEjercicio').addClass('is-valid');
+                        $('#error_ejercicio').css('display', 'none');
+                    }
+                });
+
+                $("#selectCapitulo").change(function () {
+                    if ($("#selectCapitulo").val() != "") {
+                        $('#selectCapitulo').removeClass('is-invalid');
+                        $('#selectCapitulo').addClass('is-valid');
+                        $('#error_capitulo').css('display', 'none');
+                    }
+                });
+
+                $("#selectPresupuesto").change(function () {
+                    if ($("#selectPresupuesto").val() != "") {
+                        $('#selectPresupuesto').removeClass('is-invalid');
+                        $('#selectPresupuesto').addClass('is-valid');
+                        $('#error_presupuesto').css('display', 'none');
+                    }
+                });
+
+                $("#importeEstimado").change(function () {
+                    if ($("#importeEstimado").val() != "" && $("#importeEstimado").val() != 0) {
+                        $('#importeEstimado').removeClass('is-invalid');
+                        $('#importeEstimado').addClass('is-valid');
+                        $('#error_importe').css('display', 'none');
+                    }
+                });
+
+                $(".btn_guardar").click(function () {
+                    var ejercicio = $("#selectEjercicio").val();
+                    var capitulo = $("#selectCapitulo").val();
+                    var presupuesto = $("#selectPresupuesto").val();
+                    var importe = $("#importeEstimado").val();
+                    var evento = $(".chk_evento").prop("checked");
+
+                    if (ejercicio != "")
+                        ejercicio = parseInt(ejercicio);
+                    else
+                        ejercicio = 0;
+
+                    if (capitulo != "")
+                        capitulo = parseInt(capitulo);
+                    else
+                        capitulo = 0;
+
+                    if (presupuesto != "")
+                        presupuesto = presupuesto;
+                    else
+                        presupuesto = "";
+
+                    if (importe != "" && importe != 0) {
+                        importe = importe;
+                    }else {
+                        importe = 0;
+                    }
+
+                    axios.post('/historial/nuevoHistorialProyecto', { IntegracionId: model.id, UsuarioId: parseInt(@User.Claims.ElementAt(0).Value),
+                                                                    Tipo: "Integración", Estatus: "En Proceso", Comentarios: "Se relizó captura de datos del proyecto."
+                    }).then(historial => {
+                        if (historial.data != -1) {
+                            axios.post('/integracion/actualizarIntegracion', {
+                                Id: model.id, UsuarioId: parseInt(@User.Claims.ElementAt(0).Value), Evento: evento, Capitulo: capitulo,Tipo: presupuesto, Importe: importe, Estatus: "En Proceso"
+                            }).then(response => {
+                                if (response.data != -1)
+                                {
+                                    Swal.fire({
+                                        'icon': "success",
+                                        'title': "Integración del Proyecto",
+                                        'html': "Se guardó el proyecto correctamente."
+                                    }).then(function () {
+                                        window.location.reload();
+                                    });
+                                }
+                            }).catch(error => {
+                                Swal.fire({
+                                    'icon': 'error',
+                                    'title': 'Integración del Proyecto',
+                                    'html': 'Hubo un error al guardar el proyecto. Favor de contactar al administrador'
+                                });
+                            });
+                        }
+                    }).catch(errh => {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Integración del Proyecto',
+                            'html': 'Hubo un error al guardar el proyecto. Favor de contactar al administrador'
+                        });
+                    });
+                });
+
+            /********************************** Funciones Adicionales *********************************/
+                function cuentaPartidasProyecto() {
+                    var isContinue = true;
+                    $.ajax({
+                        url: '/partidas/getPartidasProyecto/' + model.id,
+                        type: 'GET',
+                        async: false,
+                        success: function (json) {
+                            json == 0 ? isContinue = false : true;
+                        },
+                    });
+                    return isContinue;
+                }
+            /********************************** FIN Funciones Asincronas*********************************/
+                $(".btn_enviar").click(function () {
+                    var ejercicio = $("#selectEjercicio").val();
+                    var capitulo = $("#selectCapitulo").val();
+                    var presupuesto = $("#selectPresupuesto").val();
+                    var importe = $("#importeEstimado").val();
+
+                    if (!cuentaPartidasProyecto()) {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Integración del Proyecto',
+                            'html': 'Aún no asigna la(s) <b>Partidas Presupuestales</b> al proyecto.'
+                        });
+
+                        return false;
+                    }
+
+                    if (validacionCampos()) {
+                        axios.post('/historial/nuevoHistorialProyecto', { IntegracionId: model.id, UsuarioId: parseInt(@User.Claims.ElementAt(0).Value),
+                                                                    Tipo: "Integración", Estatus: "Enviada", Comentarios: "Se envía la integración del proyecto para su revisión."
+                        }).then(historial => {
+                            if (historial.data != -1) {
+                                axios.post('/integracion/actualizarIntegracion', {
+                                    Id: model.id, UsuarioId: parseInt(@User.Claims.ElementAt(0).Value), Capitulo: capitulo, Tipo: presupuesto, Importe: importe, Estatus: "Enviada"
+                                }).then(response => {
+                                    if (response.data != -1) {
+                                        Swal.fire({
+                                            'icon': "success",
+                                            'title': "Integración del Proyecto",
+                                            'html': "Se envió el proyecto correctamente."
+                                        }).then(function () {
+                                            window.location.href = "/proyectos/index?UEG=" + model.ueg.numeroUEG;
+                                        });
+                                    }
+                                }).catch(error => {
+                                     Swal.fire({
+                                         'icon': 'error',
+                                         'title': 'Integración del Proyecto',
+                                         'html': 'Hubo un error al envíar el proyecto. Favor de contactar al administrador'
+                                     });
+                                });
+                            }
+                        }).catch(errh => {
+                            Swal.fire({
+                                'icon': 'error',
+                                'title': 'Integración del Proyecto',
+                                'html': 'Hubo un error al envíar el proyecto. Favor de contactar al administrador'
+                            });
+                        });
+                    } else {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Integración del Proyecto',
+                            'html': 'Antes de enviar el proyecto capture todos los datos marcados en rojo.'
+                        });
+                    }
+                });
+            /*********************** FIN Procesos para Insertar/Actualizar la Integracion del Proyecto *************************************/
+
+            /****************** Procesos para mostrar los resultados capturados en la Integracion del Proyecto *****************************/
+            $("#selectEjercicio").val(model.ejercicio);
+                $("#selectCapitulo").val(model.capitulo == 0 ? "" : model.capitulo);
+                $("#selectPresupuesto").val(model.tipo);
+            /***************** FIN Procesos para mostrar los resultados capturados en la Integracion del Proyecto **************************/
+
+        });
+    </script>
+}

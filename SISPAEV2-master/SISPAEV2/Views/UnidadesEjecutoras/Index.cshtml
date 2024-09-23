@@ -1,0 +1,164 @@
+﻿@model IEnumerable<Sispae.Entities.MUEGS.UEG>
+@{
+    ViewData["Title"] = "Unidades Ejecutoras del Gasto (UEG)";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <table class="table" id="table_profiles">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>UEG</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in @Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(model => item.Orden)</td>
+                        <td>@Html.DisplayFor(model => item.NumeroUEG)</td>
+                        <td>@Html.DisplayFor(model => item.Nombre)</td>
+                        <td>@Html.DisplayFor(model => item.Descripcion)</td>
+                        <td>
+                            <a href="#" class="text-center update_ueg" data-id="@item.Id" data-nombre="@item.Nombre" data-ueg="@item.NumeroUEG" data-descripcion="@item.Descripcion">
+                                <i class="fad fa-pencil text-primary mr-2"></i>
+                            </a>
+                            <a href="#" class="text-center delete_ueg" data-id="@item.Id">
+                                <i class="fad fa-times text-danger"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@* Modal para ver los datos de la unidad ejecutora *@
+<div class="modal fade" id="modal-show">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-joke">
+                <h4 class="modal-title text-white">Actualizar de la Unidad Ejecutora del Gasto</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row col-lg-12 mt-2">
+                    <input type="hidden" id="inId" />
+                    <div class="col-lg-5" id="divNombre">
+                        <strong>Nombre:</strong>
+                        <input class="form-control" type="text" id="inNombre" />
+                    </div>
+                    <div class=" col-lg-3" id="divNumero">
+                        <strong>Clave:</strong>
+                        <input class="form-control" type="number" id="inNumero" />
+                    </div>
+                    <div class=" col-lg-3" id="divNumero">
+                        <strong>Abreviación:</strong>
+                        <input class="form-control" type="text" id="inAbreviacion" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button type="button" class="btn btn-primary" id="actualizaUEG">Actualizar UEG</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@* FIN del Modal para ver los datos de la unidad ejecutora *@
+
+@section Scripts{
+    <script>
+        $(function () {
+            
+            $(".update_ueg").click(function () {
+                $("#inId").val($(this).data('id'));
+                $("#inAbreviacion").val($(this).data('nombre'));
+                $("#inNombre").val($(this).data('descripcion'));
+                $("#inNumero").val($(this).data('ueg'));
+                $("#modal-show").modal('show');
+            });
+
+            $("#actualizaUEG").click(function () {
+                var id = $("#inId").val();
+                var nombre = $("#inNombre").val();
+                var abreviacion = $("#inAbreviacion").val();
+                var numero = $("#inNumero").val();
+
+                axios.post('/ueg/actualiza', { Id: parseInt(id), Nombre: abreviacion, Descripcion: nombre, NumeroUEG: parseInt(numero) }).then(response => {
+                    if (response.data == 1) {
+                        Swal.fire({
+                            'icon': 'success',
+                            'title': 'Unidad Ejecutora del Gasto',
+                            'html': 'Los datos de la <strong>Unidad Ejecutora del Gasto </strong> se actualizarón correctamente.',
+                        }).then(function () {
+                            $("#modal-show").modal('hide');
+                            window.location.reload();
+                        });
+                    }
+                }).catch(err => {
+                    Swal.fire({
+                        'icon': 'error',
+                        'title': 'Unidad Ejecutora del Gasto',
+                        'html': 'Se presentó un error al actualizar los datos de la <strong>Unidad Ejecutora</strong>. Favor de contactar al administrador a la ext. #318 2574',
+                    }).then(function () {
+                        $("#modal-show").modal('hide');
+                    });
+                });
+            });
+
+            $(".delete_ueg").click(function () {
+                Swal.fire({
+                    'icon': 'warning',
+                    'title': 'Unidad Ejecutora del Gasto',
+                    'html': '¿Esta seguro de que desea eliminar la <b>Unidad Ejecutora del Gasto</b>?',
+                    'confirmButtonColor': '#3085d6',
+                    'cancelButtonColor': '#d33',
+                    'confirmButtonText': 'Si, eliminar',
+                    'cancelButtonText': 'Cancelar',
+                    'showCancelButton': true
+                }).then(del => {
+                    if (del.isConfirmed) {
+                        axios.get('/ueg/delete/' + $(this).data('id')).then(response => {
+                            if (response.data == 1) {
+                                Swal.fire({
+                                    'icon': 'success',
+                                    'title': 'Unidad Ejecutora del Gasto',
+                                    'html': 'La <strong>Unidad Ejecutora del Gasto </strong> se eliminó correctamente.',
+                                }).then(function () {
+                                    $("#modal-show").modal('hide');
+                                    window.location.reload();
+                                });
+                            }
+                        }).catch(err => {
+                            Swal.fire({
+                                'icon': 'error',
+                                'title': 'Unidad Ejecutora del Gasto',
+                                'html': 'Se presentó un error al intentar eliminar la <strong>Unidad Ejecutora</strong>. Favor de contactar al administrador a la ext. #318 2574',
+                            }).then(function () {
+                                $("#modal-show").modal('hide');
+                            });
+                        });
+                    }
+                });
+            });
+
+            $("#table_profiles").DataTable({
+                paging: true,
+                bLengthChange: false,
+                pageLength: 10,
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+            });
+        });
+    </script>
+}
