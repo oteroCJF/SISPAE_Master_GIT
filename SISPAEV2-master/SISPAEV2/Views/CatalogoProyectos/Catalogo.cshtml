@@ -12,7 +12,7 @@
     ViewData["Title"] = title;
 }
 
-<div class="container-fluid">    
+<div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
             <div class="col-lg-12">
@@ -28,151 +28,144 @@
                     </div>
                     @if (Model.proyectoSUEG != null && Model.proyectoSUEG.Count > 0)
                     {
-                        <a class="btn btn-app-ueg bg-black text-white font-weight-bold btnUeg" data-ueg="">
-                            <i class="fas fa-list mr-2"></i> Proyectos sin UEG
-                        </a>
-                    }
+        <a class="btn btn-app-ueg bg-black text-white font-weight-bold btnUeg" data-ueg="">
+            <i class="fas fa-list mr-2"></i> Proyectos sin UEG
+        </a>}
                     @foreach (var md in Model.uegsAsignadas)
                     {
-                        <a class="btn btn-app-ueg @md.Fondo text-white font-weight-bold btnUeg" data-ueg="@md.NumeroUEG">
-                            @Html.Raw(@md.Icono)
-                            @md.NumeroUEG - @md.Nombre
-                        </a>
-                    }
+        <a class="btn btn-app-ueg @md.Fondo text-white font-weight-bold btnUeg" data-ueg="@md.NumeroUEG">
+            @Html.Raw(@md.Icono)
+            @md.NumeroUEG - @md.Nombre
+        </a>}
                 </div>
             </div>
             @*Mostramos los estatus de los proyectos de acuerdo a la UEG*@
             @if (Model.ueg != 0 && (Model.Catalogo == null || !Model.Catalogo.Equals("")))
             {
-                <div class="row col-lg-12">
-                    <div class="row col-lg-12">
-                        <p class="h6 ml-2">1) Seleccione una <strong>"Unidad Ejecutora del Gasto"</strong> para ver los diferentes catálogos de proyectos.
-                    </div>
-                    <a class="btn btn-app-ueg bg-primary text-white font-weight-bold btnCatalogo" data-tipo="PAE">
-                        <i class="fa-light fa-folder-bookmark mr-1"></i> PO y CP
-                    </a>
-                    <a class="btn btn-app-ueg bg-success text-white font-weight-bold btnCatalogo" data-tipo="Ahorros">
-                        <i class="fa-light fa-folder-bookmark mr-1"></i> Ahorros y Economías
-                    </a>
-                </div>
-            }
+<div class="row col-lg-12">
+    <div class="row col-lg-12">
+        <p class="h6 ml-2">1) Seleccione una <strong>"Unidad Ejecutora del Gasto"</strong> para ver los diferentes catálogos de proyectos.
+    </div>
+    <a class="btn btn-app-ueg bg-primary text-white font-weight-bold btnCatalogo" data-tipo="PAE">
+        <i class="fa-light fa-folder-bookmark mr-1"></i> PO y CP
+    </a>
+    <a class="btn btn-app-ueg-catalogo-sujetos bg-success text-white font-weight-bold btnCatalogo" data-tipo="Ahorros">
+        <i class="fa-light fa-folder-bookmark mr-1"></i> Sujetos a Disponibilidad Presupuestal
+    </a>
+</div> }
             else if (Model.ueg == 0 && (Model.Catalogo == null || Model.Catalogo.Equals("")))
             {
-                <div class="col-lg-12">
-                    <table class="table" id="table_profiles">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Nombre</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in @Model.proyectoSUEG)
-                            {
-                                <tr>
-                                    <td>@Html.DisplayFor(model => item.Id)</td>
-                                    <td>@Html.DisplayFor(model => item.Nombre)</td>
-                                    <td>
-                                        <a href="/proyectos/catalogo/detalle/@item.Id" class="text-center update_ueg">
-                                            <i class="fad fa-pencil text-primary mr-2"></i>
-                                        </a>
-                                        <a href="#" class="text-center delete_ueg" data-id="@item.Id">
-                                            <i class="fad fa-times text-danger"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
+<div class="col-lg-12">
+    <table class="table" id="table_profiles">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in @Model.proyectoSUEG)
+            {
+<tr>
+    <td>@Html.DisplayFor(model => item.Id)</td>
+    <td>@Html.DisplayFor(model => item.Nombre)</td>
+    <td>
+        <a href="/proyectos/catalogo/detalle/@item.Id" class="text-center update_ueg">
+            <i class="fad fa-pencil text-primary mr-2"></i>
+        </a>
+        <a href="#" class="text-center delete_ueg" data-id="@item.Id">
+            <i class="fad fa-times text-danger"></i>
+        </a>
+    </td>
+</tr>}
+        </tbody>
+    </table>
+</div>            }
             @if (Model.ueg != 0 && (Model.Catalogo != null && !Model.Catalogo.Equals("")))
             {
-                <div class="col-lg-12">
-                    <table class="table" id="table_profiles">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Nombre</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in @Model.proyectos)
-                            {
-                                <tr>
-                                    <td>@Html.DisplayFor(model => item.Id)</td>
-                                    <td>@Html.DisplayFor(model => item.Nombre)</td>
-                                    <td>
-                                        <a href="/proyectos/catalogo/detalle/@item.Id" class="text-center update_ueg">
-                                            <i class="fad fa-pencil text-primary mr-2"></i>
-                                        </a>
-                                        <a href="#" class="text-center delete_ueg" data-id="@item.Id">
-                                            <i class="fad fa-times text-danger"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
+<div class="col-lg-12">
+    <table class="table" id="table_profiles">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in @Model.proyectos)
+            {
+<tr>
+    <td>@Html.DisplayFor(model => item.Id)</td>
+    <td>@Html.DisplayFor(model => item.Nombre)</td>
+    <td>
+        <a href="/proyectos/catalogo/detalle/@item.Id" class="text-center update_ueg">
+            <i class="fad fa-pencil text-primary mr-2"></i>
+        </a>
+        <a href="#" class="text-center delete_ueg" data-id="@item.Id">
+            <i class="fad fa-times text-danger"></i>
+        </a>
+    </td>
+</tr>}
+        </tbody>
+    </table>
+</div>            }
         </div>
     </div>
 
-@*Modal para buscar cédulas*@
-<div class="modal fade" id="modal-proyectos">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-joke">
-                <h4 class="modal-title text-white">Nuevo Proyecto</h4>
-                <button type="button" class="close close-incidencias text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="row col-lg-12">
-                        <div class="form-group col-lg-4">
-                            <label for="name">Catálogo: *</label>
-                            <select class="form-control" name="nombre" id="tipoProyecto">
-                                <option value="">Seleccione el Catálogo</option>
-                                <option value="PAE">Programa Anual de Ejecución</option>
-                                <option value="Ahorros">Ahorros y Economías</option>
-                            </select>
-                            <div class="col-sm-12" id="error_tipoProyecto">
+    @*Modal para buscar cédulas*@
+    <div class="modal fade" id="modal-proyectos">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-joke">
+                    <h4 class="modal-title text-white">Nuevo Proyecto</h4>
+                    <button type="button" class="close close-incidencias text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="row col-lg-12">
+                            <div class="form-group col-lg-4">
+                                <label for="name">Catálogo: *</label>
+                                <select class="form-control" name="nombre" id="tipoProyecto">
+                                    <option value="">Seleccione el Catálogo</option>
+                                    <option value="PAE">Programa Anual de Ejecución</option>
+                                    <option value="Ahorros">Sujetos a Disponibilidad Presupuestal</option>
+                                </select>
+                                <div class="col-sm-12" id="error_tipoProyecto">
+                                    <small id="dateHelp" class="text-danger">
+                                        Seleccione el catálogo del proyecto
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-lg-12">
+                            <div class="form-group col-lg-12">
+                                <label for="name">Nombre del Proyecto: *</label>
+                                <textarea class="form-control" name="nombre" id="nombreProyecto" style="height:100px"></textarea>
+                            </div>
+                            <div class="col-sm-12" id="error_nombreProyecto">
                                 <small id="dateHelp" class="text-danger">
-                                    Seleccione el catálogo del proyecto
+                                    Capture el nombre del proyecto.
                                 </small>
                             </div>
                         </div>
                     </div>
-                    <div class="row col-lg-12">
-                        <div class="form-group col-lg-12">
-                            <label for="name">Nombre del Proyecto: *</label>
-                            <textarea class="form-control" name="nombre" id="nombreProyecto" style="height:100px"></textarea>
-                        </div>
-                        <div class="col-sm-12" id="error_nombreProyecto">
-                            <small id="dateHelp" class="text-danger">
-                                Capture el nombre del proyecto.
-                            </small>
-                        </div>
-                    </div>
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <button class="btn btn-primary btn_guardar" type="button">Guardar Proyecto</button>
                 </div>
             </div>
-            <div class="modal-footer justify-content-end">
-                <button class="btn btn-primary btn_guardar" type="button">Guardar Proyecto</button>
-            </div>
+            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-content -->
+        <!-- /.modal-dialog -->
     </div>
-    <!-- /.modal-dialog -->
-</div>
-@*Fin del Modal para Capturar Oficios*@
+    @*Fin del Modal para Capturar Oficios*@
 
-@section Scripts{
-    <script>
+    @section Scripts{
+        <script>
         $(function () {
             var model = @Html.Raw(Json.Serialize(@Model));
 
@@ -299,5 +292,5 @@
                 });
             /******************************* Nuevo Proyecto ***************************************/
         });
-    </script>
-}
+        </script>
+    }

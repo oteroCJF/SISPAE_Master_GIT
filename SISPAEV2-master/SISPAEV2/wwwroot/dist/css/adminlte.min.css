@@ -2695,8 +2695,8 @@ a.btn.disabled, fieldset:disabled a.btn {
 
 .btn-cjf {
     color: #fff !important;
-    background-color: #24135F !important;
-    border-color: #24135F !important;
+    background-color: #00106d !important;
+    border-color: #00106d !important;
     box-shadow: none !important;
 }
 
@@ -18521,6 +18521,21 @@ html.maximized-card {
     position: relative;
     text-align: center;
     width: 180px;
+    white-space: initial;
+}
+
+.btn-app-ueg-catalogo-sujetos {
+    border-radius: 3px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    color: #FFF;
+    font-size: 12px;
+    height: 30px;
+    margin: 0 0 10px 10px;
+    min-width: 80px;
+    position: relative;
+    text-align: center;
+    width: 250px;
     white-space: initial;
 }
 

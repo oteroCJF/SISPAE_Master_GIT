@@ -403,6 +403,23 @@ namespace Sispae.Controllers
             return File(excel, "application/msexcel", "Reporte_Calendario" + DateTime.Now + ".xlsx");
         }
 
+        //***********************SE AGREGA MÉTODO PARA EL REPORTE PRES OPERACION EXCEL**************
+
+        [Route("/reportes/PO/excel/{ueg}/{ejercicio}/{tipo}")]
+        public async Task<IActionResult> GetReportePOExcel(int ejercicio, int ueg, string tipo)
+        {
+            LocalReport local = new LocalReport();
+            var path = Directory.GetCurrentDirectory() + "\\Reportes\\ReportePresupuestoOperacionE.rdlc";
+            local.ReportPath = path;
+            var proyectos = await vReportes.GetProyectosByUEG(ueg, ejercicio, tipo);
+            local.DataSources.Add(new ReportDataSource("PO", proyectos));
+
+            var excel = local.Render("EXCELOPENXML");
+            return File(excel, "application/msexcel", "Reporte_PresupuestoDeOperación" +  DateTime.Now + ".xlsx");
+        }
+
+        //*******************TERMINA AGREGA MÉTODO PARA EL REPORTE PRES OPERACION EXCEL********************
+
         private int UserId()
         {
             return Convert.ToInt32(User.Claims.ElementAt(0).Value);

@@ -24,7 +24,7 @@
                     <strong>Estatus: </strong>@(Model.Estatus.Equals("") ? "Sin Integrar":Model.Estatus)
                 </td>
                 <td data-toggle="tooltip" title="Presupuesto del proyecto" data-placement="top">
-                    <strong>Presupuesto: </strong> @(Model.Tipo.Equals("CP") ? "Contratos Plurianuales" : Model.Tipo.Equals("PO") ? "Presupuesto de Operación":"Ahorros y Economías")
+                    <strong>Presupuesto: </strong> @(Model.Tipo.Equals("CP") ? "Contratos Plurianuales" : Model.Tipo.Equals("PO") ? "Presupuesto de Operación":"Sujetos a Disponibilidad Presupuestal")
                 </td>
             </tr>
             <tr>

@@ -32,7 +32,7 @@
             <div class="input-group mb-3">
                 <select class="form-control" asp-for="@Model.Anio" id="anioActual">
                     <option value="">Seleccione el Año</option>
-                    @for (var i = anio; i < (anio + 3); i++)
+                    @for (var i = anio; i < (anio + 5); i++)
                     {
                         <option value="@i">@i</option>
                     }
@@ -52,7 +52,7 @@
                         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Integración y Seguimiento "PAE"</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#ahorros" role="tab" aria-controls="contact" aria-selected="false">Integración y Seguimiento "Ahorros y Economías"</a>
+                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#ahorros" role="tab" aria-controls="contact" aria-selected="false">Integración y Seguimiento "Sujetos a Disponibilidad Presupuestal"</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
@@ -102,7 +102,7 @@
                     </div>
                     <div class="tab-pane fade mt-2 ml-3" id="ahorros" role="tabpanel" aria-labelledby="contact-tab">
                         <h4 class="mt-4">
-                            @(@Model.Estatus != null ? "Integración y Seguimiento \"Ahorros y Economías\" - Estatus "+ @Model.Estatus: "Ahorros y Economías\"PAE\"")
+                            @(@Model.Estatus != null ? "Integración y Seguimiento \"Sujetos a Disponibilidad Presupuestal\" - Estatus "+ @Model.Estatus: "Sujetos a Disponibilidad Presupuestal\"PAE\"")
                         </h4>
                         <div class="row col-lg-12 mt-3">
                             @foreach (var ds in Model.dashboardEstatusA)

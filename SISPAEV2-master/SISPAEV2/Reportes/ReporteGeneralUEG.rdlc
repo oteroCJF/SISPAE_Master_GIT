@@ -2375,10 +2375,10 @@
         <Height>4.44687in</Height>
         <Style />
       </Body>
-      <Width>8.20708in</Width>
+      <Width>8.19875in</Width>
       <Page>
         <PageHeader>
-          <Height>1.46834in</Height>
+          <Height>1.45167in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -2442,7 +2442,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>DIRECCIÓN DE ADMINISTRACIÓN DE SERVICIOS</Value>
+                      <Value />
                       <Style>
                         <FontWeight>Bold</FontWeight>
                       </Style>

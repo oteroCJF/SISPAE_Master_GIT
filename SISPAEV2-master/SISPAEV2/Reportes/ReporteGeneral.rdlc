@@ -1227,7 +1227,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>DIRECCIÓN DE ADMINISTRACIÓN DE SERVICIOS</Value>
+                      <Value />
                       <Style>
                         <FontWeight>Bold</FontWeight>
                       </Style>

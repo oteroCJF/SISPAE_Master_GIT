@@ -6,7 +6,7 @@
     string title = "Integración y Seguimiento a Proyectos";
     if (Model.Catalogo != null && Model.Catalogo.Equals("Ahorros"))
     {
-        title = "Integración y Seguimiento a Proyectos de Ahorros y Economías " + (Model.Anio != 0 ? Model.Anio.ToString() : "");
+        title = "Integración y Seguimiento a Proyectos Sujetos a Disponibilidad Presupuestal " + (Model.Anio != 0 ? Model.Anio.ToString() : "");
     }
     else if (Model.Catalogo != null && Model.Catalogo.Equals("PAE"))
     {
@@ -197,7 +197,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="form-row col-md-3" id="divBusquedaMes">
-                        <label for="Anio">Mes: </label>
+                        <label for="Anio">Año: </label>
                         <select class="form-control" id="anioActual">
                             <option value="">Seleccione el Año</option>
                             @for (var j = 2022; j < (DateTime.Now.Year + 3); j++)
@@ -216,7 +216,7 @@
                         <select class="form-control" name="nombre" id="tipoCatalogo">
                             <option value="">Seleccione el Catálogo</option>
                             <option value="PAE">Programa Anual de Ejecución</option>
-                            <option value="Ahorros">Ahorros y Economías</option>
+                            <option value="Ahorros">Sujetos a Disponibilidad Presupuestal</option>
                         </select>
                         <div class="col-sm-12" id="error_tipoCatalogo">
                             <small id="dateHelp" class="text-danger">

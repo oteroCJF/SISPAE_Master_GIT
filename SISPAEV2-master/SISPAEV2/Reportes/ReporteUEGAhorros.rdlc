@@ -1674,19 +1674,6 @@
                     <TextAlign>Center</TextAlign>
                   </Style>
                 </Paragraph>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>DIRECCIÓN DE ADMINISTRACIÓN DE SERVICIOS</Value>
-                      <Style>
-                        <FontWeight>Bold</FontWeight>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Center</TextAlign>
-                  </Style>
-                </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox1</rd:DefaultName>
               <Top>0.35292in</Top>

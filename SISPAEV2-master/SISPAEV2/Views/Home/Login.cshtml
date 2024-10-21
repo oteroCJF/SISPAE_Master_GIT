@@ -16,17 +16,18 @@
     </div>
     <hr style="background-color: #24135F; font-weight: bold;" />
     <div class="container">
-        <div class="col-lg-12 mt-2">
-            <h3 class="font-weight-bold text-center" style="color:#21006A;">Sistema para la Integración y Seguimiento de Proyectos que conforman el PAE(SISPAE)</h3>
+        <div class="col-lg-12 mt-1">
+            <h2 class="font-weight-bold text-center" style="color:#00106d;">SISPAE</h2>
+            <h5 class="font-weight-bold text-center" style="color:#00106d;">Sistema para la Integración y Seguimiento de Proyectos que conforman el PAE</h5>
         </div>
     </div>
-    <div class="row mt-5">
-        <div class="col-lg-12">
-            <h3 class="ml-5">Inicio del Sistema</h3>
+    <div class="row mt-3">
+        <div class="col-lg-12" align="center">
+            <h4 class="ml-2" style="color:#00106d;"><b>Inicio del Sistema</b></h4>
         </div>
     </div>
     <div class="row col-lg-12">
-        <div class="col-lg-6 mt-5">
+        <div class="col-lg-6 mt-1">
             <form action="/login?ReturnUrl=@System.Net.WebUtility.UrlEncode(returnUrl)" method="post">
                 <div class="input-group mr-1 mb-3 col-lg-8 float-right">
                     <input type="text" class="form-control" name="username" placeholder="u + número de expediente" id="usr_expediente">
@@ -57,7 +58,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-lg-6 mt-5 text-justify">
+        <div class="col-lg-6 mt-1 text-justify">
             Para capturar el usuario, recuerde colocar la letra “u” antes de su número de expediente.<BR />
             Ejemplo: u + 56, el usuario será: u56
             <div class="mt-2">
@@ -75,34 +76,39 @@
     </div>
 </aside>
 <!-- Footer -->
-<footer class="page-footer font-small teal pt-4" style="background-color:#21006A; color: white;">
+<footer class="page-footer font-small teal pt-4" style="background-color:#00106d; color: white;">
     <!-- Footer Text -->
     <div class="container-fluid text-center text-md-left">
         <!-- Grid row -->
         <div class="row">
             <!-- Grid column -->
-            <div class="col-md-6 mt-md-0 mt-3" style="background-color:#21006A; color: white;">
+            <div class="col-md-6 mt-0" style="background-color:#00106d; color: white;">
                 <!-- Content -->
                 <h5 class="font-weight-bold">Edificio Sede</h5>
-                <p class="ml-3">
+                <p class="ml-3 contact-info">
                     <i class="fad fa-building"></i>
                     &nbsp;&nbsp;Edificio Sede Insurgentes Sur 2417
                     San Ángel. Álvaro Obregón <br />
                 </p>
-                <p class="ml-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C.P. 01000, Ciudad de México</p>
-                <p class="ml-3"><i class="fad fa-phone"></i>&nbsp; +52 (55) 5490-8000</p>
+                <p class="ml-3 contact-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C.P. 01000, Ciudad de México</p>
+                <p class="ml-3 contact-info"><i class="fad fa-phone"></i>&nbsp; +52 (55) 5490-8000</p>
 
             </div>
             <!-- Grid column -->
 
             <hr class="clearfix w-100 d-md-none pb-3">
             <!-- Grid column -->
-            <div class="col-md-6 mb-md-0 mb-3" style="background-color:#21006A; color: white;">
+            <div class="col-md-6 mb-md-0 mb-3" style="background-color:#00106d; color: white;">
                 <!-- Content -->
                 <h5 class="font-weight-bold">¿Problemas con el sistema?</h5>
-                <p><i class="fad fa-phone"></i>&nbsp;&nbsp;&nbsp;Ext. 2574, Red nacional #318-2574</p>
-                <p><i class="fad fa-envelope-open-text"></i> &nbsp;&nbsp;juan.miranda.alatriste@correo.cjf.gob.mx</p>
+                <p class="contact-info"><i class="fad fa-user"></i>&nbsp;&nbsp;&nbsp;Ing. Christian Otero García</pclass="contact-info">
+                <p class="contact-info"><i class="fad fa-envelope-open-text"></i> &nbsp;&nbsp;coterog@cjf.gob.mx </p>
+                <p class="contact-info"><i class="fad fa-phone"></i>&nbsp;&nbsp;&nbsp;Ext. 2574, Red nacional #318-2574</p>
+
             </div>
+
+
+
             <!-- Grid column -->
 
         </div>
@@ -111,9 +117,12 @@
     </div>
     <!-- Footer Text -->
     <!-- Copyright -->
-    <div class="page-footer text-center py-3" style="background-color:#21006A; color: white; font-weight: bold;">
-        ©2021 - CASESG - Consejo de la Judicatura Federal
+
+    <div class="col-md-12" align="center" style="background-color:#00106d; color: white; font-weight: bold;">
+        ©2024 - Consejo de la Judicatura Federal - SISPAE
     </div>
+
+  
     <!-- Copyright -->
 
 </footer>
@@ -123,8 +132,16 @@
     footer {
         position: absolute;
         bottom: 0;
-        height: 60px;
+        height: 150px;
         width: 100%;
+    }
+
+    .contact-info {
+        margin-top: -6px; /* Ajusta el valor según sea necesario */
+    }
+
+    .contact-info2 {
+        margin-top: -100px; /* Ajusta el valor según sea necesario */
     }
 </style>
 

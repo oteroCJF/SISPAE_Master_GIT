@@ -24,7 +24,7 @@
                     <strong>Estatus: </strong>@(Model.Estatus.Equals("") ? "Sin Integrar":Model.Estatus)
                 </td>
                 <td data-toggle="tooltip" title="Presupuesto del proyecto" data-placement="top">
-                    <strong>Presupuesto: </strong> @(Model.Tipo.Equals("CP") ? "Contratos Plurianuales" : Model.Tipo.Equals("PO") ? "Presupuesto de Operación":"Ahorros y Economías")
+                    <strong>Presupuesto: </strong> @(Model.Tipo.Equals("CP") ? "Contratos Plurianuales" : Model.Tipo.Equals("PO") ? "Presupuesto de Operación":"Sujetos a Disponibilidad Presupuestal")
                 </td>
             </tr>
             <tr>
@@ -98,7 +98,7 @@
                                                 <option value=''>Seleccione el seguimiento</option>
                                                 <option value="Adjudicado">Adjudicado</option>
                                                 <option value="Tramite">Trámite</option>
-                                                <option value="Covid">Trámite Covid</option>
+                                                @*<option value="Covid">Trámite Covid</option>*@
                                                 <option value="DGPPT">Disposición de DGPPT</option>
                                                 <option value="DGRM">Disposición de DGRM</option>
                                             </select>
@@ -112,7 +112,7 @@
                                             <label for="anioAdj">Año de adjudicación:* </label>
                                             <select class="form-control" id="anioAdj">
                                                 <option value=''>Seleccione el año</option>
-                                                @for (var j = 2021; j <= DateTime.Now.Year; j++)
+                                                @for (var j = 2021; j <= DateTime.Now.Year+2; j++)
                                                 {
                                                     <option value="@j">@j</option>
                                                 }
@@ -406,7 +406,7 @@
                             <option value="Solicitud">Solicitud de Recursos a DGPPT</option>
                             <option value="Tesorería DGPPT" readonly>Monto adjudicado menor al estimado</option>
                             <option value="Deductiva DGPPT">Deductiva DGPPT</option>
-                            <option value="Trámite COVID">Trámite COVID</option>
+                            @*<option value="Trámite COVID">Trámite COVID</option>*@
                             <option value="SolicitudDGRM">Solicitud de Recursos DGRM</option>
                             <option value="RecursosUtilizar">Recursos a Utilizar</option>
                             <option value="Tesorería DGRM" readonly>Monto adjudicado menor al estimado DGRM</option>

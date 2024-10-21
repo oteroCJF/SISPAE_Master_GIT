@@ -1,12 +1,10 @@
 ﻿@model Sispae.Entities.Vistas.VProyectos;
-@{
-    var user = Convert.ToInt32((@User.Claims.ElementAt(2).Value).Contains("Evaluador"));
+@{ var user = Convert.ToInt32((@User.Claims.ElementAt(2).Value).Contains("Evaluador"));
     ViewData["Title"] = "Integración del Proyecto";
-    var anio = 2024;
+    var anio = DateTime.Now.Year;
     var c = 0;
     decimal totalPP = 0;
-    decimal totalC = 0;
-}
+    decimal totalC = 0; }
 <div class="container-fluid" id="limpieza">
     <a href="#" type='button' class='btn-sm btn-warning float-right mr-2 mb-3 btn-regresar' data-toggle="tooltip" title="Regresar al Listado de Proyectos" data-placement="top"><i class="fal fa-arrow-left"></i></a>
     <div class="row col-lg-12 mt-2 mb-3">
@@ -62,8 +60,7 @@
                                         <option value="0">Seleccione la clasificación</option>
                                         @foreach (var m in Model.CTTipo)
                                         {
-                                            <option value='@m.Id'>@m.Nombre</option>
-                                        }
+                            <option value='@m.Id'>@m.Nombre</option>}
                                     </select>
                                     <div class="col-sm-12" id="error_clasificacion">
                                         <small id="dateHelp" class="text-danger">
@@ -86,12 +83,27 @@
                                 </div>
                                 <div class="form-group col-lg-2">
                                     <label for="UEG">Capítulo: *</label>
-                                    <select class="form-control" id="selectCapitulo">
-                                        <option value=''>Seleccione un capítulo</option>
-                                        <option value='2000'>2000</option>
-                                        <option value='3000'>3000</option>
-                                        <option value='5000'>5000</option>
-                                    </select>
+
+                                    @if (Model.Ejercicio == 2025)
+                                    {
+                                <select class="form-control" id="selectCapitulo">
+                                    <option value=''>Seleccione un capítulo</option>
+                                    <option value='2000'>2000</option>
+                                    <option value='3000'>3000</option>
+                                </select>
+                            }
+                            else
+                            {
+                                <select class="form-control" id="selectCapitulo">
+                                    <option value=''>Seleccione un capítulo</option>
+                                    <option value='2000'>2000</option>
+                                    <option value='3000'>3000</option>
+                                    <option value='5000'>5000</option>
+                                </select>
+                            }
+
+
+
                                     <div class="col-sm-12" id="error_capitulo">
                                         <small id="dateHelp" class="text-danger">
                                             Seleccione el capítulo del proyecto.
@@ -104,7 +116,7 @@
                                         <option value="">Seleccione una opción</option>
                                         <option value="PO">Presupuesto de Operación</option>
                                         <option value="CP">Contratos Plurianuales</option>
-                                        <option value="Ahorros">Ahorros y Economías</option>
+                                        <option value="Ahorros">Sujetos a Disponibilidad Presupuestal</option>
                                     </select>
                                     <div class="col-sm-12" id="error_presupuesto">
                                         <small id="dateHelp" class="text-danger">
@@ -116,10 +128,9 @@
                                     <label for="anioAdj">Año estimado de adjudicación:* </label>
                                     <select class="form-control" id="anioEstimado">
                                         <option value=''>Seleccione el año</option>
-                                        @for (var i = 2020;i<=anio;i++)
+                                        @for (var i = 2020; i <= anio + 2; i++)
                                         {
-                                            <option value="@i">@i</option>
-                                        }
+                            <option value="@i">@i</option>}
                                     </select>
                                     <div class="col-sm-12" id="error_anio">
                                         <small id="dateHelp" class="text-danger">
@@ -163,13 +174,24 @@
                                             <option value=''>Seleccione una Partida</option>
                                             @foreach (var pp in Model.CTPartidas)
                                             {
-                                                <option value=@pp.Id>@pp.Nombre</option>
+                                                  @if (Model.Ejercicio == 2025)
+                                                  {
+                                                     @if (pp.Id != 38 && pp.Id != 41)
+                                                       {
+                                                          <option value=@pp.Id>@pp.Nombre</option>
+                                                       }
+                                                  }
+                                                   else
+                                                        {
+                                                            <option value=@pp.Id>@pp.Nombre</option>
+                                                            }
                                             }
+
                                         </select>
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label for="partida">Monto: *</label>
-                                        <input class="form-control" id="montoPartida"/>
+                                        <input class="form-control" id="montoPartida" />
                                     </div>
                                     <div class="form-group col-lg-2 mt-4">
                                         <button type="button" class="btn btn-primary mt-2 h6" id="btnPartidas">Agregar Partida</button>
@@ -189,17 +211,16 @@
                                                 {
                                                     c++;
                                                     totalPP += rp.Monto;
-                                                    <tr>
-                                                        <td class='text-right'>@c</td>
-                                                        <td class='text-right'>@rp.Nombre</td>
-                                                        <td class='text-right'>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rp.Monto)</td>
-                                                        <td class='text-center'>
-                                                            <a href="javascript:" class="delete_partida" data-monto="@rp.Monto" data-partida="@rp.Id" data-nombre="@rp.Nombre">
-                                                                <i class="fas fa-times text-danger"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                }
+                                    <tr>
+                                        <td class='text-right'>@c</td>
+                                        <td class='text-right'>@rp.Nombre</td>
+                                        <td class='text-right'>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rp.Monto)</td>
+                                        <td class='text-center'>
+                                            <a href="javascript:" class="delete_partida" data-monto="@rp.Monto" data-partida="@rp.Id" data-nombre="@rp.Nombre">
+                                                <i class="fas fa-times text-danger"></i>
+                                            </a>
+                                        </td>
+                                    </tr>}
                                             </tbody>
                                             <tfoot>
                                                 <tr>
@@ -232,8 +253,7 @@
                                             <option value=''>Seleccione una partida</option>
                                             @foreach (var pt in Model.partidas)
                                             {
-                                                <option value=@pt.Id>@pt.Nombre</option>
-                                            }
+                                <option value=@pt.Id>@pt.Nombre</option>}
                                         </select>
                                     </div>
                                     <div class="form-group col-lg-2">
@@ -255,26 +275,23 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="tb_calendar">
-                                                @{
-                                                    c = 0;
-                                                } 
-                                                @foreach(var rp in Model.RecursosProyecto)
+                                                @{ c = 0; }
+                                                @foreach (var rp in Model.RecursosProyecto)
                                                 {
                                                     c++;
-                                                    totalC += rp.Monto; 
-                                                    <tr>
-                                                        <td class='text-center'>@c</td>
-                                                        <td class='text-center'>@rp.Mes</td>
-                                                        <td class='text-center'>@(rp.Partida.Equals("") ? "Sin Partida":rp.Partida)</td>
-                                                        <td class='text-center'>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rp.Monto)</td>
-                                                        <td class='text-center'>
-                                                            <a href="javascript:" class="eliminaCalendar" data-monto="@rp.Monto" data-integracion="@rp.IntegracionId" 
-                                                            data-mes="@rp.MesId">
-                                                                <i class="fas fa-times text-danger"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                }
+                                                    totalC += rp.Monto;
+                                    <tr>
+                                        <td class='text-center'>@c</td>
+                                        <td class='text-center'>@rp.Mes</td>
+                                        <td class='text-center'>@(rp.Partida.Equals("") ? "Sin Partida":rp.Partida)</td>
+                                        <td class='text-center'>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rp.Monto)</td>
+                                        <td class='text-center'>
+                                            <a href="javascript:" class="eliminaCalendar" data-monto="@rp.Monto" data-integracion="@rp.IntegracionId"
+                                               data-mes="@rp.MesId">
+                                                <i class="fas fa-times text-danger"></i>
+                                            </a>
+                                        </td>
+                                    </tr>}
                                             </tbody>
                                             <tfoot>
                                                 <tr>
@@ -337,8 +354,7 @@
             margin-top: 7px;
             left: -5px;
         }
-
-    </style>
+</style>
 
 @section Scripts{
     <script>
@@ -406,7 +422,7 @@
                 var limite = 14;
                 $("#montoPartida").attr('maxlength', limite);
             });
-            
+
             $('#montoCalendar').keydown(function (e) {
                 setTimeout(() => {
                     let montoMin = $('#montoCalendar').val().split(".");
@@ -493,7 +509,7 @@
             /*Fin de la Eliminacion de Partidas*/
 
             /*********************** FIN Procesos para Partridas Presupuestales *************************************/
-            
+
             /*********************** Procesos para Calendarizacion *************************************/
             $('#btnCalendarizacion').click(function () {
                 var existsMes = false;
@@ -564,7 +580,7 @@
                             'icon': "success",
                             'title': "Integración del Proyecto",
                             'html': "Se asignó el gasto estimado al proyecto correctamente."
-                        }).then(function (){ 
+                        }).then(function (){
                             window.location.reload();
                         });
                     }
@@ -757,7 +773,7 @@
                         presupuesto = presupuesto;
                     else
                         presupuesto = "";
-                        
+
                     if (tipoId != "")
                         tipoId = tipoId;
                     else

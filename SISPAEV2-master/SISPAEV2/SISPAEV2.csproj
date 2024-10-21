@@ -19,14 +19,28 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="ReporteGeneralUEG.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReporteGeneralUEG.xsd</DependentUpon>
+    </Compile>
     <Compile Update="ReportesSISPAE.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ReportesSISPAE.xsd</DependentUpon>
     </Compile>
+    <Compile Update="SISPAEV2DataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SISPAEV2DataSet.xsd</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ReporteGeneralUEG.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ReporteGeneralUEG.Designer.cs</LastGenOutput>
+    </None>
     <None Update="ReportesSISPAE.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>ReportesSISPAE.Designer.cs</LastGenOutput>
@@ -61,6 +75,10 @@
     </None>
     <None Update="Reportes\ReporteGeneralUEG.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SISPAEV2DataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SISPAEV2DataSet.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 

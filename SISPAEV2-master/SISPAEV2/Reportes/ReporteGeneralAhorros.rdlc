@@ -79,7 +79,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Reporte General de Ahorros y Economías</Value>
+                    <Value>Reporte General de Sujetos a Disponibilidad Presupuestal</Value>
                     <Style>
                       <FontWeight>Bold</FontWeight>
                     </Style>
@@ -1500,19 +1500,6 @@
                   <TextRuns>
                     <TextRun>
                       <Value>DIRECCIÓN GENERAL DE SERVICIOS GENERALES</Value>
-                      <Style>
-                        <FontWeight>Bold</FontWeight>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Center</TextAlign>
-                  </Style>
-                </Paragraph>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>DIRECCIÓN DE ADMINISTRACIÓN DE SERVICIOS</Value>
                       <Style>
                         <FontWeight>Bold</FontWeight>
                       </Style>

@@ -1,7 +1,7 @@
 ﻿@model Sispae.Entities.Vistas.VProyectos;
 @{
     var i = 0;
-    ViewData["Title"] = "Ahorros y Economías - Adjudicación del Proyecto ";
+    ViewData["Title"] = "Sujetos a Disponibilidad Presupuestal - Adjudicación del Proyecto ";
 }
 
 <div class="container-fluid" id="limpieza">
@@ -24,7 +24,7 @@
                     <strong>Estatus: </strong>@(Model.Estatus.Equals("") ? "Sin Integrar":Model.Estatus)
                 </td>
                 <td data-toggle="tooltip" title="Presupuesto del proyecto" data-placement="top">
-                    <strong>Presupuesto: </strong> @(Model.Tipo.Equals("CP") ? "Contratos Plurianuales" : Model.Tipo.Equals("PO") ? "Presupuesto de Operación":"Ahorros y Economías")
+                    <strong>Presupuesto: </strong> @(Model.Tipo.Equals("CP") ? "Contratos Plurianuales" : Model.Tipo.Equals("PO") ? "Presupuesto de Operación":"Sujetos a Disponibilidad Presupuestal")
                 </td>
             </tr>
             <tr>
@@ -106,10 +106,10 @@
                                             <label for="anioAdj">Año de adjudicación:* </label>
                                             <select class="form-control" id="anioAdj">
                                                 <option value=''>Seleccione el año</option>
-                                                <option value="2021">2021</option>
-                                                <option value="2022">2022</option>
-                                                <option value="@(DateTime.Now.Year)">@(DateTime.Now.Year)</option>
-                                                <option value="@(DateTime.Now.Year+1)">@(DateTime.Now.Year+1)</option>
+                                                @for (var j = 2021; j <= DateTime.Now.Year + 2; j++)
+                                                {
+                                                     <option value="@j">@j</option>
+                                                 }
                                             </select>
                                             <div class="col-sm-12" id="error_anioAdj">
                                                 <small id="dateHelp" class="text-danger">

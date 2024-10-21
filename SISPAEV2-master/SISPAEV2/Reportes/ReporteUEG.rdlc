@@ -1872,7 +1872,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=IIF(Parameters!presupuesto.Value.Equals("Ahorros"),"Total General Ahorros y Economías","Total General")</Value>
+                                  <Value>=IIF(Parameters!presupuesto.Value.Equals("Ahorros"),"Total General Sujetos a Disponibilidad Presupuestal","Total General")</Value>
                                   <Style>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -2091,7 +2091,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>DIRECCIÓN DE ADMINISTRACIÓN DE SERVICIOS</Value>
+                      <Value />
                       <Style>
                         <FontWeight>Bold</FontWeight>
                       </Style>

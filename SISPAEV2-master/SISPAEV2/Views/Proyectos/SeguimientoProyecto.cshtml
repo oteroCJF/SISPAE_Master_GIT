@@ -51,13 +51,13 @@
                                         <div class="col-lg-5">
                                             <p class="text">Nombre del Proyecto: <b>@Model.Proyecto</b></p>
                                             <ul class="ml-4 mb-0 fa-ul">
-                                                <li class="small mt-3">
+                                                <li class="mt-3">
                                                     <span class="fa-li"><i class="fa-solid fa-circle-c"></i></span>
-                                                    <b>Capitulo: </b>@Model.Capitulo
+                                                    <b>Capítulo: </b>@Model.Capitulo
                                                 </li>
                                                 <li class="mt-3">
                                                     <span class="fa-li"><i class="fa-solid fa-box-dollar"></i></span>
-                                                    <b>Presupuesto: </b>@(Model.Tipo.Equals("PO") ? "Presupuesto de Operación" : Model.Tipo.Equals("CP") ? "Contrtatos Plurianuales": "Ahorros y Economías")
+                                                    <b>Presupuesto: </b>@(Model.Tipo.Equals("PO") ? "Presupuesto de Operación" : Model.Tipo.Equals("CP") ? "Contrtatos Plurianuales": "Sujetos a Disponibilidad Presupuestal")
                                                 </li>
                                                 <li class="mt-3">
                                                     <span class="fa-li"><i class="fas fa-calendar"></i></span>
@@ -67,7 +67,7 @@
                                                     <span class="fa-li">
                                                         <i class="fas fa-lg fa-dollar-sign"></i>
                                                     </span>
-                                                    <b>Importe estimado de adjudicación: </b>: @String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", Model.Importe)
+                                                    <b>Importe estimado de adjudicación: </b> @String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", Model.Importe)
                                                 </li>
                                                 <li class="mt-3">
                                                     <span class="fa-li"><i class="fas fa-lg fa-user"></i></span>
