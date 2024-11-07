@@ -478,7 +478,10 @@
                                             'title': "Integración del Proyecto",
                                             'html': "Se envió el proyecto correctamente."
                                         }).then(function () {
-                                            window.location.href = "/proyectos/index?UEG=" + model.ueg.numeroUEG;
+                                            /*window.location.href = "/proyectos/index?UEG=" + model.ueg.numeroUEG;*/
+                                            //SE AGREGÓ ESTA LINEA PARA QUE AL ENVIAR EL PROYECTO, REGRESE A LA PANTALLA CON LA UEG SELECCIONADA PREVIAMENTE
+                                            window.location.href = "/proyectos/index" + window.location.search;
+
                                         });
                                     }
                                 }).catch(error => {

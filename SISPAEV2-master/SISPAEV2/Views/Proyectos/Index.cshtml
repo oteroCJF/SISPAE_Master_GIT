@@ -156,6 +156,7 @@
                                             <a href="#" data-id="@item.Id" data-tipo="@item.Tipo" class="text-center ml-2 btnIntegracion" data-toggle="tooltip" title="Integrar Proyecto" data-placement="top">
                                                 <i class="fad fa-pencil text-primary"></i>
                                             </a>
+
                                         }
 
                                         @if ((item.Estatus.Equals("Autorizada") || item.Estatus.Equals("Seguimiento Enviado") || item.Estatus.Equals("Seguimiento Autorizado")) || item.Evento)
@@ -344,7 +345,10 @@
                 window.location.href = "/proyectos/index?anio=" + model.anio + "&catalogo=" + model.catalogo + "&UEG=" + model.ueg + "&Estatus=" + $(this).data('estatus');
             });
 
+            //SE MANTUVO, PERO SE MODIFICÓ EL STORED PROCEDURE PARA OBTENER EL TIPO!!
             $(".btnIntegracion").click(function () {
+                //var tipo = $(this).data('tipo');
+                //console.log('Holaaaaaaaaaa', tipo); // Esto mostrará el valor de data-tipo en la consola
                 if ($(this).data('tipo') == "Ahorros")
                 {
                     window.location.href = "/ahorros/integracion/" + $(this).data('id') + window.location.search;

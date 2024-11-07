@@ -1,8 +1,6 @@
 ﻿@model Sispae.Entities.Vistas.VProyectos;
-@{
-    var i = 0;
-    ViewData["Title"] = "Sujetos a Disponibilidad Presupuestal - Adjudicación del Proyecto ";
-}
+@{ var i = 0;
+    ViewData["Title"] = "Sujetos a Disponibilidad Presupuestal - Adjudicación del Proyecto "; }
 
 <div class="container-fluid" id="limpieza">
     <a href="#" type='button' class='btn-sm btn-warning float-right mr-2 mb-3 btn-regresar' data-toggle="tooltip" title="Regresar al Listado de Proyectos" data-placement="top"><i class="fal fa-arrow-left"></i></a>
@@ -34,24 +32,20 @@
                 <td data-toggle="tooltip" title="Monto total de adjudicación del proyecto" data-placement="top">
                     @if (Model.seguimiento != null && Model.seguimiento.Tipo.Equals("Tramite"))
                     {
-                        <strong>Proyecto en Trámite: </strong>
-                    }
-                    else if (Model.seguimiento != null && Model.seguimiento.Tipo.Equals("Covid"))
-                    {
-                        <strong>Proyecto en Trámite COVID: </strong>
-                    }
-                    else
-                    {
-                        <strong>Adjudicado por: </strong>
-                    }
+        <strong>Proyecto en Trámite: </strong> }
+    else if (Model.seguimiento != null && Model.seguimiento.Tipo.Equals("Covid"))
+    {
+<strong>Proyecto en Trámite COVID: </strong> }
+else
+{
+<strong>Adjudicado por: </strong>}
                     @if (Model.seguimiento != null && Model.seguimiento.Monto != 0)
-                        @String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", Model.seguimiento.Monto)
-                        else
-                            @String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", 0)
+        @String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", Model.seguimiento.Monto) else
+@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", 0)
                 </td>
                 <td colspan="2" data-toggle="tooltip" title="Recursos Disponibles" data-placement="top">
                     <strong>Recursos Disponibles: </strong>
-                        @String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", Model.RecursosDisponibles)
+                    @String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", Model.RecursosDisponibles)
                 </td>
             </tr>
         </table>
@@ -72,16 +66,14 @@
                         </li>
                         @if (Model.seguimiento != null)
                         {
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#oficios" role="tab" aria-controls="contact" aria-selected="false">Oficios</a>
-                            </li>
-                        }
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#oficios" role="tab" aria-controls="contact" aria-selected="false">Oficios</a>
+            </li>}
                         @if (Model.entregables != null)
                         {
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#entregables" role="tab" aria-controls="contact" aria-selected="false">Documentación del Proyecto</a>
-                            </li>
-                        }
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#entregables" role="tab" aria-controls="contact" aria-selected="false">Documentación del Proyecto</a>
+            </li>}
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         @* Recursos 1 *@
@@ -108,8 +100,7 @@
                                                 <option value=''>Seleccione el año</option>
                                                 @for (var j = 2021; j <= DateTime.Now.Year + 2; j++)
                                                 {
-                                                     <option value="@j">@j</option>
-                                                 }
+                                    <option value="@j">@j</option>}
                                             </select>
                                             <div class="col-sm-12" id="error_anioAdj">
                                                 <small id="dateHelp" class="text-danger">
@@ -145,14 +136,12 @@
                                             <strong class="text-black mr-3">¿Los recursos sobrantes se devolverán a la DGPPT?</strong>
                                             @if (Model.seguimiento != null && Model.seguimiento.Devolver)
                                             {
-                                                <input class="chk_recursosDGPPT" type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>"
-                                                       data-onstyle="success" data-offstyle="danger" data-style="ios" checked>
-                                            }
-                                            else
-                                            {
-                                                <input class="chk_recursosDGPPT" type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>"
-                                                       data-onstyle="success" data-offstyle="danger" data-style="ios">
-                                            }
+                                <input class="chk_recursosDGPPT" type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>"
+                                       data-onstyle="success" data-offstyle="danger" data-style="ios" checked> }
+                            else
+                            {
+                <input class="chk_recursosDGPPT" type="checkbox" data-toggle="toggle" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>"
+                       data-onstyle="success" data-offstyle="danger" data-style="ios">}
                                         </div>
                                     </div>
                                     <div class="form-row mt-2" id="divMontoP">
@@ -248,106 +237,99 @@
                         @* Fin de la Prestador *@
                         @if (Model.seguimiento != null)
                         {
-                            i = 0;
-                            @* Oficios *@
-                            <div class="tab-pane fade mt-2 ml-3" id="oficios" role="tabpanel" aria-labelledby="contact-tab">
-                                <div class="col-lg-12 mt-3">
-                                    <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right addOficio'><i class="fas fa-plus"></i></a>
-                                </div>
-                                <div class="row col-lg-12">
-                                    <table class="table mt-3" id="tblOficios">
-                                        <thead>
+                            i = 0;@* Oficios *@
+                                            <div class="tab-pane fade mt-2 ml-3" id="oficios" role="tabpanel" aria-labelledby="contact-tab">
+                                                <div class="col-lg-12 mt-3">
+                                                    <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right addOficio'><i class="fas fa-plus"></i></a>
+                                                </div>
+                                                <div class="row col-lg-12">
+                                                    <table class="table mt-3" id="tblOficios">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Tipo de Movimiento</th>
+                                                                <th>Número de Oficio</th>
+                                                                @*<th>Oficio</th>*@
+                                                                <th>Archivo</th>
+                                                                <th>Monto</th>
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="tEntregables">
+                                                            @foreach (var rec in Model.seguimiento.recursos)
+                                                            {
+                                                                i++;
                                             <tr>
-                                                <th>#</th>
-                                                <th>Tipo de Movimiento</th>
-                                                <th>Número de Oficio</th>
-                                                @*<th>Oficio</th>*@
-                                                <th>Archivo</th>
-                                                <th>Monto</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tEntregables">
-                                            @foreach (var rec in Model.seguimiento.recursos)
-                                            {
-                                                i++;
-                                                <tr>
-                                                    <td>@i</td>
-                                                    <td>@rec.TipoRecurso</td>
-                                                    <td>@(rec.NumeroOficio != 0 ? rec.NumeroOficio.ToString(): "Sin capturar")</td>
-                                                    @*<td>@(!rec.Oficio.Equals("") ? rec.Oficio.ToString(): "Sin capturar")</td>*@
-                                                    <td>@(rec.NombreArchivo.Equals("") ? "Pendiente de Adjuntar": rec.NombreArchivo)</td>
-                                                    <td>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rec.Monto)</td>
-                                                    <td>
-                                                        <a href="#" data-id="@rec.Id" class="text-center viewOficio" data-file="@rec.NombreArchivo"
-                                                           data-tipo="@rec.Tipo" data-numo="@rec.NumeroOficio" data-fecha="@rec.FechaOficio.ToString("dd/MM/yyyy")"
-                                                           data-monto="@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rec.Monto)"
-                                                           data-nombreo="@rec.Oficio" data-observaciones="@rec.Observaciones"
-                                                           data-toggle="tooltip" title="Ver Oficio" data-placement="top">
-                                                            <i class="fad fa-eye text-success"></i>
-                                                        </a>
-                                                        <a href="#" class="text-center ml-2 editOficio" data-id="@rec.Id" data-tipo="@rec.Tipo" data-oficio="@rec.NumeroOficio"
-                                                           data-fecha="@rec.FechaOficio.ToString("yyyy-MM-dd")" data-monto="@rec.Monto" data-archivo="@rec.NombreArchivo"
-                                                           data-observaciones="@rec.Observaciones" data-nombreo="@rec.Oficio" data-toggle="tooltip" title="Editar Oficio" data-placement="top">
-                                                            <i class="fad fa-pencil text-primary"></i>
-                                                        </a>
-                                                        <a href="#" data-id="@rec.Id" data-numo="@rec.NumeroOficio" class="text-center ml-2 eliminarRecursos" data-toggle="tooltip" title="Eliminar Oficio" data-placement="top">
-                                                            <i class="fad fa-times text-danger"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
                                 </div>
-                            </div>
-                            @* Fin de Oficios *@
-                        }
-                        @* Entregables *@
+                                                <td>@i</td>
+                                                <td>@rec.TipoRecurso</td>
+                                                <td>@(rec.NumeroOficio != 0 ? rec.NumeroOficio.ToString(): "Sin capturar")</td>
+                                                @*<td>@(!rec.Oficio.Equals("") ? rec.Oficio.ToString(): "Sin capturar")</td>*@
+                                                <td>@(rec.NombreArchivo.Equals("") ? "Pendiente de Adjuntar": rec.NombreArchivo)</td>
+                                                <td>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rec.Monto)</td>
+                                                <td>
+                                                    <a href="#" data-id="@rec.Id" class="text-center viewOficio" data-file="@rec.NombreArchivo"
+                                                       data-tipo="@rec.Tipo" data-numo="@rec.NumeroOficio" data-fecha="@rec.FechaOficio.ToString("dd/MM/yyyy")"
+                                                       data-monto="@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rec.Monto)"
+                                                       data-nombreo="@rec.Oficio" data-observaciones="@rec.Observaciones"
+                                                       data-toggle="tooltip" title="Ver Oficio" data-placement="top">
+                                                        <i class="fad fa-eye text-success"></i>
+                                                    </a>
+                                                    <a href="#" class="text-center ml-2 editOficio" data-id="@rec.Id" data-tipo="@rec.Tipo" data-oficio="@rec.NumeroOficio"
+                                                       data-fecha="@rec.FechaOficio.ToString("yyyy-MM-dd")" data-monto="@rec.Monto" data-archivo="@rec.NombreArchivo"
+                                                       data-observaciones="@rec.Observaciones" data-nombreo="@rec.Oficio" data-toggle="tooltip" title="Editar Oficio" data-placement="top">
+                                                        <i class="fad fa-pencil text-primary"></i>
+                                                    </a>
+                                                    <a href="#" data-id="@rec.Id" data-numo="@rec.NumeroOficio" class="text-center ml-2 eliminarRecursos" data-toggle="tooltip" title="Eliminar Oficio" data-placement="top">
+                                                        <i class="fad fa-times text-danger"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div> @* Fin de Oficios *@ } @* Entregables *@
                         @if (Model.entregables != null)
                         {
-                            <div class="tab-pane fade mt-2 ml-3" id="entregables" role="tabpanel" aria-labelledby="contact-tab">
-                                <div class="col-lg-12 mt-3">
-                                    <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right addEntregables'><i class="fas fa-plus"></i></a>
-                                </div>
-                                <div class="row col-lg-12 mt-3">
-                                    <table class="table" id="tblEntregables">
-                                        <thead>
-                                            <tr>
-                                                <th>Entregable</th>
-                                                <th>Archivo</th>
-                                                <th>Fecha de Carga</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tEntregables">
-                                            @foreach (var entre in Model.entregables)
-                                            {
-                                                <tr>
-                                                    <td>@entre.Tipo</td>
-                                                    <td>@entre.NombreArchivo</td>
-                                                    <td>@entre.FechaCreacion.ToString("dd/MM/yyyy hh:MM tt")</td>
-                                                    <td>
-                                                        <a href="#" data-id="@entre.Id" class="text-center viewEntregable" data-file="@entre.NombreArchivo"
-                                                           data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-seguimiento="@entre.SeguimientoId">
-                                                            <i class="fad fa-eye text-success mr-2"></i>
-                                                        </a>
-                                                        <a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-file="@entre.NombreArchivo"
-                                                           class="text-center btnEdit">
-                                                            <i class="fa-duotone fa-pencil text-primary mr-2"></i>
-                                                        </a>
-                                                        <a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" class="text-center btnEliminar">
-                                                            <i class="fad fa-times text-danger mr-2"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        }
-                        @* Fin de Entregables *@
+            <div class="tab-pane fade mt-2 ml-3" id="entregables" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="col-lg-12 mt-3">
+                    <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right addEntregables'><i class="fas fa-plus"></i></a>
+                </div>
+                <div class="row col-lg-12 mt-3">
+                    <table class="table" id="tblEntregables">
+                        <thead>
+                            <tr>
+                                <th>Entregable</th>
+                                <th>Archivo</th>
+                                <th>Fecha de Carga</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tEntregables">
+                            @foreach (var entre in Model.entregables)
+                            {
+            <tr>
+                <td>@entre.Tipo</td>
+                <td>@entre.NombreArchivo</td>
+                <td>@entre.FechaCreacion.ToString("dd/MM/yyyy hh:MM tt")</td>
+                <td>
+                    <a href="#" data-id="@entre.Id" class="text-center viewEntregable" data-file="@entre.NombreArchivo"
+                       data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-seguimiento="@entre.SeguimientoId">
+                        <i class="fad fa-eye text-success mr-2"></i>
+                    </a>
+                    <a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-file="@entre.NombreArchivo"
+                       class="text-center btnEdit">
+                        <i class="fa-duotone fa-pencil text-primary mr-2"></i>
+                    </a>
+                    <a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" class="text-center btnEliminar">
+                        <i class="fad fa-times text-danger mr-2"></i>
+                    </a>
+                </td>
+            </tr>}
+                        </tbody>
+                    </table>
+                </div>
+            </div> } @* Fin de Entregables *@
                     </div>
                 </div>
             </div>
@@ -356,8 +338,7 @@
             <div class=" col-lg-12">
                 @if (Model.seguimiento != null && Model.seguimiento.Id != 0)
                 {
-                    <button type="button" class="btn btn-success float-right ml-3 btn_enviar mr-3" data-toggle="tooltip" title='Enviar la integración del proyecto para su revisión' data-placement="top">Enviar</button>
-                }
+    <button type="button" class="btn btn-success float-right ml-3 btn_enviar mr-3" data-toggle="tooltip" title='Enviar la integración del proyecto para su revisión' data-placement="top">Enviar</button>}
                 <button type="button" class="btn btn-primary float-right btn_guardar" data-toggle="tooltip" title='Guardar la información capturada' data-placement="top">Guardar</button>
             </div>
         </div>
@@ -384,6 +365,8 @@
                             <option value="Tesorería DGPPT">Monto adjudicado menor al estimado</option>
                             <option value="Solicitud">Solicitud de Recursos a DGPPT</option>
                             <option value="Otorgado">Recursos Otorgados</option>
+                            <option value="Deductiva DGPPT">Deductiva DGPPT</option>
+
                         </select>
                         <div class="col-sm-12" id="error_movimientoRec">
                             <small id="dateHelp" class="text-danger">
