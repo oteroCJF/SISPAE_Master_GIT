@@ -52,6 +52,7 @@ namespace Sispae.Controllers
             if (success == 1)
             {
                 proyecto = await vAhorros.GetProyectoById(id);
+                proyecto.entregables = await vEntregables.getEntregablesMemorias(id);
                 proyecto.ueg = await vUnidad.GetUnidadEjecutoraById(proyecto.UEGId);
                 proyecto.partidas = await vPartidas.GetPartidasProyecto(id);
                 proyecto.CTPartidas = await vPartidas.GetPartidasPresupuestales(id);

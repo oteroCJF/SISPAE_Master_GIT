@@ -56,19 +56,19 @@
 
                                     @if (Model.Ejercicio == 2025)
                                     {
-                                <select class="form-control" id="selectCapitulo">
-                                    <option value=''>Seleccione un capítulo</option>
-                                    <option value='2000'>2000</option>
-                                    <option value='3000'>3000</option>
-                                </select> }
-                                            else
-                                            {
-                                <select class="form-control" id="selectCapitulo">
-                                    <option value=''>Seleccione un capítulo</option>
-                                    <option value='2000'>2000</option>
-                                    <option value='3000'>3000</option>
-                                    <option value='5000'>5000</option>
-                                </select>}
+                                        <select class="form-control" id="selectCapitulo">
+                                            <option value=''>Seleccione un capítulo</option>
+                                            <option value='2000'>2000</option>
+                                            <option value='3000'>3000</option>
+                                        </select> }
+                                    else
+                                    {
+                                        <select class="form-control" id="selectCapitulo">
+                                            <option value=''>Seleccione un capítulo</option>
+                                            <option value='2000'>2000</option>
+                                            <option value='3000'>3000</option>
+                                            <option value='5000'>5000</option>
+                                        </select>}
 
                                     <div class="col-sm-12" id="error_capitulo">
                                         <small id="dateHelp" class="text-danger">
@@ -132,14 +132,16 @@
                                             <option value=''>Seleccione una Partida</option>
                                             @foreach (var pp in Model.CTPartidas)
                                             {
-                                    @if (Model.Ejercicio == 2025)
-                                    {
-                                    @if (pp.Id != 38 && pp.Id != 41)
-                                    {
-                                    <option value=@pp.Id>@pp.Nombre</option>} }
-                                                    else
+                                                @if (Model.Ejercicio == 2025)
+                                                {
+                                                    @if (pp.Id != 38 && pp.Id != 41)
                                                     {
-                                    <option value=@pp.Id>@pp.Nombre</option>}}
+                                                        <option value=@pp.Id>@pp.Nombre</option>
+                                                    } }
+                                                else
+                                                {
+                                                    <option value=@pp.Id>@pp.Nombre</option>
+                                                }}
 
                                         </select>
                                     </div>
@@ -177,25 +179,69 @@
                         </div>
                         @* Fin de la Pregunta 2 *@
                         @* Entregables *@
-                        <div class="tab-pane fade mt-2 ml-3" id="entregables" role="tabpanel" aria-labelledby="contact-tab">
-                            <div class="col-lg-12 mt-3">
-                                <h3>Adjuntar Entregables</h3>
-                                <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right btn_addFile'><i class="fas fa-plus"></i></a>
-                            </div>
-                            <div class="row col-lg-12 mt-3">
-                                <table class="table" id="tblEntregables">
-                                    <thead>
-                                        <tr>
-                                            <th>Entregable</th>
-                                            <th>Archivo</th>
-                                            <th>Fecha de Carga</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tEntregables"></tbody>
-                                </table>
-                            </div>
+
+                        @if (Model.entregables != null)
+                        {
+                    <div class="tab-pane fade mt-2 ml-3" id="entregables" role="tabpanel" aria-labelledby="contact-tab">
+                        <div class="col-lg-12 mt-3">
+                            <h3>Adjuntar Entregables</h3>
+                            @*<a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right btn_addFile addEntregables'><i class="fas fa-plus"></i></a>*@
                         </div>
+                        @*******************BOTON ESPECIAL DE CARGA*@
+
+                        <div class="container">
+                            <div class="folder">
+                                <div class="front-side">
+                                    <div class="tip"></div>
+                                    <div class="cover"></div>
+                                </div>
+                                <div class="back-side cover"></div>
+                            </div>
+                            <label class="custom-file-upload  btn_addFile addEntregables">
+                                +
+                            </label>
+                        </div>
+
+                        @******************FIN BOTON ESPECIAL DE CARGA*@
+                        <div class="row col-lg-12 mt-3">
+                            <table class="table" id="tblEntregables">
+                                <thead>
+                                    <tr>
+                                        <th>Entregable</th>
+                                        <th>Archivo</th>
+                                        <th>Fecha de Carga</th>
+                                        <th>Acciones</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="tEntregables">
+
+                                    @foreach (var entre in Model.entregables)
+                                    {
+                                        <tr>
+                                            <td>@entre.Tipo</td>
+                                            <td>@entre.NombreArchivo</td>
+                                            <td>@entre.FechaCreacion</td>
+                                            <td>
+                                                <a href="#" data-id="@entre.Id" class="text-center viewEntregable2" data-file="@entre.NombreArchivo"
+                                                   data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-seguimiento="@entre.SeguimientoId">
+                                                    <i class="fad fa-eye text-success mr-2"></i>
+                                                </a>
+                                                @*<a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-file="@entre.NombreArchivo"
+                                   class="text-center btnEdit">
+                                    <i class="fa-duotone fa-pencil text-primary mr-2"></i>
+                                </a>*@
+                                                <a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" class="text-center btnEliminar">
+                                                    <i class="fad fa-times text-danger mr-2"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                        }
                         @* Fin de Entregables *@
                     </div>
                 </div>
@@ -210,6 +256,102 @@
     </div>
 </div>
 
+
+
+@* Modal para la captura de Entregables *@
+<div class="modal fade" id="modal_entregables">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-joke">
+                <h4 class="modal-title text-white">Adjuntar/Modificar Entregables</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="entregableId" />
+                    <div class="form-group col-lg-4">
+                        <label for="tipoIncidencia">Tipo de Entregable:</label>
+                        <select class="form-control" id="tipo_entregable">
+                            <option value="">Seleccione un archivo</option>
+                            <option value="Memoria de Calculo">Memoria de Cálculo</option>
+                            @*<option value="Contrato">Contrato</option>
+                                <option value="Nota(s)">Nota(s)</option>*@
+                        </select>
+                        <div class="col-sm-12" id="error_tipoEntre">
+                            <small id="dateHelp" class="text-danger">
+                                Por favor seleccione el tipo de entregable
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="elegirArchivo">Seleccionar Archivo: </label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFileSoporte" accept=".pdf">
+                            <label class="custom-file-label" id="custom-file-label-soporte" for="customFile">Seleccionar Archivo</label>
+                        </div>
+                        <div class="col-sm-12" id="error_archivoSoporte">
+                            <small id="dateHelp" class="text-danger">
+                                Por favor seleccione el oficio correspondiente
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-row col-lg-12 mt-2" id="divComentariosSoporte">
+                        <div class="form-group mt-2 col-md-12">
+                            <label for="fechaCierre">Comentarios:</label><br>
+                            <textarea id="comentariosSoporte" class="form-control float-left"></textarea>
+                            <div class="col-sm-12" id="error_comentariosSoporte">
+                                <small id="comentariosHelp" class="text-danger">
+                                    Por favor capture los comentarios correspondientes
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button type="button" class="btn btn-primary" id="adjuntarArchivo">Adjuntar Entregable</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@*Fin Modal para la captura de Entregables *@
+
+
+@*Modal para la visualizar entregables *@
+<div class="modal fade" id="modal_ViewEntregables2">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-joke">
+                <h4 class="modal-title text-white" id="ve_title"></h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-5" id="ve_tipo">
+                    </div>
+                    <div class="col-lg-6" id="ve_observaciones">
+                    </div>
+                </div>
+                <div class="row mt-3" id="ve_entregablePDF">
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@*Fin Modal para la carga entregables*@
+
+
+
+
+
 <style>
     .fields {
         margin: 0 10px 0 0;
@@ -223,7 +365,137 @@
             left: -5px;
         }
 
-    </style>
+
+        /* DISEÑO DE BOTON DE CARGA CSS */
+    .container {
+        float: right;
+        width: 7%;
+        --transition: 350ms;
+        --folder-W: 60px;
+        --folder-H: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: inherit;
+        justify-content: flex-end;
+        padding: 10px;
+        background: linear-gradient(135deg, #6dd5ed, #2193b0);
+        border-radius: 15px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        height: calc(var(--folder-H) * 1.7);
+        position: relative;
+    }
+
+    .folder {
+        position: absolute;
+        top: -20px;
+        left: calc(50% - 60px);
+        animation: float 2.5s infinite ease-in-out;
+        transition: transform var(--transition) ease;
+    }
+
+.folder:hover {
+  transform: scale(1.05);
+}
+
+.folder .front-side,
+.folder .back-side {
+  position: absolute;
+  transition: transform var(--transition);
+  transform-origin: bottom center;
+}
+
+.folder .back-side::before,
+.folder .back-side::after {
+
+  content: "";
+  display: block;
+  background-color: white;
+  opacity: 0.5;
+  z-index: 0;
+  width: var(--folder-W);
+  height: var(--folder-H);
+  position: absolute;
+  transform-origin: bottom center;
+  border-radius: 15px;
+  transition: transform 350ms;
+  z-index: 0;
+}
+
+.container:hover .back-side::before {
+  transform: rotateX(-5deg) skewX(5deg);
+}
+.container:hover .back-side::after {
+  transform: rotateX(-15deg) skewX(12deg);
+}
+
+.folder .front-side {
+  z-index: 1;
+}
+
+.container:hover .front-side {
+  transform: rotateX(-40deg) skewX(15deg);
+}
+
+.folder .tip {
+  background: linear-gradient(135deg, #ff9a55, #ff6f53);
+  width: 40px;
+  height: 10px;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: -5px;
+  z-index: 2;
+}
+
+.folder .cover {
+  background: linear-gradient(135deg, #ffe563, #ffc664);
+  width: var(--folder-W);
+  height: var(--folder-H);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+    .custom-file-upload {
+        font-size: 1.1em;
+        color: #ffffff;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 5px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: background var(--transition) ease;
+        display: inline-block;
+        width: 50%;
+        padding: 10px 35px;
+        position: absolute;
+    }
+
+.custom-file-upload:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.custom-file-upload input[type="file"] {
+  display: none;
+}
+
+@@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+
+
+</style>
 
 @section Scripts{
     <script>
@@ -231,6 +503,7 @@
             var model = @Html.Raw(Json.Serialize(@Model));
             var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
             var partidas = new Array();
+            var seguiIdMemoria = @Html.Raw(Json.Serialize(@Model.Id));
 
             $('[data-toggle="tooltip"]').tooltip();
 
@@ -515,6 +788,193 @@
                 $("#selectPresupuesto").val(model.tipo);
             /***************** FIN Procesos para mostrar los resultados capturados en la Integracion del Proyecto **************************/
 
+
+
+
+             /************************ CAPTURA DE ENTREGABLES *************************************/
+
+           $('#error_tipoEntre').css('display', 'none');
+                $('#error_archivoSoporte').css('display', 'none');
+                $('#error_comentariosSoporte').css('display', 'none');
+
+                $(".addEntregables").click(function () {
+                    $("#modal_entregables").modal("show");
+                });
+
+                $('#tipo_entregable').change(function () {
+                        if ($('#tipo_entregable').val() == "") {
+                            $('#tipo_entregable').addClass('is-invalid');
+                            $('#error_tipoEntre').css('display', 'block');
+
+                            return false;
+                        } else {
+                            $('#tipo_entregable').removeClass('is-invalid');
+                            $('#tipo_entregable').addClass('is-valid');
+                            $('#error_tipoEntre').css('display', 'none');
+                        }
+                    });
+
+                $('#customFileSoporte').change(function () {
+                    if ($('#customFileSoporte').val() == "") {
+                        $('#customFileSoporte').addClass('is-invalid');
+                        $('#error_customFileSoporte').css('display', 'block');
+                    } else {
+                        var fileName = $("#customFileSoporte").val().split("\\").pop();
+                        var ext = fileName.split('.').pop();
+                        if (ext != "pdf") {
+                            $('#customFileSoporte').addClass('is-invalid');
+                            $('#error_customFileSoporte').css('display', 'block');
+                        } else {
+                            $('#customFileSoporte').removeClass('is-invalid');
+                            $('#customFileSoporte').addClass('is-valid');
+                            $('#error_customFileSoporte').css('display', 'none');
+                        }
+                    }
+                });
+
+                $('#comentarios_entregable').change(function () {
+                        if ($('#comentarios_entregable').val() == "") {
+                            $('#comentarios_entregable').addClass('is-invalid');
+                            $('#error_comentariosEntre').css('display', 'block');
+
+                            return false;
+                        } else {
+                            $('#comentarios_entregable').removeClass('is-invalid');
+                            $('#comentarios_entregable').addClass('is-valid');
+                            $('#error_comentariosEntre').css('display', 'none');
+                        }
+                    });
+
+                $("#adjuntarArchivo").click(function () {
+                    var formData = new FormData();
+                    var id = $('#entregableId').val();
+                    var tipo = $('#tipo_entregable').val();
+                    var file = document.getElementById('customFileSoporte').files[0];
+                    var observaciones = $("#comentariosSoporte").val();
+                    var url = "inserta";
+                    var txt = "insertó";
+
+                    if (parseInt(id) != 0 && id != "") {
+                        id = parseInt(id);
+                        url = "actualiza";
+                        txt = "actualizó";
+                    } else {
+                        id = 0;
+                    }
+
+                    formData.append("Id", id);
+                    formData.append("IntegracionId", seguiIdMemoria);
+                    formData.append("UsuarioId", parseInt(@User.Claims.ElementAt(0).Value));
+                    formData.append("Tipo", tipo);
+                    if (file != null)
+                        formData.append("Archivo", file);
+
+                    formData.append("Observaciones", observaciones);
+
+                    axios.post('/entregables/' + url + 'Memoria', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then(response => {
+                                    $('.close').trigger('click');
+                                    /*Validamos la pregunta a la que se realizo el anexo de evidencia*/
+                                    if (response.status == 200) {
+                                        Swal.fire({
+                                            'icon': "success",
+                                            'title': 'Adjudicación del Proyecto',
+                                            'text': 'Se '+txt+' el(la) '+tipo+' correctamente.'
+                                        }).then(function () {
+                                            window.location.reload();
+                                        });
+                                        $('#customFile').removeClass('is-valid');
+                                        $('#oficioRec').removeClass('is-valid');
+                                        $('#fechaRec').removeClass('is-valid');
+                                        $('#montoRec').removeClass('is-valid');
+                                        $('#obseracionesRec').removeClass('is-valid');
+                                        $('#movimientoRec').removeClass('is-valid');
+                                    }
+                                }).catch(error => {
+                                    Swal.fire({
+                                        'icon': "error",
+                                        'title': 'Adjudicación del Proyecto',
+                                        'text': 'Se presento un error al adjuntar el oficio.'
+                                    });
+                                });
+
+                });
+
+                $(document).on("click", '.btnEdit', function(){
+                    $("#entregableId").val($(this).data('id'));
+                    $("#tipo_entregable").val($(this).data('tipo'));
+                    $("#custom-file-label-soporte").text($(this).data('file'));
+                    $("#comentariosSoporte").val($(this).data('observaciones'));
+                    $("#modal_entregables").modal("show");
+                });
+
+                $(".btnEliminar").click(function () {
+                    Swal.fire({
+                        'icon': 'warning',
+                        'title': 'Adjudicación del Proyecto',
+                        'html': '¿Está seguro de eliminar el ' + $(this).data('tipo')+'?',
+                        'confirmButtonColor': '#3085d6',
+                        'cancelButtonColor': '#d33',
+                        'confirmButtonText': 'Si, eliminar',
+                        'cancelButtonText': 'Cancelar',
+                        'showCancelButton': true
+                    }).then(response => {
+                        if (response.isConfirmed) {
+                            axios.post('/entregables/eliminaEntregableMemoria', { Id: $(this).data('id'), IntegracionId: seguiIdMemoria }).then(response => {
+                                if (response.status == 200) {
+                                    Swal.fire({
+                                        'icon': "success",
+                                        'title': 'Adjudicación del Proyecto',
+                                        'text': 'Se eliminó el ' + $(this).data('tipo')+' correctamente.'
+                                    }).then(function () {
+                                        window.location.reload();
+                                    });
+                                }
+                            }).catch(error => {
+                                Swal.fire({
+                                    'icon': "error",
+                                    'title': 'Adjudicación del Proyecto',
+                                    'text': 'Se presentó un error al eliminar el oficio.'
+                                });
+                            });
+                        }
+                    });
+                });
+
+                $("#customFileSoporte").on("change", function () {
+                        var fileName = $(this).val().split("\\").pop();
+                        var ext = fileName.split('.').pop();
+                        if (ext == "pdf" || ext == "PDF") {
+                            $(this).siblings("#custom-file-label-soporte").addClass("selected").html(fileName);
+                        } else {
+                            Swal.fire({
+                                'icon': 'error',
+                                'title': 'Adjudicación del Proyecto',
+                                'text': 'El archivo que intentas adjuntar no es válido. Favor de solo seleccionar archivos "PDF"'
+                            });
+                            $("#custom-file-label-soporte").text("Seleccionar Archivo");
+                            document.getElementById('customFileSoporte').value = '';
+                            if ($('#customFileSoporte').hasClass('is-valid')) {
+                                $('#customFileSoporte').removeClass('is-valid');
+                            }
+                            $('#customFileSoporte').addClass('is-invalid');
+                            $('#error_customFileSoporte').css('display', 'block');
+                        }
+
+                });
+      
+
+        /************************ FIN CAPTURA DE ENTREGABLES ********************************/
+
+        /************************************** Visualización de Entregables *****************************************/
+        $(".viewEntregable2").click(function () {
+            $('#ve_title').text("Visualización de Entregables");
+            $("#ve_tipo").html('<strong>Tipo de Entregable: </strong>' + $(this).data('tipo'))
+            $("#ve_observaciones").html('<strong>Observaciones: </strong>' + $(this).data('observaciones'))
+            let data = "<object width='100%' height='410px' data='/view/entregable/" + $(this).data('seguimiento') + "/" + $(this).data('file') + "'></object>";
+            $('#ve_entregablePDF').html(data);
+            $("#modal_ViewEntregables2").modal('show');
+        });
+            /************************************** Fin Visualización de Entregables *************************************/
         });
     </script>
 }

@@ -39,6 +39,22 @@ namespace Sispae.Controllers
             return BadRequest(); ;
         }
 
+        [Route("/entregables/getEntregablesMemorias/{integracion}")]
+        [HttpPost]
+        public async Task<IActionResult> getEntregablesMemorias(int seguimiento)
+        {
+            int success = await vPerfiles.getPermiso(UserId(), modulo(), "ver");
+            if (success == 1)
+            {
+                List<Entregables> entregables = await vEntregables.getEntregablesMemorias(seguimiento);
+                if (entregables != null)
+                {
+                    return Ok(entregables);
+                }
+            }
+            return BadRequest(); ;
+        }
+
         [Route("/entregables/insertaEntregable")]
         [HttpPost]
         public async Task<IActionResult> insertaEntregables([FromForm] Entregables entregable)
@@ -47,6 +63,22 @@ namespace Sispae.Controllers
             if (success == 1)
             {
                 int insert = await vEntregables.insertaEntregable(entregable);
+                if (insert != -1 && insert != 0)
+                {
+                    return Ok(insert);
+                }
+            }
+            return BadRequest(); ;
+        }
+
+        [Route("/entregables/insertaMemoria")]
+        [HttpPost]
+        public async Task<IActionResult> insertaMemorias([FromForm] Entregables entregable)
+        {
+            int success = await vPerfiles.getPermiso(UserId(), modulo(), "crear");
+            if (success == 1)
+            {
+                int insert = await vEntregables.insertaEntregableMemoria(entregable);
                 if (insert != -1 && insert != 0)
                 {
                     return Ok(insert);
@@ -79,6 +111,22 @@ namespace Sispae.Controllers
             if (success == 1)
             {
                 int insert = await vEntregables.eliminaEntregables(entregable);
+                if (insert != -1 && insert != 0)
+                {
+                    return Ok(insert);
+                }
+            }
+            return BadRequest();
+        }
+
+        [Route("/entregables/eliminaEntregableMemoria")]
+        [HttpPost]
+        public async Task<IActionResult> eliminaEntregableMemoria([FromBody] Entregables entregable)
+        {
+            int success = await vPerfiles.getPermiso(UserId(), modulo(), "eliminar");
+            if (success == 1)
+            {
+                int insert = await vEntregables.eliminaEntregableMemoria(entregable);
                 if (insert != -1 && insert != 0)
                 {
                     return Ok(insert);

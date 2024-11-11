@@ -52,6 +52,37 @@ namespace Sispae.Repositories
             }
         }
 
+        public async Task<List<Entregables>> getEntregablesMemorias(int integracion)
+        {
+            try
+            {
+                using (SqlConnection sql = new SqlConnection(_connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_getEntregablesMemorias", sql))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@integracion", integracion));
+                        var response = new List<Entregables>();
+                        await sql.OpenAsync();
+
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                response.Add(MapToValueMemoria(reader));
+                            }
+                        }
+
+                        return response;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+                return null;
+            }
+        }
         public async Task<int> insertaEntregable(Entregables entregable)
         {
             DateTime date = DateTime.Now;
@@ -74,6 +105,51 @@ namespace Sispae.Repositories
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.Add(new SqlParameter("@id", entregable.Id)).Direction = ParameterDirection.Output;
                             cmd.Parameters.Add(new SqlParameter("@seguimiento", entregable.SeguimientoId));
+                            cmd.Parameters.Add(new SqlParameter("@usuario", entregable.UsuarioId));
+                            cmd.Parameters.Add(new SqlParameter("@tipo", entregable.Tipo));
+                            if (entregable.Archivo != null)
+                            {
+                                cmd.Parameters.Add(new SqlParameter("@archivo", (date_str + "_" + entregable.Archivo.FileName)));
+                            }
+                            cmd.Parameters.Add(new SqlParameter("@observaciones", entregable.Observaciones));
+
+                            await sql.OpenAsync();
+                            await cmd.ExecuteNonQueryAsync();
+                            id = Convert.ToInt32(cmd.Parameters["@id"].Value);
+                        }
+                    }
+                }
+                return id;
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+                return 0;
+            }
+        }
+
+        public async Task<int> insertaEntregableMemoria(Entregables entregable)
+        {
+            DateTime date = DateTime.Now;
+            string date_str = date.ToString("yyyyMMddHHmmss");
+            int id = 0;
+            string saveFile = "";
+
+            if (entregable.Archivo != null)
+            {
+                saveFile = await guardaArchivo(entregable.Archivo, entregable.SeguimientoId.ToString(), date_str);
+            }
+            try
+            {
+                if (saveFile.Equals("Ok") || entregable.Archivo == null)
+                {
+                    using (SqlConnection sql = new SqlConnection(_connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand("sp_insertaEntregableMemoriaCalculo", sql))
+                        {
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.Add(new SqlParameter("@id", entregable.Id)).Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add(new SqlParameter("@integracion", entregable.IntegracionId));
                             cmd.Parameters.Add(new SqlParameter("@usuario", entregable.UsuarioId));
                             cmd.Parameters.Add(new SqlParameter("@tipo", entregable.Tipo));
                             if (entregable.Archivo != null)
@@ -234,6 +310,38 @@ namespace Sispae.Repositories
             }
         }
 
+        public async Task<int> eliminaEntregableMemoria(Entregables entregable)
+        {
+            try
+            {
+                using (SqlConnection sql = new SqlConnection(_connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_eliminaEntregableMemoria", sql))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@id", entregable.Id));
+                        cmd.Parameters.Add(new SqlParameter("@archivo", SqlDbType.VarChar, 500)).Direction = ParameterDirection.Output;
+                        await sql.OpenAsync();
+                        await cmd.ExecuteNonQueryAsync();
+
+                        string archivo = (cmd.Parameters["@archivo"].Value).ToString();
+                        if (archivo != null && !archivo.Equals(""))
+                        {
+                            string newPath = Directory.GetCurrentDirectory() + "\\Entregables\\" + entregable.SeguimientoId.ToString() + "\\" + archivo;
+                            File.Delete(newPath);
+                        }
+
+                        return 1;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+                return 0;
+            }
+        }
+
         private Entregables MapToValue(SqlDataReader reader)
         {
             return new Entregables
@@ -247,5 +355,20 @@ namespace Sispae.Repositories
                 FechaActualizacion = reader["FechaActualizacion"] != DBNull.Value ? Convert.ToDateTime(reader["FechaActualizacion"].ToString()) : Convert.ToDateTime("01/01/1990"),
             };
         }
+
+        private Entregables MapToValueMemoria(SqlDataReader reader)
+        {
+            return new Entregables
+            {
+                Id = (int)reader["Id"],
+                IntegracionId = reader["IntegracionId"] != DBNull.Value ? (int)reader["IntegracionId"] : 0,
+                Tipo = reader["Tipo"] != DBNull.Value ? reader["Tipo"].ToString() : "",
+                NombreArchivo = reader["Archivo"].ToString(),
+                Observaciones = reader["Observaciones"] != DBNull.Value ? reader["Observaciones"].ToString() : "",
+                FechaCreacion = Convert.ToDateTime(reader["FechaCreacion"].ToString()),
+                FechaActualizacion = reader["FechaActualizacion"] != DBNull.Value ? Convert.ToDateTime(reader["FechaActualizacion"].ToString()) : Convert.ToDateTime("01/01/1990"),
+            };
+        }
+
     }
 }

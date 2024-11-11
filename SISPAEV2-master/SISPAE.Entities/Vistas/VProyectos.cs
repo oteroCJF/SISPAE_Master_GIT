@@ -48,8 +48,10 @@ namespace Sispae.Entities.Vistas
         public virtual UEG ueg { get; set; }
         public virtual Usuarios usuarios { get; set; }
         public virtual Seguimiento seguimiento { get; set; }
+        public virtual Integracion integracion { get; set; }
         public virtual PrestadorServicios prestador { get; set; }
         public virtual List<Seguimiento> seguimientos { get; set; }
+        public virtual List<Integracion> integraciones { get; set; }
         public virtual List<PrestadorServicios> prestadores { get; set; }
         public virtual List<PartidasPresupuestales> partidas { get; set; }
         public virtual List<HistorialProyectos> historial{ get; set; }

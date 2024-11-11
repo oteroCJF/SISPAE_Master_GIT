@@ -77,7 +77,7 @@ else
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#entregables" role="tab" aria-controls="contact" aria-selected="false">Documentación del Proyecto</a>
             </li>
-}
+        }
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         @* Recursos 1 *@
@@ -323,46 +323,50 @@ else
                         @* Entregables *@
                         @if (Model.entregables != null)
                         {
-            <div class="tab-pane fade mt-2 ml-3" id="entregables" role="tabpanel" aria-labelledby="contact-tab">
-                <div class="col-lg-12 mt-3">
-                    <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right addEntregables'><i class="fas fa-plus"></i></a>
-                </div>
-                <div class="row col-lg-12 mt-3">
-                    <table class="table" id="tblEntregables">
-                        <thead>
-                            <tr>
-                                <th>Entregable</th>
-                                <th>Archivo</th>
-                                <th>Fecha de Carga</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tEntregables">
-                            @foreach (var entre in Model.entregables)
-                            {
-            <tr>
-                <td>@entre.Tipo</td>
-                <td>@entre.NombreArchivo</td>
-                <td>@entre.FechaCreacion</td>
-                <td>
-                    <a href="#" data-id="@entre.Id" class="text-center viewEntregable" data-file="@entre.NombreArchivo"
-                       data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-seguimiento="@entre.SeguimientoId">
-                        <i class="fad fa-eye text-success mr-2"></i>
-                    </a>
-                    <a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-file="@entre.NombreArchivo"
-                       class="text-center btnEdit">
-                        <i class="fa-duotone fa-pencil text-primary mr-2"></i>
-                    </a>
-                    <a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" class="text-center btnEliminar">
-                        <i class="fad fa-times text-danger mr-2"></i>
-                    </a>
-                </td>
-            </tr>
-}
-                        </tbody>
-                    </table>
-                </div>
-            </div> } @* Fin de Entregables *@
+                             <div class="tab-pane fade mt-2 ml-3" id="entregables" role="tabpanel" aria-labelledby="contact-tab">
+                                <div class="col-lg-12 mt-3">
+                                   <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right addEntregables'><i class="fas fa-plus"></i></a>
+                             </div>
+                             <div class="row col-lg-12 mt-3">
+                             <table class="table" id="tblEntregables">
+                            
+                                 <thead>
+                                    <tr>
+                                        <th>Entregable</th>
+                                        <th>Archivo</th>
+                                        <th>Fecha de Carga</th>
+                                        <th>Acciones</th>
+                                   </tr>
+                                </thead>
+                                <tbody id="tEntregables">
+                            
+                                    @foreach (var entre in Model.entregables)
+                                     {
+                                        <tr>
+                                            <td>@entre.Tipo</td>
+                                            <td>@entre.NombreArchivo</td>
+                                            <td>@entre.FechaCreacion</td>
+                                            <td>
+                                                <a href="#" data-id="@entre.Id" class="text-center viewEntregable" data-file="@entre.NombreArchivo"
+                                                   data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-seguimiento="@entre.SeguimientoId">
+                                                    <i class="fad fa-eye text-success mr-2"></i>
+                                                </a>
+                                                <a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-file="@entre.NombreArchivo"
+                                                   class="text-center btnEdit">
+                                                    <i class="fa-duotone fa-pencil text-primary mr-2"></i>
+                                                </a>
+                                                <a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" class="text-center btnEliminar">
+                                                    <i class="fad fa-times text-danger mr-2"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                     }
+                                </tbody>
+                            </table>
+                            </div>
+                            </div> 
+                         }  
+                       @* Fin de Entregables *@
                     </div>
                 </div>
             </div>

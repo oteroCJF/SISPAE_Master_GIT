@@ -9,6 +9,7 @@ namespace Sispae.Entities.MEntregables
     {
         public int Id { get; set; }
         public int SeguimientoId { get; set; }
+        public int IntegracionId { get; set; }
         public int UsuarioId { get; set; }
         public string Tipo { get; set; }
         public IFormFile Archivo { get; set; }

@@ -90,6 +90,7 @@ namespace Sispae.Controllers
             {
                 proyecto = await vProyectos.GetProyectoById(id);
                 proyecto.ueg = await vUnidad.GetUnidadEjecutoraById(proyecto.UEGId);
+                proyecto.entregables = await vEntregables.getEntregablesMemorias(id);
                 proyecto.CTTipo = await vCTTipo.GetCTTiposProyecto();
                 proyecto.partidas = await vPartidas.GetPartidasProyecto(id);
                 proyecto.CTPartidas = await vPartidas.GetPartidasPresupuestales(id);

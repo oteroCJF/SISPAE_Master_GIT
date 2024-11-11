@@ -60,8 +60,8 @@
                                         <option value="0">Seleccione la clasificación</option>
                                         @foreach (var m in Model.CTTipo)
                                         {
-                            <option value='@m.Id'>@m.Nombre</option>
-}
+                                            <option value='@m.Id'>@m.Nombre</option>
+                                        }
                                     </select>
                                     <div class="col-sm-12" id="error_clasificacion">
                                         <small id="dateHelp" class="text-danger">
@@ -88,19 +88,19 @@
 
                                     @if (Model.Ejercicio == 2025)
                                     {
-                        <select class="form-control" id="selectCapitulo">
-                            <option value=''>Seleccione un capítulo</option>
-                            <option value='2000'>2000</option>
-                            <option value='3000'>3000</option>
-                        </select> }
+                                        <select class="form-control" id="selectCapitulo">
+                                            <option value=''>Seleccione un capítulo</option>
+                                            <option value='2000'>2000</option>
+                                            <option value='3000'>3000</option>
+                                        </select> }
                                     else
                                     {
-                        <select class="form-control" id="selectCapitulo">
-                            <option value=''>Seleccione un capítulo</option>
-                            <option value='2000'>2000</option>
-                            <option value='3000'>3000</option>
-                            <option value='5000'>5000</option>
-                        </select>}
+                                        <select class="form-control" id="selectCapitulo">
+                                            <option value=''>Seleccione un capítulo</option>
+                                            <option value='2000'>2000</option>
+                                            <option value='3000'>3000</option>
+                                            <option value='5000'>5000</option>
+                                        </select>}
 
 
 
@@ -130,9 +130,10 @@
                                         <option value=''>Seleccione el año</option>
                                         @for (var i = 2020; i <= anio + 2; i++)
                                         {
-                            <option value="@i">@i</option>
-}
+                                            <option value="@i">@i</option>
+                                        }
                                     </select>
+
                                     <div class="col-sm-12" id="error_anio">
                                         <small id="dateHelp" class="text-danger">
                                             Seleccione el año estimado.
@@ -175,14 +176,16 @@
                                             <option value=''>Seleccione una Partida</option>
                                             @foreach (var pp in Model.CTPartidas)
                                             {
-                                @if (Model.Ejercicio == 2025)
-                                {
-                @if (pp.Id != 38 && pp.Id != 41)
-                {
-<option value=@pp.Id>@pp.Nombre</option>} }
-                                else
-                                {
-                <option value=@pp.Id>@pp.Nombre</option>}}
+                                                @if (Model.Ejercicio == 2025)
+                                                {
+                                                    @if (pp.Id != 38 && pp.Id != 41)
+                                                    {
+                                                        <option value=@pp.Id>@pp.Nombre</option>
+                                                    } }
+                                                else
+                                                {
+                                                    <option value=@pp.Id>@pp.Nombre</option>
+}}
 
                                         </select>
                                     </div>
@@ -208,17 +211,17 @@
                                                 {
                                                     c++;
                                                     totalPP += rp.Monto;
-                                    <tr>
-                                        <td class='text-right'>@c</td>
-                                        <td class='text-right'>@rp.Nombre</td>
-                                        <td class='text-right'>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rp.Monto)</td>
-                                        <td class='text-center'>
-                                            <a href="javascript:" class="delete_partida" data-monto="@rp.Monto" data-partida="@rp.Id" data-nombre="@rp.Nombre">
-                                                <i class="fas fa-times text-danger"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-}
+                                                    <tr>
+                                                        <td class='text-right'>@c</td>
+                                                        <td class='text-right'>@rp.Nombre</td>
+                                                        <td class='text-right'>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rp.Monto)</td>
+                                                        <td class='text-center'>
+                                                            <a href="javascript:" class="delete_partida" data-monto="@rp.Monto" data-partida="@rp.Id" data-nombre="@rp.Nombre">
+                                                                <i class="fas fa-times text-danger"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
                                             </tbody>
                                             <tfoot>
                                                 <tr>
@@ -251,8 +254,8 @@
                                             <option value=''>Seleccione una partida</option>
                                             @foreach (var pt in Model.partidas)
                                             {
-                                <option value=@pt.Id>@pt.Nombre</option>
-}
+                                                <option value=@pt.Id>@pt.Nombre</option>
+                                            }
                                         </select>
                                     </div>
                                     <div class="form-group col-lg-2">
@@ -279,19 +282,18 @@
                                                 {
                                                     c++;
                                                     totalC += rp.Monto;
-                                    <tr>
-                                        <td class='text-center'>@c</td>
-                                        <td class='text-center'>@rp.Mes</td>
-                                        <td class='text-center'>@(rp.Partida.Equals("") ? "Sin Partida":rp.Partida)</td>
-                                        <td class='text-center'>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rp.Monto)</td>
-                                        <td class='text-center'>
-                                            <a href="javascript:" class="eliminaCalendar" data-monto="@rp.Monto" data-integracion="@rp.IntegracionId"
-                                               data-mes="@rp.MesId">
-                                                <i class="fas fa-times text-danger"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-}
+                                                    <tr>
+                                                        <td class='text-center'>@c</td>
+                                                        <td class='text-center'>@rp.Mes</td>
+                                                        <td class='text-center'>@(rp.Partida.Equals("") ? "Sin Partida":rp.Partida)</td>
+                                                        <td class='text-center'>@String.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:C}", rp.Monto)</td>
+                                                        <td class='text-center'>
+                                                            <a href="javascript:" class="eliminaCalendar" data-monto="@rp.Monto" data-integracion="@rp.IntegracionId" data-mes="@rp.MesId">
+                                                                <i class="fas fa-times text-danger"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
                                             </tbody>
                                             <tfoot>
                                                 <tr>
@@ -307,27 +309,80 @@
                                 </div>
                             </div>
                         </div>
-                        @* Fin de la Pregunta 2 *@
+                        @* Fin de la Pregunta 3 *@
                         @* Entregables *@
-                        <div class="tab-pane fade mt-2 ml-3" id="entregables" role="tabpanel" aria-labelledby="contact-tab">
-                            <div class="col-lg-12 mt-3">
-                                <h3>Adjuntar Entregables</h3>
-                                <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right btn_addFile addEntregables'><i class="fas fa-plus"></i></a>
+
+                        @if (Model.entregables != null)
+                        {
+                            <div class="tab-pane fade mt-2 ml-3" id="entregables" role="tabpanel" aria-labelledby="contact-tab">
+                                <div class="col-lg-12 mt-3">
+                                    <h3>Adjuntar Entregables</h3>
+                                    <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right btn_addFile addEntregables'><i class="fas fa-plus"></i></a>
+                                </div>
+                                <div class="row col-lg-12 mt-3">
+                                    <table class="table" id="tblEntregables">
+                                        <thead>
+                                            <tr>
+                                                <th>Entregable</th>
+                                                <th>Archivo</th>
+                                                <th>Fecha de Carga</th>
+                                                <th>Acciones</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tEntregables">
+
+                                            @foreach (var entre in Model.entregables)
+                                            {
+                                                <tr>
+                                                    <td>@entre.Tipo</td>
+                                                    <td>@entre.NombreArchivo</td>
+                                                    <td>@entre.FechaCreacion</td>
+                                                    <td>
+                                                        <a href="#" data-id="@entre.Id" class="text-center viewEntregable" data-file="@entre.NombreArchivo"
+                                                           data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-seguimiento="@entre.SeguimientoId">
+                                                            <i class="fad fa-eye text-success mr-2"></i>
+                                                        </a>
+                                                        @*<a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" data-observaciones="@entre.Observaciones" data-file="@entre.NombreArchivo"
+                                                           class="text-center btnEdit">
+                                                            <i class="fa-duotone fa-pencil text-primary mr-2"></i>
+                                                        </a>*@
+                                                        <a href="#" data-id="@entre.Id" data-tipo="@entre.Tipo" class="text-center btnEliminar">
+                                                            <i class="fad fa-times text-danger mr-2"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="row col-lg-12 mt-3">
-                                <table class="table" id="tblEntregables">
-                                    <thead>
-                                        <tr>
-                                            <th>Entregable</th>
-                                            <th>Archivo</th>
-                                            <th>Fecha de Carga</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tEntregables"></tbody>
-                                </table>
+                        }
+                        else
+                        {
+
+                            <div class="tab-pane fade mt-2 ml-3" id="entregables" role="tabpanel" aria-labelledby="contact-tab">
+                                <div class="col-lg-12 mt-3">
+                                    <h3>Adjuntar Entregables</h3>
+                                    <a href="#" type='button' class='btn-sm btn-success mr-2 mb-2 float-right btn_addFile addEntregables'><i class="fas fa-plus"></i></a>
+                                </div>
+                                <div class="row col-lg-12 mt-3">
+                                    <table class="table" id="tblEntregables">
+                                        <thead>
+                                            <tr>
+                                                <th>Entregable</th>
+                                                <th>Archivo</th>
+                                                <th>Fecha de Carga</th>
+                                                <th>Acciones</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tEntregables">
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
+                        }
                         @* Fin de Entregables *@
                     </div>
                 </div>
@@ -361,8 +416,6 @@
                         <select class="form-control" id="tipo_entregable">
                             <option value="">Seleccione un archivo</option>
                             <option value="Memoria de Calculo">Memoria de Cálculo</option>
-                            @*<option value="Contrato">Contrato</option>
-                            <option value="Nota(s)">Nota(s)</option>*@
                         </select>
                         <div class="col-sm-12" id="error_tipoEntre">
                             <small id="dateHelp" class="text-danger">
@@ -405,6 +458,34 @@
 </div>
 @*Fin Modal para la captura de Entregables *@
 
+@*Modal para la visualizar entregables *@
+<div class="modal fade" id="modal_ViewEntregables">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-joke">
+                <h4 class="modal-title text-white" id="ve_title"></h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-5" id="ve_tipo">
+                    </div>
+                    <div class="col-lg-6" id="ve_observaciones">
+                    </div>
+                </div>
+                <div class="row mt-3" id="ve_entregablePDF">
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@*Fin Modal para la carga entregables*@
+
+
 <style>
     .fields {
         margin: 0 10px 0 0;
@@ -430,6 +511,7 @@
             var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
             var meses2 = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
             var partidas = new Array();
+            var seguiIdMemoria = @Html.Raw(Json.Serialize(@Model.Id));
 
             $('[data-toggle="tooltip"]').tooltip();
 
@@ -1031,12 +1113,9 @@
                 $("#selectTipoId").val(model.tipoId);
             /***************** FIN Procesos para mostrar los resultados capturados en la Integracion del Proyecto **************************/
 
-       
 
-
-        /************************ CAPTURA DE ENTREGABLES *************************************/
-
-           $('#error_tipoEntre').css('display', 'none');
+            /***************************************** Captura de Entregables ****************************************/
+                $('#error_tipoEntre').css('display', 'none');
                 $('#error_archivoSoporte').css('display', 'none');
                 $('#error_comentariosSoporte').css('display', 'none');
 
@@ -1106,7 +1185,7 @@
                     }
 
                     formData.append("Id", id);
-                    formData.append("SeguimientoId", model.seguimiento.id);
+                    formData.append("IntegracionId", seguiIdMemoria);
                     formData.append("UsuarioId", parseInt(@User.Claims.ElementAt(0).Value));
                     formData.append("Tipo", tipo);
                     if (file != null)
@@ -1114,7 +1193,7 @@
 
                     formData.append("Observaciones", observaciones);
 
-                     axios.post('/entregables/'+url+'Entregable', formData, { headers: { 'Content-Type': 'multipart/form-data' }}).then(response => {
+                     axios.post('/entregables/'+url+'Memoria', formData, { headers: { 'Content-Type': 'multipart/form-data' }}).then(response => {
                                     $('.close').trigger('click');
                                     /*Validamos la pregunta a la que se realizo el anexo de evidencia*/
                                     if (response.status == 200) {
@@ -1162,7 +1241,7 @@
                         'showCancelButton': true
                     }).then(response => {
                         if (response.isConfirmed) {
-                            axios.post('/entregables/eliminaEntregable', { Id: $(this).data('id'), SeguimientoId: parseInt(model.seguimiento.id) }).then(response => {
+                            axios.post('/entregables/eliminaEntregableMemoria', { Id: $(this).data('id'), IntegracionId: seguiIdMemoria }).then(response => {
                                 if (response.status == 200) {
                                     Swal.fire({
                                         'icon': "success",
@@ -1204,8 +1283,21 @@
                         }
 
                 });
-        });
 
-        /************************ FIN CAPTURA DE ENTREGABLES ********************************/
+
+            /************************************** Fin de Captura de Entregables*************************************/
+
+            /************************************** Visualización de Entregables *****************************************/
+            $(".viewEntregable").click(function () {
+                $('#ve_title').text("Visualización de Entregables");
+                $("#ve_tipo").html('<strong>Tipo de Entregable: </strong>' + $(this).data('tipo'))
+                $("#ve_observaciones").html('<strong>Observaciones: </strong>' + $(this).data('observaciones'))
+                let data = "<object width='100%' height='410px' data='/view/entregable/" + $(this).data('seguimiento') + "/" + $(this).data('file') + "'></object>";
+                $('#ve_entregablePDF').html(data);
+                $("#modal_ViewEntregables").modal('show');
+            });
+            /************************************** Fin Visualización de Entregables *************************************/
+
+        });
     </script>
 }
