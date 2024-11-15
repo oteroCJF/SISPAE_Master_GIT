@@ -18524,20 +18524,20 @@ html.maximized-card {
     white-space: initial;
 }
 
-.btn-app-ueg-catalogo-sujetos {
-    border-radius: 3px;
-    background-color: #f8f9fa;
-    border: 1px solid #ddd;
-    color: #FFF;
-    font-size: 12px;
-    height: 30px;
-    margin: 0 0 10px 10px;
-    min-width: 80px;
-    position: relative;
-    text-align: center;
-    width: 250px;
-    white-space: initial;
-}
+    .btn-app-ueg-catalogo-sujetos {
+        border-radius: 3px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        color: #FFF;
+        font-size: 12px;
+        height: 30px;
+        margin: 0 0 10px 10px;
+        min-width: 80px;
+        position: relative;
+        text-align: center;
+        width: 250px;
+        white-space: initial;
+    }
 
 .btn-app > .fa, .btn-app > .fab, .btn-app > .far, .btn-app > .fas, .btn-app > .glyphicon, .btn-app > .ion {
     font-size: 12px;

@@ -16,11 +16,51 @@
 }
 
 <div class="container-fluid">
-    <div class="row col-lg-12">
-        <a href="#" type='button' id="search_proyecto" class='btn-sm btn-primary float-left mr-2 mb-3' data-toggle="tooltip" title="Filtrar Proyecto(s)" data-placement="top">
+    @*<div class="row col-lg-12">*@
+        @*<a href="#" type='button' id="search_proyecto" class='btn-sm btn-primary float-left mr-2 mb-3' data-toggle="tooltip" title="Filtrar Proyecto(s)" data-placement="top">
             <i class="fas fa-filter"></i> Seleccionar Año
-        </a>
-    </div>
+        </a>*@
+
+        @*SE MEJORÓ LA NAVEGACIÓN QUITANDO EL MODAL INNECESARIO PARA EL FILTRADO DE PROYECTOS*@
+
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-row col-md-3" id="divBusquedaMes">
+                    <label for="Anio">Año: </label>
+                    <select class="form-control" id="anioActual">
+                        <option value="">Seleccione el Año</option>
+                        @for (var j = 2022; j < (DateTime.Now.Year + 3); j++)
+                        {
+            <option value="@j">@j</option>}
+                    </select>
+                    <div class="col-sm-12" id="error_anioActual">
+                        <small id="dateHelp" class="text-danger">
+                            Por favor seleccione un año a consultar.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-row col-md-3" id="divBusquedaTipo">
+                    <label for="name">Catálogo: </label>
+                    <select class="form-control" name="nombre" id="tipoCatalogo">
+                        <option value="">Seleccione el Catálogo</option>
+                        <option value="PAE">Programa Anual de Ejecución</option>
+                        <option value="Ahorros">Sujetos a Disponibilidad Presupuestal</option>
+                    </select>
+                    <div class="col-sm-12" id="error_tipoCatalogo">
+                        <small id="dateHelp" class="text-danger">
+                            Por favor seleccione el catálogo a consultar.
+                        </small>
+                    </div>
+
+                </div>
+                <div>
+                    <button class="btn btn-primary shadow__btnFiltro" type="button" id="filtrar">Filtrar Proyectos</button>
+                </div>
+
+            </div>
+        </div>
+       
+    @*</div>*@
     <div class="row" id="Prrueba">
         @*Mostramos las unidades ejecutoras del gasto asignadas al usuario*@
         @if (@Model.Anio != 0)
@@ -31,7 +71,7 @@
                 </div>
                 @foreach (var md in Model.uegsAsignadas)
                 {
-                    <a class="btn btn-app-ueg @md.Fondo text-white font-weight-bold btnUeg" data-ueg="@md.Id">
+                    <a class="btn btn-app-ueg shadow__btn @md.Fondo text-white font-weight-bold btnUeg" data-ueg="@md.Id">
                         @Html.Raw(@md.Icono)
                         @md.NumeroUEG - @md.Nombre
                     </a>
@@ -39,7 +79,8 @@
             </div>
         }
         @*Fin de mostrar las unidades ejecutoras del gasto asignadas al usuario*@
-
+        
+    <div class= "seguimiento"
         @*Mostramos los estatus de los proyectos de acuerdo a la UEG*@
         @if (Model.Anio != 0 && Model.ueg != 0)
         {
@@ -59,7 +100,7 @@
                     <div class="col-lg-10">
                         @foreach (var md in Model.proyectosEstatus)
                         {
-                            <a class="btn btn-app @md.Fondo text-white font-weight-bold btnEstatus" data-estatus="@md.Estatus">
+                            <a class="btn btn-app shadow__btn @md.Fondo text-white font-weight-bold btnEstatus" data-estatus="@md.Estatus">
                                 <span class="badge @(md.Estatus.Equals("Autorizada") ? "":"bg-danger")">
                                     @if (!@md.Estatus.Equals("Autorizada"))
                                     {
@@ -75,7 +116,7 @@
             </div>
         }
         @*Mostramos los estatus de los proyectos de acuerdo a la UEG*@
-
+        </div>
         @*Mostramos los unidades ejecutoras del gasto asignadas al usuario*@
         @if (Model.Estatus != null && Model.Anio != 0 && Model.ueg != 0 && !Model.Ordenar)
         {
@@ -150,8 +191,8 @@
                                             </a>
                                         }
 
-                                        @if ((item.Estatus.Equals("Rechazada") || item.Estatus.Equals("En Proceso") || item.Estatus.Equals("Asignado")) || 
-                                        ((@User.Claims.ElementAt(2).Value).Contains("Administrador")))
+                                        @if ((item.Estatus.Equals("Rechazada") || item.Estatus.Equals("En Proceso") || item.Estatus.Equals("Asignado") || item.Estatus.Equals("Autorizada")) ||
+                                       ((@User.Claims.ElementAt(2).Value).Contains("Administrador")))
                                         {
                                             <a href="#" data-id="@item.Id" data-tipo="@item.Tipo" class="text-center ml-2 btnIntegracion" data-toggle="tooltip" title="Integrar Proyecto" data-placement="top">
                                                 <i class="fad fa-pencil text-primary"></i>
@@ -186,7 +227,7 @@
 </div>
 
 @*Modal para buscar cédulas*@
-<div class="modal fade" id="modal-proyectos">
+<!--<div class="modal fade" id="modal-proyectos">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-joke">
@@ -230,13 +271,31 @@
             <div class="modal-footer justify-content-end">
                 <button class="btn btn-primary" type="button" id="filtrar">Filtrar Proyectos(s)</button>
             </div>
-        </div>
+        </div>-->
         <!-- /.modal-content -->
-    </div>
+    <!--</div>-->
     <!-- /.modal-dialog -->
-</div>
+<!--</div>-->
 @*Fin del Modal para Capturar Oficios*@
+<style>
+    .btn-primary {
+        transform: translate(5%, 85%);
+    }
+    .shadow__btnFiltro{
+         background: #4CAF5a; /* Verde */
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+ 
+    }
+    .shadow__btn {
+        background: #4CAF50; /* Verde */
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    }
 
+        .shadow__btn:hover {
+            box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 6px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+        }
+
+</style>
 @section Scripts{
     <script>
         $(function () {
@@ -260,7 +319,7 @@
                 language: {
                     url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
-                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                lengthMenu: [[25, 35, 50, -1], [25, 35, 50, "Todos"]],
                 columnDefs: [
                     { width: 100, targets: 7 }
                 ],

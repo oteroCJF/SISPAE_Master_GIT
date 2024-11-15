@@ -17,37 +17,75 @@
 }
 
 <div class="container-fluid">
-    <div class="row col-lg-12">
-        <a href="#" type='button' id="search_proyecto" class='btn-sm btn-primary float-left mr-2 mb-3' data-toggle="tooltip" title="Filtrar Proyecto(s)" data-placement="top">
-            <i class="fas fa-filter"></i> Seleccionar Año
-        </a>
+    @*<div class="row col-lg-12">
+            <a href="#" type='button' id="search_proyecto" class='btn-sm btn-primary float-left mr-2 mb-3' data-toggle="tooltip" title="Filtrar Proyecto(s)" data-placement="top">
+                <i class="fas fa-filter"></i> Seleccionar Año
+            </a>
+        </div>*@
+    <div class="modal-body">
+        <div class="row">
+            <div class="form-row col-md-3" id="divBusquedaMes">
+                <label for="Anio">Año: </label>
+                <select class="form-control" id="anioActual">
+                    <option value="">Seleccione el Año</option>
+                    @for (var j = 2022; j < (DateTime.Now.Year + 3); j++)
+                    {
+                        <option value="@j">@j</option>
+                    }
+                </select>
+                <div class="col-sm-12" id="error_anioActual">
+                    <small id="dateHelp" class="text-danger">
+                        Por favor seleccione un año a consultar.
+                    </small>
+                </div>
+            </div>
+            <div class="form-row col-md-3" id="divBusquedaTipo">
+                <label for="name">Catálogo: *</label>
+                <select class="form-control" name="nombre" id="tipoCatalogo">
+                    <option value="">Seleccione el Catálogo</option>
+                    <option value="PAE">Programa Anual de Ejecución</option>
+                    <option value="Ahorros">Sujetos a Disponibilidad Presupuestal</option>
+                </select>
+                <div class="col-sm-12" id="error_tipoCatalogo">
+                    <small id="dateHelp" class="text-danger">
+                        Por favor seleccione un año a consultar.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-primary shadow__btnFiltro" type="button" id="filtrar">Filtrar Proyectos</button>
+            </div>
+        </div>
     </div>
+
     <div class="row" id="Prrueba">
         @*Mostramos las unidades ejecutoras del gasto asignadas al usuario*@
         @if (@Model.Anio != 0)
         {
+
             <div class="row col-lg-12">
                 <div class="row col-lg-12">
                     <p class="h6 ml-2">1) Seleccione el tipo de reporte que desea generar.
                 </div>
+
                 <div class="row col-lg-12 mt-2">
                     @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("reporte general", @user) != 0)
                     {
-                        <a href="#" type='button' id="search_proyecto" class='btn-sm bg-cjf text-white float-left ml-2 mb-3 btnGeneral' data-toggle="tooltip" title="Genera el reporte general por Unidad Ejecutora" data-placement="top">
+                        <a href="#" type='button' id="search_proyecto" class='btn-sm bg-cjf text-white float-left ml-2 mb-3 btnGeneral shadow__btn' data-toggle="tooltip" title="Genera el reporte general por Unidad Ejecutora" data-placement="top">
                             <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte General
                         </a>
                     }
 
                     @if (Model.Catalogo.Equals("Ahorros") && await sPermisos.GetPermisosByModulo("reporte general ahorros", @user) != 0)
                     {
-                        <a href="#" type='button' id="search_proyecto" class='btn-sm bg-cjf text-white float-left ml-2 mb-3 btnGeneralA' data-toggle="tooltip" title="Genera el reporte general por Unidad Ejecutora" data-placement="top">
+                        <a href="#" type='button' id="search_proyecto" class='btn-sm bg-cjf text-white float-left ml-2 mb-3 btnGeneralA shadow__btn' data-toggle="tooltip" title="Genera el reporte general por Unidad Ejecutora" data-placement="top">
                             <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte General Ahorros
                         </a>
                     }
 
                     @if (await sPermisos.GetPermisosByModulo("reporte punto ueg", @user) != 0)
                     {
-                        <a href="#" type='button' data-reporte="PAE" class='btn-sm bg-primary text-white float-left ml-2 mb-3 btnPunto' data-toggle="tooltip" title="Genera el reporte general por Unidad Ejecutora" data-placement="top">
+                        <a href="#" type='button' data-reporte="PAE" class='btn-sm bg-primary text-white float-left ml-2 mb-3 btnPunto shadow__btn' data-toggle="tooltip" title="Genera el reporte general por Unidad Ejecutora" data-placement="top">
                             <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte Punto por Unidad Ejecutora
                         </a>
 
@@ -57,13 +95,13 @@
                     {
                         @if (Model.Catalogo.Equals("PAE"))
                         {
-                            <a href="/reportes/reportePunto/@Model.Anio" type='button' id="search_proyecto" class='btn-sm bg-success text-white float-left ml-2 mb-3 btnPuntoGral' data-toggle="tooltip" title="Genera el reporte general del Punto" data-placement="top">
+                            <a href="/reportes/reportePunto/@Model.Anio" type='button' id="search_proyecto" class='btn-sm bg-success text-white float-left ml-2 mb-3 btnPuntoGral shadow__btn' data-toggle="tooltip" title="Genera el reporte general del Punto" data-placement="top">
                                 <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte Punto General
                             </a>
                         }
                         @if (Model.Catalogo.Equals("Ahorros"))
                         {
-                            <a href="/reportes/reportePuntoAhorros/@Model.Anio" data-reporte="Ahorros" type='button' id="search_proyecto" class='btn-sm bg-success text-white float-left ml-2 mb-3 btnPuntoGral' data-toggle="tooltip" title="Genera el reporte general del Punto" data-placement="top">
+                            <a href="/reportes/reportePuntoAhorros/@Model.Anio" data-reporte="Ahorros" type='button' id="search_proyecto" class='btn-sm bg-success text-white float-left ml-2 mb-3 btnPuntoGral shadow__btn' data-toggle="tooltip" title="Genera el reporte general del Punto" data-placement="top">
                                 <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte Punto General
                             </a>
                         }
@@ -71,7 +109,7 @@
 
                     @if (await sPermisos.GetPermisosByModulo("reporte ueg", @user) != 0)
                     {
-                        <a href="#" type='button' id="search_proyecto" class='btn-sm bg-ordenar float-left ml-2 mb-3 btnRUEG' data-toggle="tooltip" title="Genera el reporte general de proyectos" data-placement="top">
+                        <a href="#" type='button' id="search_proyecto" class='btn-sm bg-ordenar float-left ml-2 mb-3 btnRUEG shadow__btn' data-toggle="tooltip" title="Genera el reporte general de proyectos" data-placement="top">
                             <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte por unidad ejecutora (UEG)
                         </a>
                     }
@@ -87,7 +125,7 @@
                 </div>
                 @foreach (var md in Model.uegsAsignadas)
                 {
-                    <a class="btn btn-app-ueg @md.Fondo font-weight-bold btnUeg" data-ueg="@md.Id">
+                    <a class="btn btn-app-ueg shadow__btn @md.Fondo font-weight-bold btnUeg" data-ueg="@md.Id">
                         @Html.Raw(@md.Icono)
                         @md.NumeroUEG - @md.Nombre
                     </a>
@@ -102,28 +140,28 @@
                 </div>
                 @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("pdf", @user) != 0)
                 {
-                    <a href="#" type='button' id="generaReporteGeneralPDF" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3" data-toggle="tooltip"
+                    <a href="#" type='button' id="generaReporteGeneralPDF" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3 shadow__btnPDF" data-toggle="tooltip"
                        title='Generar reporte de la "Unidad Ejecutora del Gasto"' data-placement="top">
                         <i class="fas fa-file-pdf"></i> Genera Reporte General PDF
                     </a>
                 }
                 @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("word", @user) != 0)
                 {
-                    <a href="#" type='button' id="generaReporteGeneralWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3" data-toggle="tooltip"
+                    <a href="#" type='button' id="generaReporteGeneralWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3 shadow__btnPDF" data-toggle="tooltip"
                        title='Descarga el reporte de la "Unidad Ejecutora del Gasto" en formato "Word"' data-placement="top">
                         <i class="fas fa-file-word"></i> Genera Reporte GeneralWord
                     </a>
                 }
                 @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("pdf", @user) != 0)
                 {
-                    <a href="#" type='button' id="generaRPTPDF" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3" data-toggle="tooltip"
+                    <a href="#" type='button' id="generaRPTPDF" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3 shadow__btnPDF" data-toggle="tooltip"
                        title='Generar reporte de la "Unidad Ejecutora del Gasto"' data-placement="top">
                         <i class="fas fa-file-pdf"></i> Genera Reporte General Proyecto PDF
                     </a>
                 }
                 @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("word", @user) != 0)
                 {
-                    <a href="#" type='button' id="generaRPTWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3" data-toggle="tooltip"
+                    <a href="#" type='button' id="generaRPTWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3 shadow__btnPDF" data-toggle="tooltip"
                        title='Descarga el reporte de la "Unidad Ejecutora del Gasto" en formato "Word"' data-placement="top">
                         <i class="fas fa-file-word"></i> Genera Reporte General Proyecto Word
                     </a>
@@ -131,14 +169,14 @@
 
                 @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("pdf", @user) != 0)
                 {
-                    <a href="#" type='button' id="generaCalendario" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3" data-toggle="tooltip"
+                    <a href="#" type='button' id="generaCalendario" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3 shadow__btnPDF" data-toggle="tooltip"
                        title='Generar reporte de la "Calendarización"' data-placement="top">
                         <i class="fas fa-file-pdf"></i> Genera Calendarización PDF
                     </a>
                 }
                 @if (Model.Catalogo.Equals("PAE") && await sPermisos.GetPermisosByModulo("word", @user) != 0)
                 {
-                    <a href="#" type='button' id="generaCalendarioWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3" data-toggle="tooltip"
+                    <a href="#" type='button' id="generaCalendarioWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3 shadow__btnPDF" data-toggle="tooltip"
                        title='Descarga el reporte de la "Calendarizacion" en formato "Word"' data-placement="top">
                         <i class="fas fa-file-word"></i> Genera Calendarización Word
                     </a>
@@ -146,14 +184,14 @@
 
                 @if (Model.Catalogo.Equals("Ahorros") && await sPermisos.GetPermisosByModulo("pdf", @user) != 0)
                 {
-                    <a href="#" type='button' id="generaReporteGeneralAPDF" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3" data-toggle="tooltip"
+                    <a href="#" type='button' id="generaReporteGeneralAPDF" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3 shadow__btnPDF" data-toggle="tooltip"
                        title='Generar reporte de la "Unidad Ejecutora del Gasto"' data-placement="top">
                         <i class="fas fa-file-pdf"></i> Genera Reporte General PDF
                     </a>
                 }
                 @if (Model.Catalogo.Equals("Ahorros") && await sPermisos.GetPermisosByModulo("word", @user) != 0)
                 {
-                    <a href="#" type='button' id="generaReporteGeneralAWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3" data-toggle="tooltip"
+                    <a href="#" type='button' id="generaReporteGeneralAWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3 shadow__btnPDF" data-toggle="tooltip"
                        title='Descarga el reporte de la "Unidad Ejecutora del Gasto" en formato "Word"' data-placement="top">
                         <i class="fas fa-file-word"></i> Genera Reporte General Word
                     </a>
@@ -172,13 +210,13 @@
                     <div class="row col-lg-12">
                         @if (Model.Catalogo.Equals("PAE"))
                         {
-                            <a href="/reportes/reportePunto/@Model.Anio/@Model.ueg" type='button' id="search_proyecto" class='btn-sm bg-success text-white float-left ml-2 mb-3 btnPunto' data-toggle="tooltip" title="Genera el reporte general del Punto" data-placement="top">
+                            <a href="/reportes/reportePunto/@Model.Anio/@Model.ueg" type='button' id="search_proyecto" class='btn-sm bg-success text-white float-left ml-2 mb-3 btnPunto shadow__btn' data-toggle="tooltip" title="Genera el reporte general del Punto" data-placement="top">
                                 <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte Punto
                             </a>
                         }
                         @if (Model.Catalogo.Equals("Ahorros"))
                         {
-                            <a href="/reportes/reportePuntoAhorros/@Model.Anio/@Model.ueg" data-reporte="Ahorros" type='button' id="search_proyecto" class='btn-sm bg-success text-white float-left ml-2 mb-3 btnPunto' data-toggle="tooltip" title="Genera el reporte general del Punto" data-placement="top">
+                            <a href="/reportes/reportePuntoAhorros/@Model.Anio/@Model.ueg" data-reporte="Ahorros" type='button' id="search_proyecto" class='btn-sm bg-success text-white float-left ml-2 mb-3 btnPunto shadow__btn' data-toggle="tooltip" title="Genera el reporte general del Punto" data-placement="top">
                                 <i class="fa-regular fa-file-chart-pie mr-2"></i> Reporte Punto
                             </a>
                         }
@@ -188,37 +226,37 @@
                 {
                     @if (Model.Catalogo.Equals("PAE"))
                     {
-                        <a href="#" class="btn btn-app-ueg bg-primary text-white font-weight-bold btnPresupuesto" data-tipo="CP">
+                        <a href="#" class="btn btn-app-ueg bg-orange text-white font-weight-bold btnPresupuesto shadow__btn" data-tipo="CP">
                             <i class="fa-solid fa-chart-pie-simple mr-2"></i> Contratos Plurianuales
                         </a>
-                        <a href="#" class='btn-sm btn-app-ueg bg-primary float-left ml-2 mb-3 font-weight-bold btnPresupuesto' style="padding-top: 5px" data-tipo="PO">
+                        <a href="#" class='btn-sm btn-app-ueg bg-warning float-left ml-2 mb-3 font-weight-bold btnPresupuesto shadow__btn' style="padding-top: 5px" data-tipo="PO">
                             <i class="fa-sharp fa-solid fa-chart-mixed mr-1"></i> Presupuesto de Operación
                         </a>
                         @*<a href="#" class='btn-sm btn-app-ueg bg-primary float-left ml-2 mb-3 font-weight-bold btnPresupuestoExcel' style="padding-top: 5px" data-tipo="PO">
-                            <i class="fa-sharp fa-solid fa-chart-mixed mr-1"></i> Pres. Operación EXCEL   <i class="fa-solid fa-file-excel mr-1"></i>
-                        </a>*@
-                        <a href="#" class='btn-sm btn-app-ueg bg-primary float-left ml-2 mb-3 font-weight-bold btnAnticipadas' style="padding-top: 5px">
-                            <i class="fa-solid fa-chart-bar mr-1"></i> Reporte Anticipadas
+                                <i class="fa-sharp fa-solid fa-chart-mixed mr-1"></i> Pres. Operación EXCEL   <i class="fa-solid fa-file-excel mr-1"></i>
+                            </a>*@
+                        <a href="#" class='btn btn-outline-danger btn-sm mb-3 btnAnticipadas shadow__btnPDF' style="padding-top: 5px">
+                            <i class="fa-solid fa-chart-bar mr-1"></i> Reporte Anticipadas PDF
                         </a>
-                        <a href="#" class='btn-sm btn-app-ueg bg-primary float-left ml-2 mb-3 font-weight-bold btnAnticipadasE' style="padding-top: 5px">
-                            <i class="fa-solid fa-file-excel mr-1"></i> Reporte Anticipadas
+                        <a href="#" class='btn btn-outline-success btn-sm mb-3 btnAnticipadasE shadow__btnPDF' style="padding-top: 5px">
+                            <i class="fa-solid fa-chart-bar mr-1"></i> Reporte Anticipadas Excel
                         </a>
-                        <a href="#" class='btn-sm btn-app-ueg bg-primary float-left ml-2 mb-3 font-weight-bold btnCalendario' style="padding-top: 5px">
-                            <i class="fa-solid fa-calendar mr-1"></i> Reporte Calendario
+                        <a href="#" class='btn btn-outline-danger btn-sm mb-3 btnCalendario shadow__btnPDF' style="padding-top: 5px">
+                            <i class="fa-solid fa-calendar mr-1"></i> Reporte Calendario PDF
                         </a>
-                        <a href="#" class='btn-sm btn-app-ueg bg-primary float-left ml-2 mb-3 font-weight-bold btnCalendarioXLS' style="padding-top: 5px">
-                            <i class="fa-solid fa-file-excel mr-1"></i> Reporte Calendario Excel
+                        <a href="#" class='btn btn-outline-success btn-sm mb-3 btnCalendarioXLS shadow__btnPDF' style="padding-top: 5px">
+                            <i class="fa-solid fa-calendar mr-1"></i> Reporte Calendario Excel
                         </a>
                     }
                     else
                     {
-                        <a href="#" class='btn-sm btn-app-ueg-catalogo-sujetos bg-primary float-left ml-2 mb-3 font-weight-bold btnPresupuesto' style="padding-top: 5px" data-tipo="Ahorros">
+                        <a href="#" class='btn-sm btn-app-ueg-catalogo-sujetos bg-primary float-left ml-2 mb-3 font-weight-bold btnPresupuesto shadow__btn' style="padding-top: 5px" data-tipo="Ahorros">
                             <i class="fa-sharp fa-solid fa-chart-mixed mr-1"></i> Sujetos a Disponibilidad Presupuestal
                         </a>
                     }
                     @if (await sPermisos.GetPermisosByModulo("ordenar proyectos", @user) != 0)
                     {
-                        <a class="btn btn-app-ueg bg-ordenar text-white font-weight-bold btnOrdenar text-justify" data-estatus="Todos">
+                        <a class="btn btn-app-ueg bg-black text-white font-weight-bold btnOrdenar text-justify shadow__btnPDF" data-estatus="Todos">
                             <i class="fa-regular fa-arrow-down-arrow-up mr-1 ml-1"></i>
                             Ordenar Proyectos
                         </a>
@@ -292,14 +330,14 @@
                 </div>
                 @if (await sPermisos.GetPermisosByModulo("pdf", @user) != 0)
                 {
-                    <a href="#" type='button' id="generaReportePDF" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3" data-toggle="tooltip"
-                       title='Generar reporte de la "Unidad Ejecutora del Gasto"' data-placement="top">
+                    <a href="#" type='button' id="generaReportePDF" data-tipo="pdf" class="btn btn-outline-danger btn-sm ml-3 mr-2 mb-3 shadow__btnPDF" data-toggle="tooltip"
+                       title='Generar reporte de la "Unidad Ejecutora del Gasto" en PDF' data-placement="top">
                         <i class="fas fa-file-pdf"></i> Genera Reporte PDF
                     </a>
                 }
                 @if (await sPermisos.GetPermisosByModulo("word", @user) != 0)
                 {
-                    <a href="#" type='button' id="generaReporteWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3" data-toggle="tooltip"
+                    <a href="#" type='button' id="generaReporteWord" data-tipo="word" class="btn btn-outline-primary btn-sm mb-3 shadow__btnPDF" data-toggle="tooltip"
                        title='Descarga el reporte de la "Unidad Ejecutora del Gasto" en formato "Word"' data-placement="top">
                         <i class="fas fa-file-word"></i> Genera Reporte Word
                     </a>
@@ -318,7 +356,7 @@
 </div>
 
 @*Modal para buscar cédulas*@
-<div class="modal fade" id="modal-proyectos">
+<!--<div class="modal fade" id="modal-proyectos">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-joke">
@@ -364,12 +402,35 @@
             </div>
         </div>
         <!-- /.modal-content -->
-    </div>
+    <!--</div>-->
     <!-- /.modal-dialog -->
-</div>
-@*Fin del Modal para Capturar Oficios*@
+<!--</div>-->
+@*Fin del Modal*@
 
+<style>
+    .btn-primary {
+        transform: translate(5%, 83%);
+    }
 
+    .shadow__btnFiltro {
+        background: #0026ff; /* Verde */
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    }
+
+    .shadow__btnPDF {
+        font-size: 13px;
+        margin: 0 0 10px 10px;
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    }
+    .shadow__btn {
+        background: #4CAF50; /* Verde */
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    }
+
+        .shadow__btn:hover {
+            box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 6px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+        }
+</style>
 @section Scripts{
     <script>
         $(function () {
@@ -430,6 +491,9 @@
                 }
             });
 
+  
+           
+
             $("#filtrar").click(function () {
                 if (validaFiltros()) {
                     window.location.href = "/reportes/index?anio=" + $("#anioActual").val() + "&catalogo=" + $("#tipoCatalogo").val();
@@ -440,6 +504,7 @@
                         'html': 'No ha seleccionado el año o el catálogo para consultar información.'
                     });
                 }
+               
             });
             /******************Fin a las Validaciones de Filtros******************/
 

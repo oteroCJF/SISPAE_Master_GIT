@@ -123,7 +123,7 @@ namespace Sispae.Controllers
         [HttpPost]
         public async Task<IActionResult> eliminaEntregableMemoria([FromBody] Entregables entregable)
         {
-            int success = await vPerfiles.getPermiso(UserId(), modulo(), "eliminar");
+            int success = await vPerfiles.getPermiso(UserId(), modulo(), "eliminarMemoria");
             if (success == 1)
             {
                 int insert = await vEntregables.eliminaEntregableMemoria(entregable);
