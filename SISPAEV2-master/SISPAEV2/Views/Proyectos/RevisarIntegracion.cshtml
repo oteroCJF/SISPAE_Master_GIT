@@ -30,8 +30,11 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="informacion_general" role="tabpanel" aria-labelledby="home-tab">
                     <div class="row justify-content-center align-items-center mt-4">
+
+                    
                         <div class="col-lg-12 h3 ml-4">
                             Información General
+
                         </div>
                     </div>
                     <div class="row">
@@ -40,7 +43,7 @@
                                 <div class="card-header border-bottom-0">
                                     <h2 class="lead">
                                         <b>Unidad Ejecutora del Gasto: </b> @Model.ueg.NumeroUEG - @String.Format(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToLower(@Model.ueg.Descripcion)))
-                                        </h2>
+                                    </h2>
                                 </div>
                                 <div class="card-body pt-0">
                                     <div class="row">
@@ -135,6 +138,18 @@
                                         </div>
                                     </div>
                                 }
+
+                                @*SE AGREGÓ LA OPCION PARA PODER RECHAZAR EL PROYECTO AÚN ASÍ YA ESTÉ AUTORIZADO*@
+                                @if (Model.Estatus.Equals("Autorizada"))
+                                {
+                                    <div class="card-footer">
+                                        <div class="text-center">
+                                            <button1 href="" class="btn btn-danger btn-emergencia mr-3 failed_integracion" data-toggle="tooltip" title='Rechazo para ajustes en el proyecto'><i class="fas fa-times mr-2"></i>Rechazar Proyecto</button1>
+                                        </div>
+                                    </div>
+                                }
+                                @*FIN DE SE AGREGÓ LA OPCION PARA PODER RECHAZAR EL PROYECTO AÚN ASÍ YA ESTÉ AUTORIZADO*@
+
                             </div>
                         </div>
                     </div>
@@ -254,6 +269,25 @@
     </div>
 </div>
 
+<style>
+    /* Opción 1: Modificar la clase btn-danger */
+    .btn-emergencia {
+        background-color: #c0392b; /* Rojo más oscuro */
+        border-color: #c0392b;
+        color: #fff;
+        font-size: 1.3rem;
+    }
+
+    /* Opción 2: Crear una nueva clase */
+     .btn-emergencia {
+        background-color: #ff0000; /* Rojo puro */
+        border-color: #ff0000;
+        color: #fff;
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); /* Sombra roja */
+    }
+
+</style>
+
 @section Scripts{
     <script>
         $(function () {
@@ -307,7 +341,9 @@
                                                         'title': "Integración del Proyecto",
                                                         'html': "Se autorizó la integración del proyecto correctamente."
                                                     }).then(function () {
-                                                        window.location.reload();
+                                                        window.location.href = "/proyectos/index" + window.location.search;
+                                                    
+
                                                     });
                                                 }
                                             }).catch(error => {
@@ -376,9 +412,11 @@
                                                     Swal.fire({
                                                         'icon': "success",
                                                         'title': "Integración del Proyecto",
-                                                        'html': "Se rechazó el proyecto correctamente."
+                                                        'html': '¿Esta seguro que desea rechazar el proyecto <b>"' + model.proyecto + '"?',
+                                                        'html': 'Se rechazó correctamente el proyecto <b>"' + model.proyecto + '"'
                                                     }).then(function () {
-                                                        window.location.reload();
+                                                        window.location.href = "/proyectos/index" + window.location.search;
+                                                    
                                                     });
                                                 }
                                             }).catch(error => {

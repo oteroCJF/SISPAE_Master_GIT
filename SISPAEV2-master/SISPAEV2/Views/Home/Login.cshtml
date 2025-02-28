@@ -8,35 +8,223 @@
             <img src="~/img/logo_color.png" alt="" height="80" class="ml-5">
         </div>
         <div class="col-lg-8 mt-5 ml-5 text-right">
-            <strong>@DateTime.Now.ToString("D", @System.Globalization.CultureInfo.CreateSpecificCulture("es")) <i class="fal fa-clock-desk"></i></strong>
+            <div class="fecha-hora">
+                <span class="fecha">@DateTime.Now.ToString("D", @System.Globalization.CultureInfo.CreateSpecificCulture("es"))</span>
+                <span class="hora"><i class="fal fa-clock-desk ml-2"></i> <span id="reloj"></span></span>
+            </div>
         </div>
     </div>
     <hr style="background-color: #24135F; font-weight: bold;" />
-    <div class="container">
-        <div class="col-lg-12 mt-1">
-            @*<h2 class="font-weight-bold text-center" style="color:#00106d;">SISPAE</h2>*@
+ 
 
-            @*NOMBRE DEL SISTEMA EFECTO*@
-            <button class="button" data-text="Awesome" disabled>
-                <span class="actual-text">&nbsp;SISPAE&nbsp;</span>
-                <span aria-hidden="true" class="hover-text">&nbsp;SISPAE&nbsp;</span>
-            </button>
-            @*NOMBRE DEL SISTEMA EFECTO FIN*@
+    <!--<div id="the-wrap">-->
+    <!--- red ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="red-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---green ball---->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="green-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---blue ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="blue-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---white ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="white-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!--- red ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="red-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---green ball---->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="blue-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---blue ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="blue-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!--- red ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="red-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---green ball---->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="green-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---blue ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="blue-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---white ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="white-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!--- red ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="red-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---green ball---->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="green-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---blue ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="blue-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---white ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="white-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!--- red ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="red-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---green ball---->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="green-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---blue ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="blue-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!---white ball--->
+    <!--<div class="ball-wrapper">
+        <div class="string"></div>
+        <div class="ring"></div>
+        <div class="button1"></div>
+        <div class="white-ball"></div>
+    </div>-->
+    <!---- end of wrapper---->
+    <!--</div>
+
+    <div class="contenedor">
+        <span class="bolita1 adorno"></span>
+        <span class="bolita2 adorno"></span>
+        <span class="bolita3 adorno"></span>
+        <span class="bolita4 adorno"></span>
+        <span class="bolita5 adorno"></span>
+        <span class="bolita6 adorno"></span>
+        <span class="bolita7 adorno"></span>
+        <span class="bolita8 adorno"></span>
+    </div>-->
 
 
+    <div class="col-lg-12 mt-1 contenedorTitulo">
+        @*<h2 class="font-weight-bold text-center" style="color:#00106d;">SISPAE</h2>*@
+        @*<div class="loader no-select" >
+                <span>SISPAE</span>
+                <span>SISPAE</span>
+            </div>*@
+        @*NOMBRE DEL SISTEMA EFECTO*@
+        <button class="button" data-text="Awesome" disabled>
+            <span class="actual-text">&nbsp;CISPAE&nbsp;</span>
+            <span aria-hidden="true" class="hover-text">&nbsp;CISPAE&nbsp;</span>
+        </button>
+        @*NOMBRE DEL SISTEMA EFECTO FIN*@
 
-            <h5 class="font-weight-bold text-center" style="color:#00106d;">Sistema para la Integración y Seguimiento de Proyectos que conforman el PAE</h5>
-        </div>
+        <h4 class="font-weight-bold text-center" style="color:#00106d;">Control para la Integración y Seguimiento al Programa Anual de Ejecución</h4>
     </div>
+
     <div class="row mt-3">
         <div class="col-lg-12" align="center">
-            <h4 class="ml-2" style="color:#00106d;"><b>Inicio</b></h4>
+            @*<h4 class="ml-2" style="color:#00106d;"><b>Inicio</b></h4>*@
         </div>
     </div>
-    <div class="row col-lg-12">
+
+    <div class="row text-center1">
+        @if (!string.IsNullOrEmpty(error))
+        {
+            <h5 class="text-danger" style="padding: 1px; text-align:center;"><b>@error</b></h5>}
+    </div>
+
+    <div class="row col-lg-12 contenedorUsuario">
         <div class="col-lg-6 mt-1">
+            <div class="row mb-3 ml-4 col-lg-12 float-left">
+                @if (!string.IsNullOrEmpty(error))
+                {
+                    <h5 class="text-danger" style="padding: 20px;">@error</h5>
+                }
+            </div>
             <form action="/login?ReturnUrl=@System.Net.WebUtility.UrlEncode(returnUrl)" method="post">
-                <div class="input-group mr-1 mb-3 col-lg-8 float-right">
+
+
+                <div class="input-group mr-1 mb-3 col-lg-8 float-xl-right">
+
                     <input type="text" class="form-control" name="username" placeholder="u + número de expediente" id="usr_expediente">
                     <div class="input-group-append">
                         <div class="input-group-text">
@@ -44,7 +232,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="row col-lg-12"></div>
                 <div class="input-group mr-1 mb-3 col-lg-8 float-right">
                     <input type="password" class="form-control" name="password" placeholder="Contraseña" id="usr_password">
                     <div class="input-group-append">
@@ -53,18 +240,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="row col-lg-12"></div>
-                <div class="row mb-3 ml-4 col-lg-12 float-left">
-                    @if (!string.IsNullOrEmpty(error))
-                    {
-        <h5 class="text-danger" style="padding: 20px;">@error</h5>}
-                </div>
+
                 <div class="row mb-3 mr-1 col-lg-4 float-right">
                     <button type="submit" class="btn btn-cjf btn-block" id="iniciar_sesion">Iniciar Sesión</button>
                 </div>
+
+
             </form>
         </div>
-        <div class="col-lg-6 mt-1 text-justify">
+        <div class="col-lg-6 mt-1 text-justify contenedorInfo">
             Para capturar el usuario, recuerde colocar la letra “u” antes de su número de expediente.<BR />
             Ejemplo: u + 56, el usuario será: u56
             <div class="mt-2">
@@ -74,174 +258,618 @@
         </div>
     </div>
 </div>
-<aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-    <div class="p-3">
-        <h5>Title</h5>
-        <p>Sidebar content</p>
-    </div>
-</aside>
-<!-- Footer -->
-<footer class="page-footer font-small teal pt-4" style="background-color:#00106d; color: white;">
-    <!-- Footer Text -->
-    <div class="container-fluid text-center text-md-left">
-        <!-- Grid row -->
-        <div class="row">
-            <!-- Grid column -->
-            <div class="col-md-6 mt-0" style="background-color:#00106d; color: white;">
-                <!-- Content -->
-                <h5 class="font-weight-bold">Edificio Sede</h5>
-                <p class="ml-3 contact-info">
-                    <i class="fad fa-building"></i>
-                    &nbsp;&nbsp;Edificio Sede Insurgentes Sur 2417
-                    San Ángel. Álvaro Obregón <br />
-                </p>
-                <p class="ml-3 contact-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C.P. 01000, Ciudad de México</p>
-                <p class="ml-3 contact-info"><i class="fad fa-phone"></i>&nbsp; +52 (55) 5490-8000</p>
-
-            </div>
-            <!-- Grid column -->
-
-            <hr class="clearfix w-100 d-md-none pb-3">
-            <!-- Grid column -->
-            <div class="col-md-6 mb-md-0 mb-3" style="background-color:#00106d; color: white;">
-                <!-- Content -->
-                <h5 class="font-weight-bold">¿Problemas con el sistema?</h5>
-                <p class="contact-info"><i class="fad fa-user"></i>&nbsp;&nbsp;&nbsp;Ing. Christian Otero García</pclass="contact-info">
-                <p class="contact-info"><i class="fad fa-envelope-open-text"></i> &nbsp;&nbsp;coterog@cjf.gob.mx </p>
-                <p class="contact-info"><i class="fad fa-phone"></i>&nbsp;&nbsp;&nbsp;Ext. 2574, Red nacional #318-2574</p>
-
-            </div>
 
 
 
-            <!-- Grid column -->
-
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+        <div class="p-3">
+            <h5>Title</h5>
+            <p>Sidebar content</p>
         </div>
-        <!-- Grid row -->
+    </aside>
+    <!-- Footer -->
+    <footer class="main-footer mt-2" style="background-color: #00106d; color: white;">
+        <div class="container-fluid text-center text-md-left">
+            <div class="row">
+                <div class="col-md-6 mt-md-0 mt-3" style="background-color: #00106d; color: white; ">
+                    <h5 class="font-weight-bold">Edificio Sede</h5>
+                    <ul class="ml-4 mb-0 fa-ul">
+                        <li class="small mt-3">
+                            <span class="fa-li"><i class="fad fa-building"></i></span>
 
-    </div>
+                            Edificio Sede Insurgentes Sur 2417, San Ángel. Álvaro Obregón <br />
+                            C.P. 01000, Ciudad de México
+
+                        </li>
+                        <li class="small mt-1"><span class="fa-li"><i class="fa-solid fa-phone-rotary"></i></span> <b> (55) 5449 9500</b></li>
+                    </ul>
+
+                </div>
+                <hr class="clearfix w-100 d-md-none pb-3">
+
+                <div class="col-md-6 mb-md-0 mb-3" style="background-color: #00106d; color: white; ">
+                    <h5 class="font-weight-bold">¿Problemas con el sistema?</h5>
+                    <p class="contact-info"><i class="fad fa-user"></i>&nbsp; Ing. Christian Otero García</p>
+                    <p class="contact-info"><i class="fad fa-envelope-open-text"></i>&nbsp; coterog@cjf.gob.mx</p>
+                    <p class="contact-info"><i class="fad fa-phone"></i>&nbsp; Ext. 2574, Red nacional #318-2574</p>
+                </div>
+            </div>
+        </div>
+        <div class="page-footer text-center py-3" style="background-color: #00106d; color: white; font-weight: bold; ">
+            <div class="footer d-flex justify-content-between align-items-center">
+                <div class="text-center">
+                    <p>Poder Judicial de la Federación</p>
+                </div>
+                <div class="text-center">
+                    <p>Consejo de la Judicatura Federal - Dirección General de Servicios Generales</p>
+                </div>
+                <div class="text-center">
+                    <p>Versión 2.5 - 2025</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!--<footer class="main-footer mt-2" style="background-color:#00106d; color: white;">-->
+    <!-- Footer Text -->
+    <!--<div class="container-fluid text-center text-md-left">-->
+    <!-- Grid row -->
+    <!--<div class="row">-->
+    <!-- Grid column -->
+    <!--<div class="col-md-6 mt-md-0 mt-3" style="background-color: #00106d; color: white; ">-->
+    <!-- Content -->
+    <!--<h5 class="font-weight-bold">Edificio Sede</h5>
+        <p class="ml-3 contact-info">
+            <i class="fad fa-building"></i>
+            &nbsp;&nbsp;Edificio Sede Insurgentes Sur 2417
+            San Ángel. Álvaro Obregón <br />
+        </p>
+        <p class="ml-3 contact-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C.P. 01000, Ciudad de México</p>
+        <p class="ml-3 contact-info"><i class="fad fa-phone"></i>&nbsp; +52 (55) 5490-8000</p>
+
+    </div>-->
+    <!-- Grid column -->
+    <!--<hr class="clearfix w-100 d-md-none pb-3">-->
+    <!-- Grid column -->
+    <!--<div class="col-md-6 mb-md-0 mb-3" style="background-color:#00106d; color: white;">-->
+    <!-- Content -->
+    <!--<h5 class="font-weight-bold">¿Problemas con el sistema?</h5>
+        <p class="contact-info"><i class="fad fa-user"></i>&nbsp;&nbsp;&nbsp;Ing. Christian Otero García</pclass="contact-info">
+        <p class="contact-info"><i class="fad fa-envelope-open-text"></i> &nbsp;&nbsp;coterog@cjf.gob.mx </p>
+        <p class="contact-info"><i class="fad fa-phone"></i>&nbsp;&nbsp;&nbsp;Ext. 2574, Red nacional #318-2574</p>
+
+    </div>-->
+    <!-- Grid column -->
+    <!--</div>-->
+    <!-- Grid row -->
+    <!--</div>-->
     <!-- Footer Text -->
     <!-- Copyright -->
-
-    <div class="col-md-12" align="center" style="background-color:#00106d; color: white; font-weight: bold;">
+    <!--<div class="col-md-12" align="center" style="background-color:#00106d; color: white; font-weight: bold;">
         ©2024 - Consejo de la Judicatura Federal - SISPAE
-    </div>
-
-
+    </div>-->
     <!-- Copyright -->
+    <!--</footer>-->
+    <!-- Footer -->
 
-</footer>
-<!-- Footer -->
+    <style>
+        .contenedorTitulo {
+            transform: translate(0%, -25%)
+        }
 
-<style>
-    footer {
-        position: absolute;
-        bottom: 0;
-        height: 0px;
-        width: 100%;
-    }
+        .contenedorUsuario {
+            transform: translate(0%, -25%)
+        }
+        .contenedorInfo {
+            transform: translate(0%, 7%)
+        }
 
-    .contact-info {
-        margin-top: -6px; /* Ajusta el valor según sea necesario */
-    }
+        .contact-info {
+            margin-top: -6px; /* Ajusta el valor según sea necesario */
+        }
 
-    .contact-info2 {
-        margin-top: -100px; /* Ajusta el valor según sea necesario */
-    }
+        .contact-info2 {
+            margin-top: -100px; /* Ajusta el valor según sea necesario */
+        }
+
+        .text-center1 {
+            transform: translate(20%, 0%);
+        }
+
+        .footer {
+            margin-top: auto;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 0;
+            height: 200px;
+            width: 100%;
+        }
+
+        .button {
+            margin: 0;
+            height: auto;
+            background: transparent;
+            padding: 0;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* button styling */
+        .button {
+            position: relative;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, 10%);
+            --border-right: 0px;
+            --text-stroke-color: rgb(0 38 255);
+            --animation-color: #0d23a1;
+            --fs-size: 9em;
+            letter-spacing: 0px;
+            text-decoration: none;
+            font-size: var(--fs-size);
+            font-family: "Cascadia Code";
+            position: relative;
+            text-transform: uppercase;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--text-stroke-color);
+        }
+        /* this is the text, when you hover on button */
+        .hover-text {
+            position: absolute;
+            box-sizing: border-box;
+            content: attr(data-text);
+            color: var(--animation-color);
+            width: 0%;
+            inset: 0;
+            border-right: var(--border-right) solid var(--animation-color);
+            overflow: hidden;
+            transition: 0.8s;
+            -webkit-text-stroke: 1px var(--animation-color);
+        }
+        /* hover */
+        .button:hover .hover-text {
+            width: 100%;
+            filter: drop-shadow(0 0 23px var(--animation-color))
+        }
+
+        .fecha-hora {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            color: #000;
+        }
+
+        .fecha {
+            font-weight: bold;
+        }
+
+        .hora {
+            color: #000;
+            font-size: 20px;
+        }
+
+        .form-control {
+            outline: none;
+            font-size: 16px;
+            border-radius: 5px;
+            padding-left: 15px;
+            border: 1px solid #00ff2a;
+            border-bottom-width: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+            .form-control:valid {
+                border-color: rgb(0 38 255);
+                box-shadow: 0.2px 0.2px 1px -10px #00ff2a;
+            }
+
+            .form-control:invalid {
+                border-color: rgb(255 0 0);
+                color: rgb(255 0 0);
+                box-shadow: 1px 1px 1px -10px #000000;
+                /* translate: -8px 8px 0px 0px; */
+            }
+
+        .text {
+            margin-top: 10px;
+            color: black;
+        }
 
 
-    .button {
-        margin: 0;
-        height: auto;
-        background: transparent;
-        padding: 0;
-        border: none;
-        cursor: pointer;
-    }
+        .loader {
+            position: relative;
+            pointer-events: none;
+        }
 
-    /* button styling */
-    .button {
-        position: relative;
-        top: 20%;
-        left: 50%;
-        transform: translate(-50%, 0%);
-        --border-right: 0px;
-        --text-stroke-color: rgb(0 38 255);
-        --animation-color: #0d23a1;
-        --fs-size: 4.5em;
-        letter-spacing: 3px;
-        text-decoration: none;
-        font-size: var(--fs-size);
-        font-family: "Cascadia Code";
-        position: relative;
-        text-transform: uppercase;
-        color: transparent;
-        -webkit-text-stroke: 1px var(--text-stroke-color);
-    }
-    /* this is the text, when you hover on button */
-    .hover-text {
-        position: absolute;
-        box-sizing: border-box;
-        content: attr(data-text);
-        color: var(--animation-color);
-        width: 0%;
-        inset: 0;
-        border-right: var(--border-right) solid var(--animation-color);
-        overflow: hidden;
-        transition: 0.8s;
-        -webkit-text-stroke: 1px var(--animation-color);
-    }
-    /* hover */
-    .button:hover .hover-text {
-        width: 100%;
-        filter: drop-shadow(0 0 23px var(--animation-color))
-    }
-</style>
+            .loader span {
+                position: absolute;
+                color: #fff;
+                font-size: 100px;
+                font-family: "Leelawadee UI";
+                letter-spacing: 0px;
+            }
 
-@section Scripts{
-    <script>
-        $(function () {
-            $("#mdl_horarios").click(function () {
-                $("#modal_horarios").modal("show");
-            });
-
-            $("#horarios_user").DataTable({
-                paging: true,
-                bLengthChange: false,
-                pageLength: 5,
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-            });
-
-            $("#iniciar_sesion").click(function () {
-                if ($("#usr_expediente").val() == "" && $("#usr_password").val() == "") {
-                    Swal.fire({
-                        'icon': 'error',
-                        'title': 'Iniciar Sesion',
-                        'html': 'Favor de capturar su usuario y contraseña que utiliza para ingresar al sistema de nóminas de la institución.'
-                    });
-                    return false;
-                } else if ($("#usr_password").val() == "" && $("#usr_expediente").val() != "") {
-                    Swal.fire({
-                        'icon': 'error',
-                        'title': 'Iniciar Sesion',
-                        'html': 'Favor de capturar su contraseña que utiliza para ingresar al sistema de nóminas de la institución.'
-                    });
-                    return false;
-                } else if ($("#usr_password").val() != "" && $("#usr_expediente").val() == "") {
-                    Swal.fire({
-                        'icon': 'error',
-                        'title': 'Iniciar Sesion',
-                        'html': 'Favor de capturar su usuario que utiliza para ingresar al sistema de nóminas de la institución.'
-                    });
-                    return false;
-                } else {
-
-                    return true;
+                .loader span:nth-child(1) {
+                    color: transparent;
+                    -webkit-text-stroke: 1px rgb(0 38 255);
                 }
+
+                .loader span:nth-child(2) {
+                    color: #0d23a1;
+                    -webkit-text-stroke: 1px rgb(0 0 0);
+                    animation: uiverse723 4s ease-in-out infinite;
+                }
+
+        @@keyframes uiverse723 {
+            0%, 100% {
+                clip-path: polygon(0% 45%, 15% 44%, 32% 50%, 54% 60%, 70% 61%, 84% 59%, 100% 52%, 100% 100%, 0% 100%);
+            }
+
+            50% {
+                clip-path: polygon(0% 60%, 16% 65%, 34% 66%, 51% 62%, 67% 50%, 84% 45%, 100% 46%, 100% 100%, 0% 100%);
+            }
+        }
+
+
+        .text {
+            margin-top: 10px;
+            color: black;
+        }
+
+
+        #the-wrap {
+            width: 2500px;
+            margin: auto;
+        }
+
+        .ball-wrapper {
+            float: left;
+            margin: 0px 40px;
+        }
+
+        .ring {
+            height: 15px;
+            width: 5px;
+            background-color: ##c03636;
+            border: 2px solid #f99d24;
+            border-radius: 45%;
+            position: relative;
+            left: 76.4px;
+        }
+
+        .string {
+            width: 1.5px;
+            position: relative;
+            background-color: #f99d24;
+            height: 20px;
+            left: 80px;
+            margin-top: -22px;
+        }
+
+        .button1 {
+            height: 10px;
+            width: 22px;
+            background-color: #f99d24;
+            position: relative;
+            left: 65px;
+            border-radius: 4px;
+        }
+
+
+        /*.red-ball {
+                        background-color: #ff0000;
+                        width: 40px;
+                        height: 40px;
+                        background: radial-gradient(at top left, #ff0000 20%, #c03636);
+                        -ms-border-radius: 25px;
+                        -moz-border-radius: 25px;
+                        -webkit-border-radius: 25px;
+                        -o-border-radius: 25px;
+                        border-radius: 25px;
+                        margin: 0px auto;
+                        position: relative;
+                        left: 56px;
+                        top: -3px;
+                    }
+
+                    .green-ball {
+                        background-color: #00ff46;
+                        width: 40px;
+                        height: 40px;
+                        background: radial-gradient(at top left, #f00 20%, #c03636);
+                        -ms-border-radius: 25px;
+                        -moz-border-radius: 25px;
+                        -webkit-border-radius: 25px;
+                        -o-border-radius: 25px;
+                        border-radius: 25px;
+                        margin: 0px auto;
+                        position: relative;
+                        left: 56px;
+                        top: -3px;
+                    }
+
+                    .blue-ball {
+                        width: 40px;
+                        height: 40px;
+                        background-color: red;
+                        background: radial-gradient(at top left, #0053ff 20%, #00fcff);
+                        -ms-border-radius: 25px;
+                        -moz-border-radius: 25px;
+                        -webkit-border-radius: 25px;
+                        -o-border-radius: 25px;
+                        border-radius: 25px;
+                        margin: 0px auto;
+                        position: relative;
+                        left: 56px;
+                        top: -3px;
+                    }
+
+                    .white-ball {
+                        background-color: #d4cdcd;
+                        width: 40px;
+                        height: 40px;
+                        background: radial-gradient(at top left, #f1ff00 20%, #00ff2a);
+                        -ms-border-radius: 25px;
+                        -moz-border-radius: 25px;
+                        -webkit-border-radius: 25px;
+                        -o-border-radius: 25px;
+                        border-radius: 25px;
+                        margin: 0px auto;
+                        position: relative;
+                        left: 56px;
+                        top: -3px;
+                    }
+
+                    body {
+                        margin: 0;
+                    }
+
+                    .buttonNieve {
+                        display: inline-block;
+                        -webkit-box-sizing: border-box;
+                        -moz-box-sizing: border-box;
+                        box-sizing: border-box;
+                        min-width: 50px;
+                        padding: 5px 10px;
+                        font-family: 'Verdana';
+                        font-size: 16px;
+                        line-height: 25px;
+                        color: #FFf;
+                        text-shadow: 0 1px 2px rgba(0,0,0,0.75);
+                        background: #5e0d0c;
+                        outline: none;
+                        border-radius: 1px;
+                        border: 1px solid #4c0300;
+                        box-shadow: inset 1px 1px 0px rgba(255,255,255,0.25),*/ /* highlight */
+        /*inset 0 0 6px #a23227,*/ /* inner glow */
+        /*inset 0 80px 80px -40px #ac3223,*/ /* gradient */
+        /*1px 1px 3px rgba(0,0,0,0.75);*/ /* shadow */
+
+        /*position: relative;
+                        overflow: visible;*/ /* IE9 & 10 */
+        /*-webkit-transition: 500ms linear;
+                        -moz-transition: 500ms linear;
+                        -o-transition: 500ms linear;
+                        transition: 500ms linear;
+                    }
+
+                        .buttonNieve::before {
+                            content: '';
+                            display: block;
+                            position: absolute;
+                            top: -7px;
+                            left: -3px;
+                            right: 0;
+                            height: 23px;
+                            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAAXCAYAAACS5bYWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABFpJREFUeNrUV0tIo1cUvpkYjQ4xxSA6DxuNqG0dtaUKOgs3s6i0dFd3pSsXdjeIixakiGA34sZuXCkoONLFwJTK4GMYLYXg29gatTpiXurkbd7vv9/5ub+IxuhA7eiFQ5Kbc8/57ne/e87/ywRBYLdl3GG3aNwqsLJ0k0tLS+fmcnNzWUVFBVMoFGx2djarvLxcm5OTw+bm5iytra2xc4ExNjY27iqVyvvwK6CpeDzuCYVC1urq6qDA9UcfPp+PHR4esmAwKK6tr68/l5/8rgQ2Ozub1dbWyiYmJooaGxt/VqvV38jlchX9l0qlwoFA4DWS/RKLxRxFRUVf5+XlPcaaT2AP0sVPJBL2SCRiAPBpu93+vKamZo/Ae71eZjabWV1dXVqw7CKwp43ksrCw8Bhg7MJ/PLDZ5PHx8cz29vYT5JGD/bSYLgTrcDgYdk6siSc6NjZWDaAe4ZoHQL+cmZnRpZPnhWDpD8kw7uKo9ML/NMCsd2tr61vkzboMrEyv138M7TyLRqMWMBsX3sMgaZhMpp+AR5EJrCocDpuEGzKg4x8khs+CVWxubvZfR9JkMik4nU7BarUKLpeLmLsKuwIqTLynp4fqmIzASrqQT09Pf1VVVfX0KsWZ6uHBwQHTaDSsoKAgo6/H4xHLEcrVyRwuEisrKzs5XrrIVAVwiUVDKRRrL+YI32ewdVhMApuHWvcj6vids6J2u90MF4yBHUZNgKoEBaRBQalJqFSqtJfUYrGIlQX+ydXVVTN+u0tKSjQNDQ1axJVl2iTypebn55d7e3v/kqoDgZU1NTU9LCws/Py0M+2ekuGincxJ3yF+18jIyHJLS0slQJUWFxczrBeBE0vE5tHRkbixlZWVfSR8gTX/0P5gH7S1tX3Z3t7+BW8qAvwSfr8/jA0EIRM/qoFtampqbW9vTw+XA+ojUruVd3Z2tvb19T2TQFEim81GgVJoCvvj4+NLOJZgaWmpemdn5y3a6BbcnJDAw8HBwac6ne6eqCW5XDwB3qVSqM9/DAwMUNy/eVLabT7sI25qwgujThCBhWE+mAt2yNc4SQKSZrOQQE1HS22VJkmPAGTr7+//fX19fRk+Zgq0trbGeFAKEAQT98BSqKOj47vm5uaa/Px8JeIk4GcaHh6eWlxcfAU/A8xG67BxAX3fwdcbYUpSDJ06Z49Ak8ZC3OL8f3YiA4PBYKdLQ2AJ9OTk5GpXV9cQiCVh79M94QtlPLDUE/1gPNrd3f0W33W4cBoco48zQuy/IZYAMnGqlSc4c66L9JruQUaSARXeT8HGKzxAqFBekni6+h46+pMzGiJGMgTOJh1yU/KNEGDvZWvfBawkA9ppwGg0mrRa7SOI2g+gxOgbJIpdFpj72PnxSnPX8vqRxTURgBQWKisrH+GThOm+CtAzoK/9/Uiqq/6hoaHfdnd3jaOjo7/yY7yxbwqkWy3sQzpS2C6YirwvUJk0y7hurfyGRrnduPGvAAMASmo8wzeVwfsAAAAASUVORK5CYII=) no-repeat 0 0, url(data:image/png;base64,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) no-repeat 50% 0, url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAXCAYAAACFxybfAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAodJREFUeNrsVb1rWlEUv2pN/GqspKRSKFYXWzEloIWif0Fn6dJChQ7OQil0qd3EzcEpg0OgdHDr4CQODk7VRlLMEIVqApX4We0zflR9/Z1Ui4T34ksaaAYP/Hzc673n/M6550PG8zz73yKjn0wm83fDYDAwo9HINBrNnwOQg4MDs0ql2lQqlfdAWont7ng8Pjw+Ps44nc4G1pI9EXWaSOzt7TGO42aH5Pv7+08ajUZ0MBiUeXEZd7vdL5VK5fX29rZ+5tQiEmdxKrlcjsEYczgcynK5/BKKv/IXFNz/XiqVXkHdjUuRIA9SqdRD8or/R8Ez9fr9fqHVakUR4c2z0REjIQuHw2ZcrPBXLCA0RHTezEdHjIQqkUhEr9I4HOILhQLf6/VoOUFEvDMiQiToDx1Cdz+bzZ6bUFarlel0OkkVUK/XWbvdPoVer5fh3ntsfwJ+CJ2XA4p0Op1bpBgJyxDehQQ6nQ5DZXHBYDBZq9V+EhFUndnr9drEqoc2bwJbwGPgtohuVSwWe2Gz2TZMJpNgRKi6qtUqg2EWj8dTgUDgo0KhWPN4PC70EvXOzs67fD6/S6kiRIKeZA1YJ2MiJNbdbvfTUCjkV6vVK2hcDF8GI2w0GrGTkxM2HA5PDxaLxSOfz/cWEfk81X0XIMMFgJJ/srBjCgk8IdcfuVyuZ36//7nFYtkQyAMumUzuRiKRD0jMFLa+AZOpYwqgB/ziBVqmVBKUO7eAB/R0WG/Z7XaTVqtdbTabHJL6EK2djBaBPHA0NSqpbUsiMUeEBgpF4Q5AbZrmSJ/yEWgBTaBNHl9kdkgmMUeG7qwAq9PqovceTA3zlxlgsuswyuXsGsiSxJLEkoSY/BZgAEjRodi+uBruAAAAAElFTkSuQmCC) no-repeat 100% 0;
+                        }
+
+                        .buttonNieve:hover {
+                            background: #a61715;
+                            text-shadow: 0 1px 2px rgba(0,0,0,0.75), 0 0 40px #FFF;
+                            box-shadow: inset 1px 1px 0px rgba(255,255,255,0.25),*/ /* highlight */
+        /*inset 0 0 6px #da3b2c,*/ /* inner glow */
+        /*inset 0 80px 80px -40px #dd4330,*/ /* gradient */
+        /*1px 1px 3px rgba(0,0,0,0.75);*/ /* shadow */
+        /*}
+
+                        .buttonNieve:focus {
+                            outline: none;*/ /*FF*/
+        /*}
+
+                        .buttonNieve:active {
+                            box-shadow: inset 1px 1px 0px rgba(255,255,255,0.25),*/ /* highlight */
+        /*inset 0 0 6px #da3b2c,*/ /* inner glow */
+        /*inset 0 80px 80px -40px #dd4330,*/ /* gradient */
+        /*0px 1px 0px rgba(255,255,255,0.25);*/ /* shadow */
+
+        /*-webkit-transition: 50ms linear;
+                            -moz-transition: 50ms linear;
+                            -o-transition: 50ms linear;
+                            transition: 50ms linear;
+                        }
+
+                    .adorno {
+                        display: inline-block;
+                        border-radius: 50%;
+                        animation: aparece 1s linear 2s 1 backwards, cambio 1s linear infinite;
+                    }
+
+                    .bolita1 {
+                        position: relative;
+                        width: 40px;
+                        height: 40px;
+                        left: 96px;
+                        top: -43px;
+                        animation-delay: 0.2s;
+                    }
+
+                    .bolita2 {
+                        position: relative;
+                        width: 40px;
+                        height: 40px;
+                        left: 292.5px;
+                        top: -43px;
+                        animation-delay: 0.4s;
+                    }
+
+                    .bolita3 {
+                        position: relative;
+                        width: 40px;
+                        height: 40px;
+                        left: 489.6px;
+                        top: -43px;
+                        animation-delay: 0.6s;
+                    }
+
+                    .bolita4 {
+                        position: relative;
+                        width: 40px;
+                        height: 40px;
+                        left: 687px;
+                        top: -43px;
+                        animation-delay: 0.8s;
+                    }
+
+                    .bolita5 {
+                        position: relative;
+                        width: 40px;
+                        height: 40px;
+                        left: 883px;
+                        top: -43px;
+                        animation-delay: 1s;
+                    }
+
+                    .bolita6 {
+                        position: relative;
+                        width: 40px;
+                        height: 40px;
+                        left: 1081px;
+                        top: -43px;
+                        animation-delay: 1.2s;
+                    }
+
+                    .bolita7 {
+                        position: relative;
+                        width: 40px;
+                        height: 40px;
+                        left: 1278px;
+                        top: -43px;
+                        animation-delay: 1.4s;
+                    }
+
+                    .bolita8 {
+                        position: relative;
+                        width: 40px;
+                        height: 40px;
+                        left: 1474px;
+                        top: -43px;
+                        animation-delay: 1.6s;
+                    }
+
+
+                    @@keyframes sube {
+                        from {
+                            transform: translateX(50%) translateY(100%);
+                        }
+
+                        to {
+                            transform: translateX(50%) translateY(0%);
+                        }
+                    }
+
+                    @@keyframes cambio {
+                        0% {
+                            background: gold;
+                            box-shadow: 0 0 2em gold;
+                        }
+
+                        33% {
+                            background: green;
+                            box-shadow: 0 0 2em green;
+                        }
+
+                        66% {
+                            background: blue;
+                            box-shadow: 0 0 2em blue;
+                        }
+
+                        100% {
+                            background: orange;
+                            box-shadow: 0 0 2em orange;
+                        }
+                    }
+
+                    @@keyframes aparece {
+                        from {
+                            opacity: 0;
+                        }
+
+                        to {
+                            opacity: 1;
+                        }
+                    }*/
+
+
+        }
+    </style>
+
+    @section Scripts{
+        <script>
+            $(function () {
+                $("#mdl_horarios").click(function () {
+                    $("#modal_horarios").modal("show");
+                });
+
+                $("#horarios_user").DataTable({
+                    paging: true,
+                    bLengthChange: false,
+                    pageLength: 5,
+                    language: {
+                        url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                    },
+                });
+
+                $("#iniciar_sesion").click(function () {
+                    if ($("#usr_expediente").val() == "" && $("#usr_password").val() == "") {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Iniciar Sesion',
+                            'html': 'Favor de capturar su usuario y contraseña que utiliza para ingresar al sistema de nóminas de la institución.'
+                        });
+                        return false;
+                    } else if ($("#usr_password").val() == "" && $("#usr_expediente").val() != "") {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Iniciar Sesion',
+                            'html': 'Favor de capturar su contraseña que utiliza para ingresar al sistema de nóminas de la institución.'
+                        });
+                        return false;
+                    } else if ($("#usr_password").val() != "" && $("#usr_expediente").val() == "") {
+                        Swal.fire({
+                            'icon': 'error',
+                            'title': 'Iniciar Sesion',
+                            'html': 'Favor de capturar su usuario que utiliza para ingresar al sistema de nóminas de la institución.'
+                        });
+                        return false;
+                    } else {
+
+                        return true;
+                    }
+                });
             });
-        });
-    </script>
-}
+
+
+            function actualizarHora() {
+                const ahora = new Date();
+                const opciones = { hour: 'numeric', minute: '2-digit', second: '2-digit' };
+                const horaFormateada = ahora.toLocaleTimeString('es-ES', opciones);
+                document.getElementById('reloj').textContent = horaFormateada;
+            }
+
+            setInterval(actualizarHora, 1000); // Actualiza cada segundo
+            actualizarHora(); // Inicializa el reloj
+        </script>
+    }

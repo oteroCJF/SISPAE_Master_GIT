@@ -101,8 +101,8 @@
                         @foreach (var md in Model.proyectosEstatus)
                         {
                             <a class="btn btn-app shadow__btn @md.Fondo text-white font-weight-bold btnEstatus" data-estatus="@md.Estatus">
-                                <span class="badge @(md.Estatus.Equals("Autorizada") ? "":"bg-danger")">
-                                    @if (!@md.Estatus.Equals("Autorizada"))
+                                <span class="badge @(md.Estatus.Equals("") ? "":"bg-danger")">
+                                    @if (!@md.Estatus.Equals(""))
                                     {
                                         @md.TotalEstatus
                                     }
@@ -179,12 +179,12 @@
                                     <td class="text-center @(item.Fondo.Replace("bg", "text")) font-weight-bold">@Html.DisplayFor(modelItem => item.Estatus)</td>
                                     <td class="text-center">@(item.FechaActualizacion.ToString("dd/MM/yyyy").Equals("01/01/2001") ? "-" : item.FechaActualizacion.ToString("dd/MM/yyyy hh:mm tt"))</td>
                                     <td>
-                                        @if ((!item.Estatus.Equals("En Proceso") && !item.Estatus.Equals("")) && 
-                                            (
-                                                (@User.Claims.ElementAt(2).Value).Contains("Administrador") || 
-                                                (@User.Claims.ElementAt(2).Value).Contains("CAE")) || 
-                                                (@User.Claims.ElementAt(2).Value).Contains("Autorizador")
-                                            )
+                                        @if ((!item.Estatus.Equals("En Proceso") && !item.Estatus.Equals("")) &&
+                                           (
+                                               (@User.Claims.ElementAt(2).Value).Contains("Administrador") ||
+                                               (@User.Claims.ElementAt(2).Value).Contains("CAE")) ||
+                                               (@User.Claims.ElementAt(2).Value).Contains("Autorizador")
+                                           )
                                         {
                                             <a href="#" data-id="@item.Id" class="text-center btnRevision" data-toggle="tooltip" title="Revisar Proyecto" data-placement="top">
                                                 <i class="fad fa-eye text-success"></i>
@@ -192,7 +192,7 @@
                                         }
 
                                         @if ((item.Estatus.Equals("Rechazada") || item.Estatus.Equals("En Proceso") || item.Estatus.Equals("Asignado") || item.Estatus.Equals("Autorizada")) ||
-                                       ((@User.Claims.ElementAt(2).Value).Contains("Administrador")))
+                                    ((@User.Claims.ElementAt(2).Value).Contains("Administrador")))
                                         {
                                             <a href="#" data-id="@item.Id" data-tipo="@item.Tipo" class="text-center ml-2 btnIntegracion" data-toggle="tooltip" title="Integrar Proyecto" data-placement="top">
                                                 <i class="fad fa-pencil text-primary"></i>
@@ -436,7 +436,85 @@
                 window.location.href = "/proyectos/seguimiento/" + $(this).data('id') + window.location.search;
             });
 
-            
+              /*Rechazar PROYECTO*/
+            $(document).on('click', '.failed_integracion', function () {
+                if (model.usuarios.correo_electronico == "") {
+                    Swal.fire({
+                        'icon': 'error',
+                        'title': 'Integración del Proyecto',
+                        'text': 'No se puede "Rechazar" la integración del proyecto ya que aún no se registra un correo electrónico para notificarle al usuario.'
+                    })
+                } else {
+                    Swal.fire({
+                        'icon': 'warning',
+                        'title': 'Integración del Proyecto',
+                        'html': '¿Esta seguro que desea rechazar el proyecto <b>"' + model.proyecto + '"?',
+                        'confirmButtonColor': '#3085d6',
+                        'cancelButtonColor': '#d33',
+                        'confirmButtonText': 'Si, rechazar',
+                        'cancelButtonText': 'Cancelar',
+                        'showCancelButton': true
+                    }).then(confirm => {
+                        if (confirm.isConfirmed) {
+                            Swal.fire({
+                                icon: 'info',
+                                'title': 'Integración del Proyecto',
+                                text: 'Por favor capture los comentarios.',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                cancelButtonText: 'Cancelar',
+                                confirmButtonText: 'Rechazar',
+                                input: 'textarea',
+                                inputPlaceholder: 'Escriba los comentarios correspondientes'
+                            }).then(send => {
+                                if (send.value.length > 0)
+                                {
+                                    axios.post('/historial/nuevoHistorialProyecto', {
+                                        IntegracionId: model.id, UsuarioId: model.id,
+                                        UsuarioId: parseInt(@User.Claims.ElementAt(0).Value),
+                                                                    Tipo: "Integración", Estatus: "Rechazada", Comentarios: send.value
+                                    }).then(historial => {
+                                        if (historial.data != -1) {
+                                            axios.post('/integracion/autorizarRechazarInte', { Id: model.id, Estatus: "Rechazada" }).then(response => {
+                                                if (response.data != -1) {
+                                                    Swal.fire({
+                                                        'icon': "success",
+                                                        'title': "Integración del Proyecto",
+                                                        'html': "Se rechazó el proyecto correctamente."
+                                                    }).then(function () {
+                                                        window.location.reload();
+                                                    });
+                                                }
+                                            }).catch(error => {
+                                                Swal.fire({
+                                                    'icon': 'error',
+                                                    'title': 'Integración del Proyecto',
+                                                    'html': 'Hubo un error al rechazar el proyecto. Favor de contactar al administrador'
+                                                });
+                                            });
+                                        }
+                                    }).catch(errh => {
+                                        Swal.fire({
+                                            'icon': 'error',
+                                            'title': 'Integración del Proyecto',
+                                            'html': 'Hubo un error al rechazar el proyecto. Favor de contactar al administrador'
+                                        });
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        'icon': 'error',
+                                        'title': 'Integración del Proyecto',
+                                        'text': 'Es necesario capturar los comentarios indicando el motivo por el cual se rechaza el proyecto.'
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+            /*Fin de Rechazar PROYECTO*/
+
         });
     </script>
 }

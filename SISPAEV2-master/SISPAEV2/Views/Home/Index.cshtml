@@ -4,7 +4,9 @@
     var anio = 2022;
     var total = 0;
     var tProyectos = 0.0;
+
     ViewData["Title"] = Model.Anio != 0 ? "Proyectos del Ejercicio - " + Model.Anio : "Dashboard de Proyectos";
+
     if (Model.Tipo != null && Model.Tipo.Equals("PAE"))
     {
         for ( var i =0;i<Model.dashboardEstatus.Count;i++)
